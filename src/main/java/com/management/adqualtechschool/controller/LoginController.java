@@ -32,4 +32,9 @@ public class LoginController {
     public String admin() {
         return "admin";
     }
+
+    @GetMapping("/forbidden-page")
+    public String forbiddenPage() {
+        return "forbidden-page";
+    }
 }
