@@ -16,7 +16,7 @@
 <div class="wrapper bg-white">
     <section class="vh-100 gradient-custom">
         <div class="container py-2 h-100">
-            <div class="alert alert-danger d-flex flex-row align-items-center text-black"
+            <div th:if="${param.error}" class="alert alert-danger d-flex flex-row align-items-center text-black"
             id="alert">
                 <i class="fa-solid fa-circle-exclamation px-2"></i>
                 <p class="my-0">Sai tài khoản hoặc mật khẩu</p>
