@@ -10,7 +10,7 @@ public class AccountCreationDTO {
     private Long id;
     private String username;
     private String password;
-    private String firsName;
+    private String firstName;
     private String lastName;
     private Boolean gender;
     private LocalDateTime birthday;

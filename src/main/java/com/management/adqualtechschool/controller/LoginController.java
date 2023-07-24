@@ -24,17 +24,17 @@ public class LoginController {
     }
 
     @GetMapping("/")
-    public String home() {
+    public String showHomePage() {
         return "home";
     }
 
     @GetMapping("/admin")
-    public String admin() {
+    public String showAdminPage() {
         return "admin";
     }
 
     @GetMapping("/forbidden-page")
-    public String forbiddenPage() {
+    public String showForbiddenPage() {
         return "forbidden-page";
     }
 }

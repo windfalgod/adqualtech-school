@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class AccountDTO {
     private Long id;
-    private String firsName;
+    private String firstName;
     private String lastName;
     private Boolean gender;
     private LocalDateTime birthday;
