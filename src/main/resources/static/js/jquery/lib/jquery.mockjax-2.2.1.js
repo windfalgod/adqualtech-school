@@ -14,7 +14,7 @@
 
 	// AMDJS module definition
 	if ( typeof define === 'function' && define.amd && define.amd.jQuery ) {
-		define(['jquery'], function($) {
+		define(['static/js/jquery/lib/jquery'], function($) {
 			return factory($, root);
 		});
 
