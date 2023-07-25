@@ -58,4 +58,16 @@ public class AccountDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Long getId() {
+        return accountCreationDTO.getId();
+    }
+
+    public String getName() {
+        return accountCreationDTO.getLastName() + " " + accountCreationDTO.getFirstName();
+    }
+
+    public String getImage() {
+        return accountCreationDTO.getImage();
+    }
 }
