@@ -1,0 +1,30 @@
+.event-home-items {
+    height: 320px;
+}
+
+.notify-home-items {
+    height: 320px;
+}
+
+.event-home-card {
+    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+    border: rgb(220,220,220) solid;
+}
+
+.event-home-card:hover{
+    background-color: lightgray;
+}
+
+.notify-home-card {
+    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+    border: rgb(220,220,220) solid;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    display: -webkit-box;
+    white-space: break-spaces;
+    -webkit-line-clamp: 12;
+}
+
+.notify-home-card:hover{
+    background-color: lightgray;
+}

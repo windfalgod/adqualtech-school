@@ -1,0 +1,6 @@
+.content-container {
+    margin-top: 70px;
+    float: right;
+    width: calc(100% - 250px);
+    font-family: Arial, serif;
+}

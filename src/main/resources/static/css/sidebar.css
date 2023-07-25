@@ -1,0 +1,38 @@
+.sidebar-wrapper {
+    width: 250px;
+    height: 100vh;
+    font-family: Arial, serif;
+    box-shadow: 2px 0 darkgray;
+}
+
+.list-group-item {
+    height: 50px;
+    width: 235px;
+}
+
+.list-group-item:active {
+    background-color: rgb(30,144,255);
+}
+
+.list-group-item:hover {
+    background-color: rgb(232,232,232);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.list-group-flush .active:hover {
+    background-color: rgb(30,144,255);
+    color: white;
+}
+
+.sidebar-link-pages a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+a:link { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:hover { text-decoration: none; }
+a:active { text-decoration: none; }
