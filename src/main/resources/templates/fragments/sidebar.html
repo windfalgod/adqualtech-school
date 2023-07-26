@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<aside class="sidebar-wrapper position-fixed d-flex flex-column pt-4 mr-1 mb-1 float-left" th:fragment="aside">
+    <div class="logo-wrapper d-flex flex-column text-align-center align-items-center mt-5 mb-2">
+        <img src="/images/logo-sidebar.png" alt="logo" width="100">
+        <p class="logo-title mt-1">ADQUATECH SCHOOL</p>
+    </div>
+    <div class="list-group-wrapper mt-5">
+        <div class="list-group-flush">
+                <a href="/" th:class="'link-home list-group-item ms-2 rounded d-flex align-items-center ' +
+                   ${#httpServletRequest.requestURI == '/' ? 'active text-white' : 'text-dark'}">
+                    <i class="fa-solid fa-house me-2"></i>
+                    Trang chủ
+                </a>
+                <a href="/events" th:class="'link-events text-dark list-group-item ms-2 rounded d-flex align-items-center ' +
+                   ${#httpServletRequest.requestURI == '/events' ? 'active text-white' : 'text-dark'}">
+                    <i class="fa-solid fa-calendar-check me-2"></i>
+                    Sự kiện
+                </a>
+                <a href="/notifies" th:class="'link-notifies text-dark list-group-item ms-2 rounded d-flex align-items-center ' +
+                   ${#httpServletRequest.requestURI == '/notifies' ? 'active text-white' : 'text-dark'}">
+                    <i class="fa-solid fa-flag me-2"></i>
+                    Thông báo
+                </a>
+                <a href="/rules" th:class="'link-rules text-dark list-group-item ms-2 rounded d-flex align-items-center ' +
+                   ${#httpServletRequest.requestURI == '/rules' ? 'active text-white' : 'text-dark'}">
+                    <i class="fa-solid fa-list-check me-2"></i>
+                    Nội quy
+                </a>
+                <a href="/preparation-exams" th:class="'link-exams text-dark list-group-item ms-2 rounded d-flex align-items-center ' +
+                   ${#httpServletRequest.requestURI == '/preparation-exams' ? 'active text-white' : 'text-dark'}">
+                    <i class="fa-solid fa-file-lines me-2"></i>
+                    Thư viện đề thi
+                </a>
+                <a href="/teachers" th:class="'link-teachers text-dark list-group-item ms-2 rounded d-flex align-items-center ' +
+                   ${#httpServletRequest.requestURI == '/teachers' ? 'active text-white' : 'text-dark'}">
+                    <i class="fa-solid fa-users me-2"></i>
+                    Danh sách giáo viên
+                </a>
+                <a href="/student" th:class="'link-student text-dark list-group-item ms-2 rounded d-flex align-items-center ' +
+                   ${#httpServletRequest.requestURI == '/student' ? 'active text-white' : 'text-dark'}">
+                    <i class="fa-solid fa-users me-2"></i>
+                    Danh sách học sinh
+                </a>
+        </div>
+    </div>
+</aside>
+</body>
+</html>

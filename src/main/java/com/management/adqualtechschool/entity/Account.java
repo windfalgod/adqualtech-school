@@ -1,7 +1,9 @@
 package com.management.adqualtechschool.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,8 +53,9 @@ public class Account {
     @Column(name = "image")
     private String image;
 
-    @Column(name = "class_id", length = 20)
-    private Long classId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "class_id", referencedColumnName = "id")
+    private Classroom classRoom;
 
     @Column(name = "address")
     private String address;
@@ -80,4 +85,10 @@ public class Account {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Event> events;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Notify> notifies;
 }
