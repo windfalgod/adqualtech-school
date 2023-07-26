@@ -7,8 +7,9 @@
 }
 
 .event-home-card {
-    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0 1px 2px;
     border: rgb(220,220,220) solid;
+    border-radius: 5px;
 }
 
 .event-home-card:hover{
@@ -16,7 +17,8 @@
 }
 
 .notify-home-card {
-    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0 1px 2px;
+    border-radius: 5px;
     border: rgb(220,220,220) solid;
     -webkit-box-orient: vertical;
     overflow: hidden;
