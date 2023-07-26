@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query(value = "select e from Event e join Scope s on e.scope.id = s.id where s.title like :className")
-    List<Event> findEventsByClassName(@Param("className")String className);
+    List<Event> findEventsByClassNameOrderByCreatedAtDesc(@Param("className")String className);
 
     @Query(value = "select e from Event e join Scope s on e.scope.id = s.id where s.title like :gradeName")
-    List<Event> findEventsByGradeName(@Param("gradeName")String gradeName);
+    List<Event> findEventsByGradeNameOrderByCreatedAtDesc(@Param("gradeName")String gradeName);
 
     @Query(value = "select e from Event e join Scope s on e.scope.id = s.id where s.title like 'Toàn trường'")
-    List<Event> findEventsBySchoolWide();
+    List<Event> findEventsBySchoolWideOrderByCreatedAtDesc();
 }

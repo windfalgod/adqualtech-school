@@ -10,5 +10,4 @@ public interface EventService {
     List<EventDTO> getEventsByGradeName(String gradeName);
     List<EventDTO> getEventsBySchoolWide();
     List<EventDTO> getEventsByStudentAccount(Long id);
-    List<EventDTO> sortEventsByCreatedDateRecent(List<EventDTO> eventDTOList);
 }

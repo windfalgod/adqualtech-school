@@ -8,9 +8,9 @@ import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.EventService;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDTO> getEventsByClassName(String className) {
-        List<Event> eventList = eventRepository.findEventsByClassName(className.toLowerCase());
+        List<Event> eventList = eventRepository.findEventsByClassNameOrderByCreatedAtDesc(className.toLowerCase());
         return eventList.stream()
                 .map(event -> modelMapper.map(event, EventDTO.class))
                 .collect(Collectors.toList());
@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDTO> getEventsByGradeName(String gradeName) {
-        List<Event> eventList = eventRepository.findEventsByGradeName(gradeName.toLowerCase());
+        List<Event> eventList = eventRepository.findEventsByGradeNameOrderByCreatedAtDesc(gradeName.toLowerCase());
         return eventList.stream()
                 .map(event -> modelMapper.map(event, EventDTO.class))
                 .collect(Collectors.toList());
@@ -59,7 +59,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDTO> getEventsBySchoolWide() {
-        List<Event> eventList = eventRepository.findEventsBySchoolWide();
+        List<Event> eventList = eventRepository.findEventsBySchoolWideOrderByCreatedAtDesc();
         return eventList.stream()
                 .map(event -> modelMapper.map(event, EventDTO.class))
                 .collect(Collectors.toList());
@@ -68,8 +68,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDTO> getEventsByStudentAccount(Long id) {
         Optional<Account> account = accountService.getAccountById(id);
-        if (account.isEmpty()) {
-            throw new EntityNotFoundException("Not found account by id");
+        if (!account.isPresent()) {
+            throw new NoSuchElementException("Not found account by id");
         }
         String nameClass = account.get().getClassRoom().getName();
         List<EventDTO> classEvents = getEventsByClassName(nameClass);
@@ -77,12 +77,7 @@ public class EventServiceImpl implements EventService {
         List<EventDTO> schoolEvents = getEventsBySchoolWide();
         classEvents.addAll(gradeEvents);
         classEvents.addAll(schoolEvents);
+        classEvents.sort(Comparator.comparing(EventDTO::getCreatedAt).reversed());
         return classEvents;
-    }
-
-    @Override
-    public List<EventDTO> sortEventsByCreatedDateRecent(List<EventDTO> eventDTOList) {
-        eventDTOList.sort(Comparator.comparing(EventDTO::getCreatedAt).reversed());
-        return eventDTOList;
     }
 }

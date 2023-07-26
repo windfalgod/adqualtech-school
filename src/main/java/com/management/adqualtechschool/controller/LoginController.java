@@ -56,8 +56,6 @@ public class LoginController {
             eventDTOList = eventService.getAllEvent();
             notifyDTOList = notifyService.getAllNotify();
         }
-        eventDTOList = eventService.sortEventsByCreatedDateRecent(eventDTOList);
-        notifyDTOList = notifyService.sortNotifiesByCreatedDateRecent(notifyDTOList);
         model.addAttribute("eventList", eventDTOList);
         model.addAttribute("notifyList", notifyDTOList);
         return "pages/home";

@@ -8,9 +8,9 @@ import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.NotifyService;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     public List<NotifyDTO> getNotifiesByClassName(String className) {
-        List<Notify> notifyList = notifyRepository.findNotifiesByClassName(className.toLowerCase());
+        List<Notify> notifyList = notifyRepository.findNotifiesByClassNameOrderByCreatedAtDesc(className.toLowerCase());
         return notifyList.stream()
                 .map(Notify -> modelMapper.map(Notify, NotifyDTO.class))
                 .collect(Collectors.toList());
@@ -51,7 +51,7 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     public List<NotifyDTO> getNotifiesByGradeName(String gradeName) {
-        List<Notify> notifyList = notifyRepository.findNotifiesByGradeName(gradeName.toLowerCase());
+        List<Notify> notifyList = notifyRepository.findNotifiesByGradeNameOrderByCreatedAtDesc(gradeName.toLowerCase());
         return notifyList.stream()
                 .map(Notify -> modelMapper.map(Notify, NotifyDTO.class))
                 .collect(Collectors.toList());
@@ -59,7 +59,7 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     public List<NotifyDTO> getNotifiesBySchoolWide() {
-        List<Notify> notifyList = notifyRepository.findNotifiesBySchoolWide();
+        List<Notify> notifyList = notifyRepository.findNotifiesBySchoolWideOrderByCreatedAtDesc();
         return notifyList.stream()
                 .map(Notify -> modelMapper.map(Notify, NotifyDTO.class))
                 .collect(Collectors.toList());
@@ -68,8 +68,8 @@ public class NotifyServiceImpl implements NotifyService {
     @Override
     public List<NotifyDTO> getNotifiesByStudentAccount(Long id) {
         Optional<Account> account = accountService.getAccountById(id);
-        if (account.isEmpty()) {
-            throw new EntityNotFoundException("Not found account by id");
+        if (!account.isPresent()) {
+            throw new NoSuchElementException("Not found account by id");
         }
         String nameClass = account.get().getClassRoom().getName();
         List<NotifyDTO> classNotifies = getNotifiesByClassName(nameClass);
@@ -77,12 +77,7 @@ public class NotifyServiceImpl implements NotifyService {
         List<NotifyDTO> schoolNotifies = getNotifiesBySchoolWide();
         classNotifies.addAll(gradeNotifies);
         classNotifies.addAll(schoolNotifies);
+        classNotifies.sort(Comparator.comparing(NotifyDTO::getCreatedAt).reversed());
         return classNotifies;
-    }
-
-    @Override
-    public List<NotifyDTO> sortNotifiesByCreatedDateRecent(List<NotifyDTO> notifyDTOList) {
-        notifyDTOList.sort(Comparator.comparing(NotifyDTO::getCreatedAt).reversed());
-        return notifyDTOList;
     }
 }

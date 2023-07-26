@@ -10,5 +10,4 @@ public interface NotifyService {
     List<NotifyDTO> getNotifiesByGradeName(String gradeName);
     List<NotifyDTO> getNotifiesBySchoolWide();
     List<NotifyDTO> getNotifiesByStudentAccount(Long id);
-    List<NotifyDTO> sortNotifiesByCreatedDateRecent(List<NotifyDTO> notifyDTOList);
 }
