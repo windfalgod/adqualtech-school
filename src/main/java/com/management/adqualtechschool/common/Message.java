@@ -19,6 +19,10 @@ public class Message {
     public final static String NOT_FOUND_ACCOUNT_ID = "Not found account by id!";
     public final static String NOT_FOUND_ACCOUNT_USERNAME = "Not found account by username ";
     public final static String NOT_FOUND_EVENT = "Not found event!";
-    public final static String NOT_FOUND_SCOPE= "Not found scope ";
-    public final static String NO_IMAGE= "Not found image name!";
+    public final static String NOT_FOUND_SCOPE = "Not found scope ";
+    public final static String NO_IMAGE = "Not found image name!";
+    public final static String CHANGE_PWD_SUCCESS = "Cập nhật mật khẩu thành công";
+    public final static String CHANGE_PWD_FAILED = "Cập nhật mật khẩu thành công";
+    public final static String PASSWORD_NOT_NULL = "Cập nhật mật khẩu thành công";
+    public final static String PASSWORD_REGEXP = "Mật khẩu phải chứa 1 chữ số, 1 chữ in hoa, 1 chữ thường, 1 ký tự đặc biệt";
 }

@@ -12,6 +12,7 @@ import javax.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
@@ -24,6 +25,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -62,5 +66,16 @@ public class AccountServiceImpl implements AccountService {
         return accountList.stream()
                 .map(account -> modelMapper.map(account, AccountDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void changePassword(AccountCreationDTO account, String passwordNew) {
+        Optional<Account> accountOptional = accountRepository.findById(account.getId());
+        if (!accountOptional.isPresent()) {
+            throw new EntityNotFoundException(NOT_FOUND_ACCOUNT_USERNAME);
+        }
+        Account accountSave = accountOptional.orElse(null);
+        accountSave.setPassword(encoder.encode(passwordNew));
+        accountRepository.save(accountSave);
     }
 }
