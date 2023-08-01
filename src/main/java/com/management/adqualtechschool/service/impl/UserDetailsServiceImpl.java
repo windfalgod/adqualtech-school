@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_USERNAME;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -18,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AccountCreationDTO accountDTO = accountService.getAccountCreationByUsername(username);
         if (accountDTO == null) {
-            throw new UsernameNotFoundException("Not found username");
+            throw new UsernameNotFoundException(NOT_FOUND_ACCOUNT_USERNAME);
         }
         return new AccountDetailsImpl(accountDTO);
     }
