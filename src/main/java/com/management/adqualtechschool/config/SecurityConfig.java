@@ -53,6 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/dist/**",
                         "/lib/**",
                         "/fontawesome/**",
+                        "/tinymce/**",
+                        "eventImages/**",
+                        "accountImages/**",
+                        "datetimepicker/**",
                         "/static/favicon.ico"
                         )
                 .permitAll()
