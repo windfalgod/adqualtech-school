@@ -32,7 +32,7 @@ public class AccountController {
     }
 
     @PostMapping("doing-change")
-    public String postChangePwd(@RequestParam("passwordNew") String passwordNew,
+    public String postChangePwd(@RequestParam("newPassword") String passwordNew,
                                 @Valid @ModelAttribute("account") AccountCreationDTO account,
                                 BindingResult result,
                                 Authentication auth,
