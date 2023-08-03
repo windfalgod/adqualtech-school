@@ -56,7 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/tinymce/**",
                         "eventImages/**",
                         "accountImages/**",
-                        "datetimepicker/**",
                         "/static/favicon.ico"
                         )
                 .permitAll()
