@@ -12,14 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
-        image: mysql:latest
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_ROOT_PASSWORD:
-          MYSQL_DATABASE: adqualtech-school
-
     steps:
       - uses: actions/checkout@v2
         with:
@@ -45,7 +37,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_JDBC_URL: jdbc:mysql://localhost:3306/adqualtech-school
-          SONAR_JDBC_USERNAME: root
-          SONAR_JDBC_PASSWORD:
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TTS_Java_Nguyen_Xuan_Nghia -Dsonar.projectName='TTS_Java_Nguyen_Xuan_Nghia'
