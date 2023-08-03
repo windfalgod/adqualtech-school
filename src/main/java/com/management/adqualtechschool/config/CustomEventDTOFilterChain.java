@@ -23,27 +23,27 @@ public class CustomEventDTOFilterChain {
 
     public CustomEventDTOFilterChain filterByStartAt(LocalDateTime startAt) {
         if (startAt == null) {
-            return this;
+            return new CustomEventDTOFilterChain(eventDTOList);
         }
         eventDTOList = eventDTOList.stream()
                 .filter(eventDTO -> eventDTO.getStartAt().isAfter(startAt))
                 .collect(Collectors.toList());
-       return this;
+       return new CustomEventDTOFilterChain(eventDTOList);
     }
 
     public CustomEventDTOFilterChain filterByEndAt(LocalDateTime endAt) {
         if (endAt == null) {
-            return this;
+            return new CustomEventDTOFilterChain(eventDTOList);
         }
         eventDTOList = eventDTOList.stream()
                 .filter(eventDTO -> eventDTO.getEndAt().isBefore(endAt))
                 .collect(Collectors.toList());
-        return this;
+        return new CustomEventDTOFilterChain(eventDTOList);
     }
 
     public CustomEventDTOFilterChain filterByCreatedAt(String createdAt) {
         if (createdAt == null) {
-            return this;
+            return new CustomEventDTOFilterChain(eventDTOList);
         }
         eventDTOList = eventDTOList.stream()
                 .filter(eventDTO -> {
@@ -70,30 +70,30 @@ public class CustomEventDTOFilterChain {
                     }
                 })
                 .collect(Collectors.toList());
-        return this;
+        return new CustomEventDTOFilterChain(eventDTOList);
     }
 
     public CustomEventDTOFilterChain filterByScopeName(String scopeName) {
         if(scopeName == null) {
-            return this;
+            return new CustomEventDTOFilterChain(eventDTOList);
         }
 
         if (scopeName.equals(SCOPE)) {
-            return this;
+            return new CustomEventDTOFilterChain(eventDTOList);
         }
 
         eventDTOList = eventDTOList.stream()
                 .filter(eventDTO -> eventDTO.getScope().getTitle().equals(scopeName))
                 .collect(Collectors.toList());
-        return this;
+        return new CustomEventDTOFilterChain(eventDTOList);
     }
 
     public CustomEventDTOFilterChain filterByCreatorName(String creatorName) {
         if (creatorName == null) {
-            return this;
+            return new CustomEventDTOFilterChain(eventDTOList);
         }
         if (creatorName.equals(CREATOR)) {
-            return this;
+            return new CustomEventDTOFilterChain(eventDTOList);
         }
         eventDTOList = eventDTOList.stream()
                 .filter(eventDTO -> (eventDTO.getCreator().getLastName()
@@ -101,7 +101,7 @@ public class CustomEventDTOFilterChain {
                         + eventDTO.getCreator().getFirstName())
                         .equals(creatorName))
                 .collect(Collectors.toList());
-        return this;
+        return new CustomEventDTOFilterChain(eventDTOList);
     }
 
     public List<EventDTO> getEventDTOList() {
