@@ -20,8 +20,8 @@ public class Message {
     public final static String UPDATE_RULE_FAILED = "Cập nhật nội quy không thành công!";
     public final static String DELETE_RULE_SUCCESS= "Cập nhật nội quy thành công!";
     public final static String DELETE_RULE_FAILED = "Cập nhật nội quy không thành công!";
-    public final static String START_BEFORE_END = "Thời gian diễn ra luôn trước thời gian kết thúc sự kiện!";
-    public final static String CREATE_BEFORE_START = "Thời gian tạo sự kiện luôn trước thời gian diễn ra sự kiện!";
+    public final static String START_BEFORE_END_RULE = "Thời gian bắt đầu luôn trước thời gian kết thúc nội quy!";
+    public final static String CREATE_BEFORE_START_RULE = "Thời gian tạo luôn trước thời gian bắt đầu nội quy!";
     public final static String NOT_FOUND_ACCOUNT_ID = "Not found account by id!";
     public final static String NOT_FOUND_ACCOUNT_USERNAME = "Not found account by username ";
     public final static String NOT_FOUND_EVENT = "Not found event!";

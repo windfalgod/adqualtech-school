@@ -98,11 +98,11 @@ public class EventServiceImpl implements EventService {
         event.setUpdatedAt(LocalDateTime.now());
 
         if (event.getStartAt().isAfter(event.getEndAt())) {
-            throw new DateTimeException(Message.START_BEFORE_END);
+            throw new DateTimeException(Message.START_BEFORE_END_RULE);
         }
 
         if (event.getStartAt().isBefore(event.getCreatedAt())) {
-            throw new DateTimeException(Message.CREATE_BEFORE_START);
+            throw new DateTimeException(Message.CREATE_BEFORE_START_RULE);
         }
 
         String imageName = String.valueOf(imageUpload.getOriginalFilename());

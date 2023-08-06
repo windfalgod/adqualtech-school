@@ -88,10 +88,10 @@ public class RuleServiceImpl implements RuleService {
         rule.setUpdatedAt(LocalDateTime.now());
 
         if (rule.getStartAt().isAfter(rule.getEndAt())) {
-            throw new DateTimeException(Message.START_BEFORE_END);
+            throw new DateTimeException(Message.START_BEFORE_END_RULE);
         }
         if (rule.getStartAt().isBefore(rule.getCreatedAt())) {
-            throw new DateTimeException(Message.CREATE_BEFORE_START);
+            throw new DateTimeException(Message.CREATE_BEFORE_START_RULE);
         }
         ruleRepository.save(modelMapper.map(rule, Rule.class));
     }
