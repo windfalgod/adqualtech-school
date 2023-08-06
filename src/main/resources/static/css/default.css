@@ -1,4 +1,4 @@
-.events-search-icon {
+.search-icon {
     right: 160px;
     cursor: pointer;
 }
@@ -21,26 +21,26 @@
     margin-top: 22px;
 }
 
-#form-search-event {
+#form-search {
     padding-right: 35px;
 }
 
-.events-search-button {
+.search-button {
     height: 38px;
     width: 120px;
     margin-left: 20px;
 }
 
-.row-event-value {
+.row-value {
     height: 100px;
     vertical-align: middle;
 }
 
-.row-event-value .title-td {
+.row-value .title-td {
     width: 280px;
 }
 
-.row-event-value .id-td {
+.row-value .id-td {
     text-align: center;
 }
 
@@ -55,4 +55,12 @@
 
 .page-item .disabled {
     color: darkgray;
+}
+
+.button-control {
+    width: 30px;
+}
+
+.detail-container {
+    box-shadow: rgba(0, 0, 0, 0.35) 10px 10px 10px 10px;
 }
