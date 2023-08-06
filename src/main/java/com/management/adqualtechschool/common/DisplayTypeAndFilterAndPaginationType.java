@@ -20,5 +20,6 @@ public class DisplayTypeAndFilterAndPaginationType {
     public final static String END_AT = "endAt";
     public final static String CURRENT_PAGE = "currentPage";
     public final static String PAGE_NUMBERS = "pageNumbers";
-
+    public final static String SCOPE_NAME= "scopeName";
+    public final static String CREATOR_NAME= "creatorName";
 }

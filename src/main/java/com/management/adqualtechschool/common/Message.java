@@ -21,6 +21,4 @@ public class Message {
     public final static String NOT_FOUND_EVENT = "Not found event!";
     public final static String NOT_FOUND_SCOPE= "Not found scope ";
     public final static String NO_IMAGE= "Not found image name!";
-    public final static String SCOPE_NAME= "scopeName";
-    public final static String CREATOR_NAME= "creatorName";
 }
