@@ -15,10 +15,12 @@ public class Message {
     public final static String UPDATE_EVENT_SUCCESS = "Cập nhật sự kiện thành công!";
     public final static String UPDATE_EVENT_FAILED = "Cập nhật sự kiện không thành công!";
     public final static String START_BEFORE_END = "Thời gian diễn ra luôn trước thời gian kết thúc sự kiện!";
-    public final static String CREATE_BEFORE_START = "Thời gian diễn ra luôn trước thời gian kết thúc sự kiện!";
+    public final static String CREATE_BEFORE_START = "Thời gian tạo sự kiện luôn trước thời gian diễn ra sự kiện!";
     public final static String NOT_FOUND_ACCOUNT_ID = "Not found account by id!";
     public final static String NOT_FOUND_ACCOUNT_USERNAME = "Not found account by username ";
     public final static String NOT_FOUND_EVENT = "Not found event!";
     public final static String NOT_FOUND_SCOPE= "Not found scope ";
     public final static String NO_IMAGE= "Not found image name!";
+    public final static String SCOPE_NAME= "scopeName";
+    public final static String CREATOR_NAME= "creatorName";
 }
