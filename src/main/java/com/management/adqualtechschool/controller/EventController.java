@@ -177,8 +177,10 @@ public class EventController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
     public String postCreateEvent(@Valid @ModelAttribute("event") EventDTO event,
                                   BindingResult result, Authentication auth,
-                                  RedirectAttributes attr) {
+                                  Model model, RedirectAttributes attr) {
         if (result.hasErrors()) {
+            List<ScopeDTO> scopeList = scopeService.getAllScope();
+            model.addAttribute(SCOPE_LIST, scopeList);
             return "pages/event/create";
         }
         MultipartFile imageUpload = event.getMultipartFile();
@@ -208,9 +210,10 @@ public class EventController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
     public String postEditEvent(@Valid @ModelAttribute("event") EventDTO event,
                                 BindingResult result, Authentication auth,
-                                Model model,
-                                RedirectAttributes attr) {
+                                Model model, RedirectAttributes attr) {
         if (result.hasErrors()) {
+            List<ScopeDTO> scopeList = scopeService.getAllScope();
+            model.addAttribute(SCOPE_LIST, scopeList);
             return "pages/event/edit";
         }
         MultipartFile imageUpload = event.getMultipartFile();
