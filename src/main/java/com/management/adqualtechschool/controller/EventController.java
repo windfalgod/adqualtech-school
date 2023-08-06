@@ -43,9 +43,11 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TYPE;
 import static com.management.adqualtechschool.common.Message.CREATE_EVENT_FAILED;
 import static com.management.adqualtechschool.common.Message.CREATE_EVENT_SUCCESS;
+import static com.management.adqualtechschool.common.Message.CREATOR_NAME;
 import static com.management.adqualtechschool.common.Message.DELETE_EVENT_FAILED;
 import static com.management.adqualtechschool.common.Message.DELETE_EVENT_SUCCESS;
 import static com.management.adqualtechschool.common.Message.FAILED;
+import static com.management.adqualtechschool.common.Message.SCOPE_NAME;
 import static com.management.adqualtechschool.common.Message.SUCCESS;
 import static com.management.adqualtechschool.common.Message.UPDATE_EVENT_FAILED;
 import static com.management.adqualtechschool.common.Message.UPDATE_EVENT_SUCCESS;
@@ -64,17 +66,15 @@ public class EventController {
     private AccountService accountService;
 
     private final static String EVENT = "event";
-    private final static String SCOPE_NAME = "scopeName";
-    private final static String CREATOR_NAME = "creatorName";
+    private final static int PAGE_SIZE = 12;
 
     @GetMapping("")
     public String showEventsPage(Model model, Authentication auth,
                                  @RequestParam("page") Optional<Integer> page) {
             int currentPage = page.orElse(1);
-            int pageSize = 12;
 
             Page<EventDTO> eventDTOPage = eventService
-                    .getListEventsPaginated(PageRequest.of(currentPage - 1, pageSize), auth);
+                    .getListEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth);
 
             model.addAttribute(CURRENT_PAGE, eventDTOPage);
             int totalPages = eventDTOPage.getTotalPages();
@@ -105,10 +105,9 @@ public class EventController {
                                @RequestParam(value = "scopeName", required = false) String scopeName,
                                @RequestParam(value = "creatorName", required = false) String creatorName) {
         int currentPage = page.orElse(1);
-        int pageSize = 12;
 
         Page<EventDTO> eventDTOPage = eventService
-                .filterEventsPaginated(PageRequest.of(currentPage - 1, pageSize),
+                .filterEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE),
                         auth, startAt, endAt, createdAt, scopeName, creatorName);
         model.addAttribute(CURRENT_PAGE, eventDTOPage);
 
@@ -138,9 +137,8 @@ public class EventController {
                                @RequestParam("page") Optional<Integer> page,
                                @RequestParam("search") String search) {
         int currentPage = page.orElse(1);
-        int pageSize = 12;
         Page<EventDTO> eventDTOPage = eventService
-                .searchEventsPaginated(PageRequest.of(currentPage - 1, pageSize), auth, search);
+                .searchEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth, search);
         model.addAttribute(CURRENT_PAGE, eventDTOPage);
 
         int totalPages = eventDTOPage.getTotalPages();

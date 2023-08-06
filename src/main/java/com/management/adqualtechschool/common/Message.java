@@ -15,7 +15,7 @@ public class Message {
     public final static String UPDATE_EVENT_SUCCESS = "Cập nhật sự kiện thành công!";
     public final static String UPDATE_EVENT_FAILED = "Cập nhật sự kiện không thành công!";
     public final static String START_BEFORE_END = "Thời gian diễn ra luôn trước thời gian kết thúc sự kiện!";
-    public final static String CREATE_BEFORE_START = "Thời gian diễn ra luôn trước thời gian kết thúc sự kiện!";
+    public final static String CREATE_BEFORE_START = "Thời gian tạo sự kiện luôn trước thời gian diễn ra sự kiện!";
     public final static String NOT_FOUND_ACCOUNT_ID = "Not found account by id!";
     public final static String NOT_FOUND_ACCOUNT_USERNAME = "Not found account by username ";
     public final static String NOT_FOUND_EVENT = "Not found event!";
@@ -25,4 +25,6 @@ public class Message {
     public final static String CHANGE_PWD_FAILED = "Cập nhật mật khẩu thành công";
     public final static String PASSWORD_NOT_NULL = "Cập nhật mật khẩu thành công";
     public final static String PASSWORD_REGEXP = "Mật khẩu phải chứa 1 chữ số, 1 chữ in hoa, 1 chữ thường, 1 ký tự đặc biệt";
+    public final static String SCOPE_NAME= "scopeName";
+    public final static String CREATOR_NAME= "creatorName";
 }

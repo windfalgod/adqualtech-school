@@ -89,8 +89,11 @@ public class EventServiceImpl implements EventService {
         }
         event.setScope(modelMapper.map(scopeDTO, Scope.class));
 
-        if (event.getCreatedAt() == null) {
+        if (event.getId() == null) {
             event.setCreatedAt(LocalDateTime.now());
+        } else {
+            eventRepository.findById(event.getId())
+                    .ifPresent(eventSaved -> event.setCreatedAt(eventSaved.getCreatedAt()));
         }
         event.setUpdatedAt(LocalDateTime.now());
 
