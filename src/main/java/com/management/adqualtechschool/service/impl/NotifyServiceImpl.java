@@ -74,9 +74,8 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     public void saveOrUpdateNotify(NotifyDTO notify, String username) {
-        AccountDTO accountDTO = accountService.getAccountByUsername(username);
-        notify.setCreator(modelMapper.map(accountDTO, Account.class));
-
+        notify.setCreator(modelMapper
+                .map(accountService.getAccountByUsername(username), Account.class));
         ScopeDTO scopeDTO;
         if (notify.getScope().getTitle().equals(SCOPE)) {
             scopeDTO = scopeService.getScopeByTitle(SCHOOL_WIDE);
