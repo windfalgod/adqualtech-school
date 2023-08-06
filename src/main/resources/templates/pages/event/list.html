@@ -31,11 +31,11 @@
     <div class="col-12 position-relative">
       <form th:action="@{/events/search}" method="get"
             class="form-search d-flex flex-row align-items-center w-100">
-        <i class="fa fa-search position-absolute events-search-icon"></i>
-        <label for="form-search-events"></label>
+        <i class="fa fa-search position-absolute search-icon"></i>
+        <label for="form-search"></label>
         <input type="text" class="form-control form-input rounded w-100"
-               id="form-search-events" name="search" placeholder="Search anything...">
-        <button type="submit" class="btn btn-primary events-search-button">Tìm kiếm</button>
+               id="form-search" name="search" placeholder="Search anything...">
+        <button type="submit" class="btn btn-primary search-button">Tìm kiếm</button>
       </form>
     </div>
   </div>
@@ -123,7 +123,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr th:each="event : ${currentPage}" class="row-event-value">
+      <tr th:each="event : ${currentPage}" class="row-value">
         <td th:text="${event.id}" class="id-td"></td>
         <td th:text="${event.title}" class="title-td"></td>
         <td th:text="${event.scope.title}"></td>
@@ -131,10 +131,14 @@
         <td th:text="${#temporals.format(event.endAt, 'HH:mm dd/MM/yyyy')}"></td>
         <td th:text="${#temporals.format(event.createdAt, 'HH:mm dd/MM/yyyy')}"></td>
         <td th:text="${event.creator.lastName} + ' ' + ${event.creator.firstName}"></td>
-        <td><a th:href="@{'/events/' + ${event.id}}" class="btn btn-success">Xem</a></td>
-        <td><a th:href="@{/events/edit(id=${event.id})}" class="btn btn-warning"
-               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a></td>
-        <td>
+        <td class="button-control">
+          <a th:href="@{'/events/' + ${event.id}}" class="btn btn-success">Xem</a>
+        </td>
+        <td class="button-control">
+          <a th:href="@{/events/edit(id=${event.id})}" class="btn btn-warning"
+               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
+        </td>
+        <td class="button-control">
           <form th:action="@{/events/delete}" method="post">
           <input type="hidden" name="id" th:value="${event.id}" />
           <button type="submit" class="btn btn-danger"
