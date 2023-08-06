@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết nội quy</title>
+</head>
+<body>
+<div class="rules-create-wrapper p-4" th:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/rules">Danh sách nội quy</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page" th:text="${rule.id}">
+            </li>
+        </ol>
+    </nav>
+
+    <h3 class="rule-detail-title mt-5 mb-5">Chi tiết nội quy</h3>
+    <div class="button-update-rule-wrapper d-flex flex-row justify-content-end mt-4 mb-4 rounded"
+         sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">
+        <a th:href="@{/rules/edit(id=${rule.id})}" class="btn btn-primary me-2">Cập nhật</a>
+        <form th:action="@{/rules/delete}" method="post" class="delete-form me-2">
+            <input type="hidden" name="id" th:value="${rule.id}" />
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('Bạn có chắc muốn xóa nội quy này?')">Xóa</button>
+        </form>
+    </div>
+
+    <div class="detail-rule-container d-flex flex-column">
+        <h4 th:text="${rule.title}" class="text-center fw-bold mb-4"></h4>
+        <div class="rule-detail-content mx-3">
+            <div class="start-date-detail d-flex">
+                <p><strong>Thời gian diễn ra:</strong></p>
+                <p class="rule-start-date ms-2"
+                   th:text="${#temporals.format(rule.startAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+            <div class="end-date-detail d-flex mb-4">
+                <p><strong>Thời gian kết thúc:</strong></p>
+                <p class="rule-end-date ms-2"
+                   th:text="${#temporals.format(rule.endAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+            <div class="rule-content" th:utext="${rule.content}"></div>
+            <div class="created-date-detail d-flex mt-4">
+                <p><strong>Thời gian tạo:</strong></p>
+                <p class="rule-created-at ms-2"
+                   th:text="${#temporals.format(rule.createdAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+            <div class="updated-date-detail d-flex">
+                <p><strong>Thời gian cập nhật:</strong></p>
+                <p class="rule-updated-at ms-2"
+                   th:text="${#temporals.format(rule.updatedAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+           <div class="creator-detail d-flex">
+               <p><strong>Người tạo:</strong></p>
+               <p class="rule-creator ms-2"
+                  th:text="${rule.creator.lastName + ' ' + rule.creator.firstName}"></p>
+           </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
