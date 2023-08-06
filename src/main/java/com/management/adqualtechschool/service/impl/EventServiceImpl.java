@@ -89,17 +89,20 @@ public class EventServiceImpl implements EventService {
         }
         event.setScope(modelMapper.map(scopeDTO, Scope.class));
 
-        if (event.getCreatedAt() == null) {
+        if (event.getId() == null) {
             event.setCreatedAt(LocalDateTime.now());
+        } else {
+            eventRepository.findById(event.getId())
+                    .ifPresent(eventSaved -> event.setCreatedAt(eventSaved.getCreatedAt()));
         }
         event.setUpdatedAt(LocalDateTime.now());
 
         if (event.getStartAt().isAfter(event.getEndAt())) {
-            throw new DateTimeException(Message.START_BEFORE_END);
+            throw new DateTimeException(Message.START_BEFORE_END_EVENT);
         }
 
-        if (event.getStartAt().isBefore(event.getCreatedAt())) {
-            throw new DateTimeException(Message.CREATE_BEFORE_START);
+        if (event.getEndAt().isAfter(event.getCreatedAt())) {
+            throw new DateTimeException(Message.CREATE_BEFORE_END_EVENT);
         }
 
         String imageName = String.valueOf(imageUpload.getOriginalFilename());
