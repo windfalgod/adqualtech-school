@@ -31,11 +31,11 @@
     <div class="col-12 position-relative">
       <form th:action="@{/notifies/search}" method="get"
             class="form-search d-flex flex-row align-items-center w-100">
-        <i class="fa fa-search position-absolute notifies-search-icon"></i>
-        <label for="form-search-notifies"></label>
+        <i class="fa fa-search position-absolute search-icon"></i>
+        <label for="form-search"></label>
         <input type="text" class="form-control form-input rounded w-100"
-               id="form-search-notifies" name="search" placeholder="Search anything...">
-        <button type="submit" class="btn btn-primary notifies-search-button">Tìm kiếm</button>
+               id="form-search" name="search" placeholder="Search anything...">
+        <button type="submit" class="btn btn-primary search-button">Tìm kiếm</button>
       </form>
     </div>
   </div>
@@ -103,20 +103,20 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="notify : ${currentPage}" class="row-notify-value">
+    <tr th:each="notify : ${currentPage}" class="row-value">
       <td th:text="${notify.id}" class="id-td"></td>
       <td th:text="${notify.title}" class="title-td"></td>
       <td th:text="${notify.scope.title}"></td>
       <td th:text="${#temporals.format(notify.createdAt, 'HH:mm dd/MM/yyyy')}"></td>
       <td th:text="${notify.creator.lastName} + ' ' + ${notify.creator.firstName}"></td>
-      <td class="btn-control">
+      <td class="button-control">
         <a th:href="@{'/notifies/' + ${notify.id}}" class="btn btn-success">Xem</a>
       </td>
-      <td class="btn-control">
+      <td class="button-control">
         <a th:href="@{/notifies/edit(id=${notify.id})}" class="btn btn-warning"
              sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
       </td>
-      <td class="btn-control">
+      <td class="button-control">
         <form th:action="@{/notifies/delete}" method="post">
           <input type="hidden" name="id" th:value="${notify.id}" />
           <button type="submit" class="btn btn-danger"
