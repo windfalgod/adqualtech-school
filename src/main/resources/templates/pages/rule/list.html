@@ -31,11 +31,11 @@
     <div class="col-12 position-relative">
       <form th:action="@{/rules/search}" method="get"
             class="form-search d-flex flex-row align-items-center w-100">
-        <i class="fa fa-search position-absolute rules-search-icon"></i>
-        <label for="form-search-rules"></label>
+        <i class="fa fa-search position-absolute search-icon"></i>
+        <label for="form-search"></label>
         <input type="text" class="form-control form-input rounded w-100"
-               id="form-search-rules" name="search" placeholder="Search anything...">
-        <button type="submit" class="btn btn-primary rules-search-button">Tìm kiếm</button>
+               id="form-search" name="search" placeholder="Search anything...">
+        <button type="submit" class="btn btn-primary search-button">Tìm kiếm</button>
       </form>
     </div>
   </div>
@@ -123,7 +123,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr th:each="rule : ${currentPage}" class="row-rule-value">
+      <tr th:each="rule : ${currentPage}" class="row-value">
         <td th:text="${rule.id}" class="id-td"></td>
         <td th:text="${rule.title}" class="title-td"></td>
         <td th:text="${rule.scope.title}"></td>
@@ -131,10 +131,14 @@
         <td th:text="${#temporals.format(rule.endAt, 'HH:mm dd/MM/yyyy')}"></td>
         <td th:text="${#temporals.format(rule.createdAt, 'HH:mm dd/MM/yyyy')}"></td>
         <td th:text="${rule.creator.lastName} + ' ' + ${rule.creator.firstName}"></td>
-        <td><a th:href="@{'/rules/' + ${rule.id}}" class="btn btn-success">Xem</a></td>
-        <td><a th:href="@{/rules/edit(id=${rule.id})}" class="btn btn-warning"
-               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a></td>
-        <td>
+        <td class="button-control">
+          <a th:href="@{'/rules/' + ${rule.id}}" class="btn btn-success">Xem</a>
+        </td>
+        <td class="button-control">
+          <a th:href="@{/rules/edit(id=${rule.id})}" class="btn btn-warning"
+               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
+        </td>
+        <td class="button-control">
           <form th:action="@{/rules/delete}" method="post">
           <input type="hidden" name="id" th:value="${rule.id}" />
           <button type="submit" class="btn btn-danger"
