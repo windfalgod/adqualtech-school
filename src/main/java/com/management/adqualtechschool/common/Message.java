@@ -28,6 +28,4 @@ public class Message {
     public final static String NOT_FOUND_RULE = "Not found rule!";
     public final static String NOT_FOUND_SCOPE= "Not found scope ";
     public final static String NO_IMAGE= "Not found image name!";
-    public final static String SCOPE_NAME= "Not found image name!";
-    public final static String CREATOR_NAME= "Not found image name!";
 }
