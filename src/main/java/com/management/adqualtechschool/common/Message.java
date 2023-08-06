@@ -28,5 +28,6 @@ public class Message {
     public final static String NOT_FOUND_ACCOUNT_USERNAME = "Not found account by username ";
     public final static String NOT_FOUND_EVENT = "Not found event!";
     public final static String NOT_FOUND_SCOPE= "Not found scope ";
+    public final static String NOT_FOUND_RULE= "Not found rule ";
     public final static String NO_IMAGE= "Not found image name!";
 }
