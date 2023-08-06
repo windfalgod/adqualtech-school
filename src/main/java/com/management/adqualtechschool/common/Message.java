@@ -25,6 +25,4 @@ public class Message {
     public final static String CHANGE_PWD_FAILED = "Cập nhật mật khẩu thành công";
     public final static String PASSWORD_NOT_NULL = "Cập nhật mật khẩu thành công";
     public final static String PASSWORD_REGEXP = "Mật khẩu phải chứa 1 chữ số, 1 chữ in hoa, 1 chữ thường, 1 ký tự đặc biệt";
-    public final static String SCOPE_NAME= "scopeName";
-    public final static String CREATOR_NAME= "creatorName";
 }
