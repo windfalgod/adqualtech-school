@@ -22,7 +22,7 @@ jobs:
       - name: Login Dockerhub
         run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Docker build
-        run: docker-compose -f "docker-compose.yml" up -d --build
+        run: docker-compose -f "docker-compose.yml" up
       - name: network
         run: docker run --network bridge appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
 
