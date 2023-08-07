@@ -15,20 +15,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import static com.management.adqualtechschool.common.RoleType.ADMIN;
+import static com.management.adqualtechschool.common.RoleType.STUDENT;
+
 @Controller
 public class LoginController {
-
-    private final static String ROLE_ADMIN = "ROLE_ADMIN";
-    private final static String ROLE_STUDENT = "ROLE_STUDENT";
-
-    @Autowired
-    private AccountService accountService;
-
     @Autowired
     private EventService eventService;
 
     @Autowired
     private NotifyService notifyService;
+
+    private final static String EVENT_LIST = "eventList";
+    private final static String NOTIFY_LIST = "notifyList";
 
     @GetMapping("/login")
     public String login(Model model, Authentication auth) {
@@ -37,7 +36,7 @@ public class LoginController {
             return "login";
         }
         if (auth.getAuthorities().iterator().next()
-                .getAuthority().equals(ROLE_ADMIN)) {
+                .getAuthority().equals(ADMIN)) {
             return "redirect:./admin";
         }
         return "redirect:./";
@@ -49,15 +48,21 @@ public class LoginController {
         List<EventDTO> eventDTOList;
         List<NotifyDTO> notifyDTOList;
         if (auth.getAuthorities().iterator().next()
-                .getAuthority().equals(ROLE_STUDENT)) {
-             eventDTOList = eventService.getEventsByStudentAccount(accountDetails.getId());
-             notifyDTOList = notifyService.getNotifiesByStudentAccount(accountDetails.getId());
+                .getAuthority().equals(STUDENT)) {
+            eventDTOList = eventService.getEventsByStudentAccount(accountDetails.getId());
+            notifyDTOList = notifyService.getNotifiesByStudentAccount(accountDetails.getId());
         } else {
             eventDTOList = eventService.getAllEvent();
             notifyDTOList = notifyService.getAllNotify();
         }
-        model.addAttribute("eventList", eventDTOList);
-        model.addAttribute("notifyList", notifyDTOList);
+        if (eventDTOList.size() > 3) {
+            eventDTOList = eventDTOList.subList(0,3);
+        }
+        if (notifyDTOList.size() > 3) {
+            notifyDTOList = notifyDTOList.subList(0,3);
+        }
+        model.addAttribute(EVENT_LIST, eventDTOList);
+        model.addAttribute(NOTIFY_LIST, notifyDTOList);
         return "pages/home";
     }
 

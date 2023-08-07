@@ -3,6 +3,7 @@
     height: 70px;
     margin-left: 250px;
     box-shadow: 0 2px darkgray;
+    z-index: 100;
 }
 
 .user-header-wrapper {

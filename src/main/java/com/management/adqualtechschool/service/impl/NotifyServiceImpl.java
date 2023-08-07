@@ -1,7 +1,7 @@
 package com.management.adqualtechschool.service.impl;
 
+import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.NotifyDTO;
-import com.management.adqualtechschool.entity.Account;
 import com.management.adqualtechschool.entity.Notify;
 import com.management.adqualtechschool.repository.NotifyRepository;
 import com.management.adqualtechschool.service.AccountService;
@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
 
 @Service
 public class NotifyServiceImpl implements NotifyService {
@@ -67,11 +69,11 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     public List<NotifyDTO> getNotifiesByStudentAccount(Long id) {
-        Optional<Account> account = accountService.getAccountById(id);
-        if (!account.isPresent()) {
-            throw new NoSuchElementException("Not found account by id");
+        AccountDTO account = accountService.getAccountById(id);
+        if (account == null) {
+            throw new NoSuchElementException(NOT_FOUND_ACCOUNT_ID);
         }
-        String nameClass = account.get().getClassRoom().getName();
+        String nameClass = account.getClassRoom().getName();
         List<NotifyDTO> classNotifies = getNotifiesByClassName(nameClass);
         List<NotifyDTO> gradeNotifies = getNotifiesByGradeName(nameClass.substring(0, nameClass.length() - 1));
         List<NotifyDTO> schoolNotifies = getNotifiesBySchoolWide();

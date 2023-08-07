@@ -1,5 +1,6 @@
 package com.management.adqualtechschool.dto;
 
+import com.management.adqualtechschool.entity.Classroom;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ public class AccountDTO {
     private Boolean gender;
     private LocalDateTime birthday;
     private String image;
-    private Long classId;
+    private Classroom classRoom;
     private String address;
     private String phone;
     private String email;

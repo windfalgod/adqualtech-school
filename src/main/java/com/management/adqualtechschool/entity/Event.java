@@ -1,9 +1,9 @@
 package com.management.adqualtechschool.entity;
 
 import java.time.LocalDateTime;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -35,11 +35,11 @@ public class Event {
     @Column(name = "image")
     private String image;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creator_id", referencedColumnName = "id")
     private Account creator;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "scope_id", referencedColumnName = "id")
     private Scope scope;
 

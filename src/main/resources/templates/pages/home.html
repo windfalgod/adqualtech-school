@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{fragments/layout}" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,16 +17,22 @@
         <a href="/events" class="addition-events-home-title d-flex justify-content-end">
             Xem thêm sự kiện >>
         </a>
-        <div class="container-fluid">
+        <div class="container-fluid" th:if="${eventList.size() > 0}">
             <div class="row">
-                <a th:href="@{/event/(id=${event.id})}" class="col p-2 event-home-items" th:each="event : ${eventList}">
+                <a th:href="@{'/events/' + ${event.id}}"
+                   class="col p-2 event-home-items"
+                   th:each="event : ${eventList}">
                     <div class="event-home-card h-100">
-                        <img th:src="${event.image}" alt="anh su kien" class="event-home-image w-100" height="200">
+                        <img th:src="${event.image}" alt="anh su kien"
+                             class="event-home-image w-100" height="200">
                         <h5 class="event-home-title text-center text-dark mt-2 fw-bold"
                             th:text="${event.title}"></h5>
                     </div>
                 </a>
             </div>
+        </div>
+        <div class="container-fluid" th:if="${eventList.size() <= 0}">
+            <h2> Không có sự kiện nào </h2>
         </div>
     </div>
     <div class="notifies-home-group">
@@ -34,16 +42,22 @@
         <a href="/notifies" class="addition-notifies-home-title d-flex justify-content-end">
             Xem thêm thông báo >>
         </a>
-        <div class="container-fluid">
+        <div class="container-fluid" th:if="${notifyList.size() > 0}">
             <div class="row">
-                <a th:href="@{/notify/(id=${notify.id})}" class="col p-2 notify-home-items" th:each="notify : ${notifyList}">
+                <a th:href="@{'/notifies/' + ${notify.id}}"
+                   class="col p-2 notify-home-items"
+                   th:each="notify : ${notifyList}">
                     <div class="notify-home-card h-100">
                         <h5 class="notify-home-title text-center text-dark fw-bold"
                             th:text="${notify.title}"></h5>
-                        <p class="notify-home-content px-1 text-dark" th:text="${notify.content}"></p>
+                        <p class="notify-home-content px-1 text-dark"
+                           th:utext="${notify.content}"></p>
                     </div>
                 </a>
             </div>
+        </div>
+        <div class="container-fluid" th:if="${notifyList.size() <= 0}">
+            <h2> Không có sự kiện nào </h2>
         </div>
     </div>
 </div>

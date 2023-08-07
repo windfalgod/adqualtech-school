@@ -1,10 +1,12 @@
 package com.management.adqualtechschool.service;
 
 import com.management.adqualtechschool.dto.AccountCreationDTO;
-import com.management.adqualtechschool.entity.Account;
-import java.util.Optional;
+import com.management.adqualtechschool.dto.AccountDTO;
+import java.util.List;
 
 public interface AccountService {
     AccountCreationDTO getAccountCreationByUsername(String username);
-    Optional<Account> getAccountById(Long id);
+    AccountDTO getAccountById(Long id);
+    AccountDTO getAccountByUsername(String username);
+    List<AccountDTO> getAllTeacherAdminAccount();
 }

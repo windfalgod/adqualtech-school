@@ -12,14 +12,53 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
-        image: mysql:latest
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_ROOT_PASSWORD:
-          MYSQL_DATABASE: adqualtech-school
+        local-mysql:
+          image: mysql:8.0.34
+          restart: unless-stopped
+          ports:
+            - "3306:3306"
+          env_file: .env
+          environment:
+            MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+            MYSQL_DATABASE: '${MYSQL_DATABASE}'
+            MYSQL_USER: '${MYSQL_USER}'
+            MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+          volumes:
+            - db-data:/var/lib/mysql
+          networks:
+            - spring-network
 
+        phpmyadmin:
+          image: phpmyadmin/phpmyadmin
+          depends_on:
+            - local-mysql
+          restart: unless-stopped
+          ports:
+            - "8081:80"
+          env_file: .env
+          environment:
+            PMA_HOST: local-mysql
+            MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+          networks:
+            - spring-network
+
+        adqualtech-school:
+          image: adqualtech-school
+          depends_on:
+            - local-mysql
+          env_file: .env
+          ports:
+            - "8080:8080"
+          environment:
+            SPRING_DATASOURCE_URL: '${SPRING_DATASOURCE_URL}'
+            SPRING_DATASOURCE_USERNAME: '${MYSQL_USER}'
+            SPRING_DATASOURCE_PASSWORD: '${MYSQL_PASSWORD}'
+          networks:
+            - spring-network
+          volumes:
+            - type: bind
+              source: '${STATIC_DIR}'
+              target: /static
     steps:
       - uses: actions/checkout@v2
         with:
@@ -45,7 +84,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_JDBC_URL: jdbc:mysql://localhost:3306/adqualtech-school
-          SONAR_JDBC_USERNAME: root
-          SONAR_JDBC_PASSWORD:
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TTS_Java_Nguyen_Xuan_Nghia -Dsonar.projectName='TTS_Java_Nguyen_Xuan_Nghia'
+
+volumes:
+  db-data:
+
+networks:
+  spring-network:
+    driver: bridge
