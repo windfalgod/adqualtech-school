@@ -23,7 +23,8 @@ public interface PrepareExamRepository extends JpaRepository<PrepareExam, Long> 
     List<PrepareExam> findAllByScope_TitleOrderByCreatedAtDesc(String title);
 
     @Query(value = "select p from PrepareExam p inner join Account a on a.id = p.creator.id" +
-            " where lower(concat(p.creator.lastName, ' ', p.creator.firstName)) like lower(concat('%', :search, '%'))" +
-            " or lower(p.title) like lower(:search)")
+            " where lower(concat(p.creator.lastName, ' ', p.creator.firstName)) " +
+            "like trim(lower(concat('%', :search, '%')))" +
+            " or lower(p.title) like trim(lower(:search))")
     List<PrepareExam> searchByTitleOrCreatorNameOrderByCreatedAtDesc(@Param("search")String search);
 }
