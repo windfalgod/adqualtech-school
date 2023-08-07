@@ -32,15 +32,13 @@ services:
       - spring-network
 
   adqualtech-school:
-    image: meanori/adqualtech-school:v1
+    image: adqualtech-school
     depends_on:
       - local-mysql
     env_file: .env
     ports:
       - "8080:8080"
     environment:
-      DOCKER_USERNAME: '${DOCKERHUB_USERNAME}'
-      DOCKER_TOKEN: '${DOCKERHUB_TOKEN}'
       SPRING_DATASOURCE_URL: '${SPRING_DATASOURCE_URL}'
       SPRING_DATASOURCE_USERNAME: '${MYSQL_USER}'
       SPRING_DATASOURCE_PASSWORD: '${MYSQL_PASSWORD}'

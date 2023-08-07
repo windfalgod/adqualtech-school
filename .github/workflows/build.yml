@@ -20,11 +20,7 @@ jobs:
           java-version: 11
 
       - name: Login Dockerhub
-        run: |
-          echo docker login docker.pkg.github.com -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-          echo docker image build -t meanori/adqualtech-school:v1
-          echo docker image push meanori/adqualtech-school:v1
-
+        run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up -d --build
       - name: network
