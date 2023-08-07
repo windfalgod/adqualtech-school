@@ -20,7 +20,7 @@ jobs:
           java-version: 11
 
       - name: Login to Dockerhub
-        run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+        run: echo docker login docker.pkg.github.com -u ${{ secrets.DOCKERHUB_USERNAME }} ${{ secrets.DOCKERHUB_PASSWORD }} --password-stdin
 
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up -d --build
