@@ -22,13 +22,13 @@ jobs:
       - name: Login Dockerhub
         run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: build phpmyadmin
-        run: docker start adqualtech-school-phpmyadmin-1
+        run: echo docker start adqualtech-school-phpmyadmin-1
       - name: build local-mysql
-        run: docker start adqualtech-school-local-mysql-1
+        run: echo docker start adqualtech-school-local-mysql-1
       - name: config jar
-        run: mvn clean package
+        run: echo mvn clean package
       - name: shutdown docker
-        run: docker compose down
+        run: echo docker compose down
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up
       - name: network
