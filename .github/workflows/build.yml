@@ -20,7 +20,15 @@ jobs:
           java-version: 11
 
       - name: Docker build
-        run: ./docker-compose build
+        run: docker-compose up -d
+      - name: network
+        run: docker run --network container:adqualtech appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
+        env:
+          MYSQL_ROOT_PASSWORD: {{MYSQL_ROOT_PASSWORD}}
+          MYSQL_DATABASE: {{MYSQL_DATABASE}}
+          MYSQL_USER: {{MYSQL_USER}}
+          MYSQL_PASSWORD: {{MYSQL_PASSWORD}}
+
       - name: Cache SonarQube packages
         uses: actions/cache@v1
         with:
