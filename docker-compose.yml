@@ -32,7 +32,7 @@ services:
       - spring-network
 
   adqualtech-school:
-    image: adqualtech-school
+    image: adqualtech-school:0.0.1-SNAPSHOT.
     depends_on:
       - local-mysql
     env_file: .env
