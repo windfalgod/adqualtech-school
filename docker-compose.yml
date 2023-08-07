@@ -33,6 +33,7 @@ services:
 
   adqualtech-school:
     image: meanori/adqualtech-school
+    build: .
     depends_on:
       - local-mysql
     env_file: .env
