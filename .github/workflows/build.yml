@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - develop
+      - feature/T5_docker_sonar
 
 
 jobs:
@@ -47,10 +47,3 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TTS_Java_Nguyen_Xuan_Nghia -Dsonar.projectName='TTS_Java_Nguyen_Xuan_Nghia'
-
-volumes:
-  db-data:
-
-networks:
-  spring-network:
-    driver: bridge
