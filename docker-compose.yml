@@ -32,10 +32,7 @@ services:
       - spring-network
 
   adqualtech-school:
-    image: adqualtech-school
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: meanori/adqualtech-school
     depends_on:
       - local-mysql
     env_file: .env
