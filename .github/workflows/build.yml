@@ -36,6 +36,9 @@ jobs:
 
       - name: Docker build
         run: echo docker-compose -f "docker-compose.yml" up
+
+      - name: Waiting for service
+        run: sleep 10
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
