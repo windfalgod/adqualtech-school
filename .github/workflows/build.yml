@@ -21,14 +21,14 @@ jobs:
 
       - name: Login Dockerhub
         run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: build phpmyadmin
-        run: echo docker start adqualtech-school-phpmyadmin-1
-      - name: build local-mysql
-        run: echo docker start adqualtech-school-local-mysql-1
-      - name: config jar
-        run: echo mvn clean package
-      - name: shutdown docker
-        run: echo docker compose down
+#      - name: build phpmyadmin
+#        run: echo docker start adqualtech-school-phpmyadmin-1
+#      - name: build local-mysql
+#        run: echo docker start adqualtech-school-local-mysql-1
+#      - name: config jar
+#        run: echo mvn clean package
+#      - name: shutdown docker
+#        run: echo docker compose down
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up
       - name: network
