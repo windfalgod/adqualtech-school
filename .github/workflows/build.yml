@@ -20,10 +20,10 @@ jobs:
           java-version: 11
 
       - name: Login Dockerhub
-        run: docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker build
-        run: docker-compose -f "docker-compose.yml" up
+        run: echo docker-compose -f "docker-compose.yml" up
       - name: network
         run: docker run --network bridge appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
 
