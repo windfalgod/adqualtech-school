@@ -22,7 +22,8 @@ jobs:
       - name: Login Dockerhub
         run: |
           echo docker login docker.pkg.github.com -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-          docker image buildx build --push -t  meanori/adqualtech-school:v1
+          echo docker image build -t meanori/adqualtech-school:v1
+          echo docker image push meanori/adqualtech-school:v1
 
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up -d --build
