@@ -21,7 +21,7 @@ jobs:
 
 
       - name: Login to GitHub Package Registry
-        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ github.repository }} --password-stdin
 
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up -d --build
