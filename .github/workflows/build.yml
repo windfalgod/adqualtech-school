@@ -20,7 +20,7 @@ jobs:
           java-version: 11
 
       - name: Login Dockerhub
-        run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up

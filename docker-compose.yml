@@ -32,7 +32,7 @@ services:
       - spring-network
 
   adqualtech-school:
-    image: meanori/adqualtech-school
+    image: meanori/adqualtech-school:latest
     depends_on:
       - local-mysql
     env_file: .env
