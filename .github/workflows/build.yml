@@ -19,9 +19,14 @@ jobs:
         with:
           java-version: 11
 
+      - name: Log in to Docker Hub
+        run: docker login docker.pkg.github.com -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Login to GitHub Package Registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ github.repository }} --password-stdin
+      - name: Build Docker image
+        run: docker build -t docker.pkg.github.com/meanori/adqualtech-school/adqualtech-school:latest .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push docker.pkg.github.com/meanori/adqualtech-school/adqualtech-school:latest
 
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up -d --build
