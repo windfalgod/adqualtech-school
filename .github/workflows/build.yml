@@ -18,9 +18,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - uses: actions/checkout@v3
       - name: Docker build
-        run: docker-compose up -d
+        run: docker-compose -f "docker-compose.yml" up -d --build
       - name: network
         run: docker run --network container:adqualtech appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
         env:
