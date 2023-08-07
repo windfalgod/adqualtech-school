@@ -1,7 +1,12 @@
 FROM openjdk:11-jdk
-RUN docker start adqualtech-school-phpmyadmin-1
-RUN docker start adqualtech-school-local-mysql-1
-RUN mvn clean package \
-Run docker compose down
+WORKDIR /adqualtech-school
+
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+COPY src/ ./src/
+
+# Build the application
+RUN mvn package
 COPY target/adqualtech-school.jar adqualtech-school.jar
 ENTRYPOINT ["java", "-jar", "/adqualtech-school.jar"]
