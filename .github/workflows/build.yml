@@ -19,14 +19,6 @@ jobs:
         with:
           java-version: 11
 
-      - name: Login Dockerhub
-        run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Docker build
-        run: echo docker-compose -f "docker-compose.yml" up
-#      - name: network
-#        run: docker run --network bridge appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
-
       - name: Cache SonarQube packages
         uses: actions/cache@v1
         with:
@@ -39,6 +31,11 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      - name: Login Dockerhub
+        run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Docker build
+        run: echo docker-compose -f "docker-compose.yml" up
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
