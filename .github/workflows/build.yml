@@ -20,6 +20,8 @@ jobs:
           java-version: 11
       - name: build docker
         run: docker-compose up -d
+      - name: Test
+        run: docker run --network container:adqualtech-school appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
       - name: Cache SonarQube packages
         uses: actions/cache@v1
         with:
