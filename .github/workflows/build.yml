@@ -23,7 +23,10 @@ jobs:
         run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: config jar
-        uses: ./Dockerfile
+      - uses: actions/checkout@v3
+        with:
+          path: ./Dockerfile
+
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up
       - name: network
