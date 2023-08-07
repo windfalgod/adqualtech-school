@@ -21,7 +21,7 @@ jobs:
 
       - name: Login Dockerhub
         run: |
-          echo docker login docker.pkg.github.com -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_USERNAME }}
+          echo docker login docker.pkg.github.com -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
           docker image build -t meanori/adqualtech-school:v1
           docker image push meanori/adqualtech-school:v1
 
