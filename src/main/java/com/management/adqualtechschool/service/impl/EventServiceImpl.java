@@ -60,7 +60,7 @@ public class EventServiceImpl implements EventService {
     private ScopeService scopeService;
 
     @Value("${spring.servlet.multipart.location}")
-    private String uploadDir;
+    private String staticDir;
 
     @Override
     public EventDTO getEventById(Long id) {
@@ -101,7 +101,7 @@ public class EventServiceImpl implements EventService {
             throw new DateTimeException(Message.START_BEFORE_END_EVENT);
         }
 
-        if (event.getEndAt().isAfter(event.getCreatedAt())) {
+        if (event.getEndAt().isBefore(event.getCreatedAt())) {
             throw new DateTimeException(Message.CREATE_BEFORE_END_EVENT);
         }
 
@@ -112,7 +112,7 @@ public class EventServiceImpl implements EventService {
         try {
             byte[] imageBytes = imageUpload.getBytes();
             if (!(eventImagesDir + imageName).equals(event.getImage())) {
-                Path imagePath = Paths.get(uploadDir + eventImagesDir , imageName);
+                Path imagePath = Path.of(staticDir + eventImagesDir + imageName);
                 Files.write(imagePath, imageBytes);
             }
             event.setImage(eventImagesDir + imageName);

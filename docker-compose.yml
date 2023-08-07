@@ -44,6 +44,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: '${MYSQL_PASSWORD}'
     networks:
       - spring-network
+    volumes:
+      - type: bind
+        source: '${STATIC_DIR}'
+        target: /static
 
 volumes:
   db-data:
