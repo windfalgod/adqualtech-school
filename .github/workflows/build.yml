@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - feature/T5_docker_sonar
+      - develop
 
 
 jobs:
@@ -31,6 +31,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
       - name: Login Dockerhub
         run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
 
