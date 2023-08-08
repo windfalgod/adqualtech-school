@@ -22,4 +22,5 @@ public class DisplayTypeAndFilterAndPaginationType {
     public final static String PAGE_NUMBERS = "pageNumbers";
     public final static String SCOPE_NAME= "scopeName";
     public final static String CREATOR_NAME= "creatorName";
+    public final static String SUBJECT_LIST = "subjectList";
 }
