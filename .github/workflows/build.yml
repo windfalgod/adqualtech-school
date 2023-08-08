@@ -41,7 +41,7 @@ jobs:
         run: docker-compose up -d
 
       - name: Check network Sonar
-        run: curl http://192.168.0.179:9001
+        run: ping 192.168.0.179
 
       - name: Build and analyze
         env:
