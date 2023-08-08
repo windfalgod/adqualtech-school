@@ -5,9 +5,13 @@ public class Message {
     public final static String FAILED = "failed";
     public final static String EVENT_TITLE_NOT_EMPTY = "Tên tiêu đề sự kiện không được để trống!";
     public final static String EVENT_CONTENT_NOT_EMPTY = "Nội dung sự kiện không được để trống!";
+    public final static String RULE_TITLE_NOT_EMPTY = "Tên tiêu đề nội quy không được để trống!";
+    public final static String RULE_CONTENT_NOT_EMPTY = "Nội dung nội quy không được để trống!";
     public final static String EVENT_IMAGE_NOT_EMPTY = "Ảnh cho sự kiện không được để trống!";
     public final static String EVENT_START_AT_NOT_NULL = "Thời gian sự kiện diễn ra không được để trống!";
     public final static String EVENT_END_AT_NOT_NULL = "Thời gian sự kiện kết thúc không được để trống!";
+    public final static String RULE_START_AT_NOT_NULL = "Thời gian nội quy có hiệu lực không được để trống!";
+    public final static String RULE_END_AT_NOT_NULL = "Thời gian nội quy hết hiệu lực không được để trống!";
     public final static String CREATE_EVENT_SUCCESS = "Thêm sự kiện thành công!";
     public final static String CREATE_EVENT_FAILED = "Thêm sự kiện không thành công!";
     public final static String UPDATE_EVENT_SUCCESS = "Cập nhật sự kiện thành công!";
@@ -18,8 +22,8 @@ public class Message {
     public final static String CREATE_RULE_FAILED = "Thêm nội quy không thành công!";
     public final static String UPDATE_RULE_SUCCESS = "Cập nhật nội quy thành công!";
     public final static String UPDATE_RULE_FAILED = "Cập nhật nội quy không thành công!";
-    public final static String DELETE_RULE_SUCCESS= "Cập nhật nội quy thành công!";
-    public final static String DELETE_RULE_FAILED = "Cập nhật nội quy không thành công!";
+    public final static String DELETE_RULE_SUCCESS= "Xóa nội quy thành công!";
+    public final static String DELETE_RULE_FAILED = "Xóa nội quy không thành công!";
     public final static String START_BEFORE_END_EVENT = "Thời gian diễn ra luôn trước thời gian kết thúc sự kiện!";
     public final static String CREATE_BEFORE_END_EVENT = "Thời gian tạo luôn trước thời gian kết thúc sự kiện!";
     public final static String START_BEFORE_END_RULE = "Thời gian bắt đầu luôn trước thời gian kết thúc nội quy!";

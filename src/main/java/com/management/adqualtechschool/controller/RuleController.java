@@ -1,6 +1,7 @@
 package com.management.adqualtechschool.controller;
 
 import com.management.adqualtechschool.dto.AccountDTO;
+import com.management.adqualtechschool.dto.EventDTO;
 import com.management.adqualtechschool.dto.RuleDTO;
 import com.management.adqualtechschool.dto.ScopeDTO;
 import com.management.adqualtechschool.service.AccountService;
@@ -75,21 +76,9 @@ public class RuleController {
         Page<RuleDTO> ruleDTOPage = ruleService
                 .getListRulesPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth);
 
-        model.addAttribute(CURRENT_PAGE, ruleDTOPage);
-        int totalPages = ruleDTOPage.getTotalPages();
-
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-
-        List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        definedCurrentPageAndAddAttrToModel(model, ruleDTOPage);
+        addAttrScopeListAndCreatorListToModel(model);
         model.addAttribute(TYPE,LIST);
-        model.addAttribute(SCOPE_LIST, scopeList);
-        model.addAttribute(ACCOUNT_LIST, accountDTOList);
         return "pages/rule/list";
     }
 
@@ -108,21 +97,10 @@ public class RuleController {
         Page<RuleDTO> ruleDTOPage = ruleService
                 .filterRulesPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE),
                         auth, startAt, endAt, createdAt, scopeName, creatorName);
-        model.addAttribute(CURRENT_PAGE, ruleDTOPage);
 
-        int totalPages = ruleDTOPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-
-        List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        definedCurrentPageAndAddAttrToModel(model, ruleDTOPage);
+        addAttrScopeListAndCreatorListToModel(model);
         model.addAttribute(TYPE,FILTER);
-        model.addAttribute(SCOPE_LIST, scopeList);
-        model.addAttribute(ACCOUNT_LIST, accountDTOList);
         model.addAttribute(START_AT, startAt);
         model.addAttribute(END_AT, endAt);
         model.addAttribute(CREATED_AT, createdAt);
@@ -138,21 +116,11 @@ public class RuleController {
         int currentPage = page.orElse(1);
         Page<RuleDTO> ruleDTOPage = ruleService
                 .searchRulesPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth, search);
-        model.addAttribute(CURRENT_PAGE, ruleDTOPage);
+        definedCurrentPageAndAddAttrToModel(model, ruleDTOPage);
+        addAttrScopeListAndCreatorListToModel(model);
 
-        int totalPages = ruleDTOPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-        List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
         model.addAttribute(TYPE, SEARCH);
         model.addAttribute(SEARCH, search);
-        model.addAttribute(SCOPE_LIST, scopeList);
-        model.addAttribute(ACCOUNT_LIST, accountDTOList);
         return "pages/rule/list";
     }
 
@@ -238,5 +206,23 @@ public class RuleController {
             attr.addFlashAttribute(FAILED, DELETE_RULE_FAILED);
         }
         return "redirect:/rules";
+    }
+
+    private void definedCurrentPageAndAddAttrToModel(Model model, Page<RuleDTO> ruleDTOPage) {
+        model.addAttribute(CURRENT_PAGE, ruleDTOPage);
+        int totalPages = ruleDTOPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute(PAGE_NUMBERS, pageNumbers);
+        }
+    }
+
+    private void addAttrScopeListAndCreatorListToModel(Model model) {
+        List<ScopeDTO> scopeList = scopeService.getAllScope();
+        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        model.addAttribute(SCOPE_LIST, scopeList);
+        model.addAttribute(ACCOUNT_LIST, accountDTOList);
     }
 }
