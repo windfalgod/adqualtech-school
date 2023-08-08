@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sự kiện</title>
+</head>
+<body>
+<div class="events-create-wrapper p-4" th:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/events">Danh sách sự kiện</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page" th:text="${event.id}">
+            </li>
+        </ol>
+    </nav>
+
+    <h3 class="event-detail-title mt-5 mb-5">Chi tiết sự kiện</h3>
+    <div class="button-update-event-wrapper d-flex flex-row justify-content-end mt-4 mb-4 rounded"
+         sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">
+        <a th:href="@{/events/edit(id=${event.id})}" class="btn btn-primary me-2">Cập nhật</a>
+        <form th:action="@{/events/delete}" method="post" class="delete-form me-2">
+            <input type="hidden" name="id" th:value="${event.id}" />
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('Bạn có chắc muốn xóa sự kiện này?')">Xóa</button>
+        </form>
+    </div>
+
+    <div class="detail-container d-flex flex-column">
+        <img th:src="${event.image}" alt="ảnh sự kiện" class="event-image">
+        <h4 th:text="${event.title}" class="text-center fw-bold mb-4"></h4>
+        <div class="event-detail-content mx-3">
+            <div class="start-date-detail d-flex">
+                <p><strong>Thời gian diễn ra:</strong></p>
+                <p class="event-start-date ms-2"
+                   th:text="${#temporals.format(event.startAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+            <div class="end-date-detail d-flex mb-4">
+                <p><strong>Thời gian kết thúc:</strong></p>
+                <p class="event-end-date ms-2"
+                   th:text="${#temporals.format(event.endAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+            <div class="event-content" th:utext="${event.content}"></div>
+            <div class="created-date-detail d-flex mt-4">
+                <p><strong>Thời gian tạo:</strong></p>
+                <p class="event-created-at ms-2"
+                   th:text="${#temporals.format(event.createdAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+            <div class="updated-date-detail d-flex">
+                <p><strong>Thời gian cập nhật:</strong></p>
+                <p class="event-updated-at ms-2"
+                   th:text="${#temporals.format(event.updatedAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+           <div class="creator-detail d-flex">
+               <p><strong>Người tạo:</strong></p>
+               <p class="event-creator ms-2"
+                  th:text="${event.creator.lastName + ' ' + event.creator.firstName}"></p>
+           </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

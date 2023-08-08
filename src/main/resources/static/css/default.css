@@ -1,0 +1,66 @@
+.search-icon {
+    right: 160px;
+    cursor: pointer;
+}
+
+.breadcrumb {
+    background-color: rgb(220,220,220);
+    height: 50px;
+    padding: 10px 10px 10px 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.form-select {
+    margin-top: 22px;
+    width: 15% !important;
+}
+
+.filter-button {
+    margin-top: 22px;
+}
+
+#form-search {
+    padding-right: 35px;
+}
+
+.search-button {
+    height: 38px;
+    width: 120px;
+    margin-left: 20px;
+}
+
+.row-value {
+    height: 100px;
+    vertical-align: middle;
+}
+
+.row-value .title-td {
+    width: 280px;
+}
+
+.row-value .id-td {
+    text-align: center;
+}
+
+.page-link {
+    color: #0d6efd;
+}
+
+.page-item .active {
+    color: white;
+    background-color: #0d6efd;
+}
+
+.page-item .disabled {
+    color: darkgray;
+}
+
+.button-control {
+    width: 30px;
+}
+
+.detail-container {
+    box-shadow: rgba(0, 0, 0, 0.35) 10px 10px 10px 10px;
+}

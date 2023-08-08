@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách sự kiện</title>
+  <script src="/js/jquery/lib/jquery.js"></script>
+  <script src="/js/alert.js"></script>
+</head>
+<body>
+<!--Breadcrumb-->
+<div class="events-content-wrapper p-4" th:fragment="content">
+  <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
+  <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/">Trang chủ</a>
+      </li>
+      <li class="breadcrumb-item active"
+          aria-current="page">Danh sách sự kiện
+      </li>
+    </ol>
+  </nav>
+
+<!--Header of events page-->
+  <div class="row header-events d-flex flex-row align-items-center mb-3 mt-5">
+    <div class="col-12 position-relative">
+      <form th:action="@{/events/search}" method="get"
+            class="form-search d-flex flex-row align-items-center w-100">
+        <i class="fa fa-search position-absolute search-icon"></i>
+        <label for="form-search"></label>
+        <input type="text" class="form-control form-input rounded w-100"
+               id="form-search" name="search" placeholder="Search anything...">
+        <button type="submit" class="btn btn-primary search-button">Tìm kiếm</button>
+      </form>
+    </div>
+  </div>
+
+<!--Filter-->
+  <div class="row filter-event mt-4 mb-3">
+    <div class="select-group col-12 d-flex flex-row">
+      <form th:action="@{/events/filter}" class="row w-100" method="get">
+
+        <!--Filter theo ngày diễn ra sự kiện -->
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="input_from">Ngày diễn ra</label>
+            <input type="date" class="form-control"
+                   id="input_from" placeholder="Start Date" name="startAt" th:value="${startAt}">
+          </div>
+        </div>
+
+        <!--Filter theo ngày kết thúc sự kiện -->
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="input_to">Ngày kết thúc</label>
+            <input type="date" class="form-control"
+                   id="input_to" placeholder="End Date" name="endAt" th:value="${endAt}">
+          </div>
+        </div>
+
+        <!--Filter theo ngày tạo sự kiện -->
+        <select class="form-select" aria-label="Default" name="createdAt">
+          <option>Ngày tạo</option>
+          <option th:selected="${createdAt == 'Hôm nay'}">Hôm nay</option>
+          <option th:selected="${createdAt == 'Hôm qua'}">Hôm qua</option>
+          <option th:selected="${createdAt == '7 Ngày gần đây'}">7 Ngày gần đây</option>
+          <option th:selected="${createdAt == '1 tháng gần đây'}">1 tháng gần đây</option>
+          <option th:selected="${createdAt == '1 năm gần đây'}">1 năm gần đây</option>
+        </select>
+
+        <!--Filter phạm vi sự kiện hoạt động-->
+        <select class="form-select ms-3" aria-label="Default" name="scopeName">
+          <option selected>Phạm vi</option>
+          <option th:each="scope : ${scopeList}"
+                  th:value="${scope.title}"
+                  th:text="${scope.title}"
+                  th:selected="${scopeName == scope.title}">
+          </option>
+        </select>
+
+        <!--Filter theo người tạo sự kiện -->
+        <select class="form-select ms-3" aria-label="Default" name="creatorName">
+          <option selected>Người tạo</option>
+          <option th:each="account : ${accountList}"
+                  th:value="${account.lastName} + ' ' + ${account.firstName}"
+                  th:text="${account.lastName} + ' ' + ${account.firstName}"
+                  th:selected="${creatorName == account.lastName + ' ' + account.firstName}">
+          </option>
+        </select>
+        <div class="col-md-1 ms-3 filter-button">
+          <button type="submit" class="btn btn-primary">Lọc</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<!--Addition button-->
+  <div class="addition-button-wrapper d-flex flex-row justify-content-end">
+    <a th:href="@{/events/create/}" class="btn btn-primary addition-event-button"
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Thêm sự kiện</a>
+  </div>
+
+<!--Table-->
+  <h3 th:if="${currentPage.totalPages <= 0}">Không có sự kiện nào!</h3>
+  <table class="table table-striped table-hover" id="events-table" th:if="${currentPage.totalPages > 0}">
+    <thead>
+      <tr>
+        <th class="text-center">#</th>
+        <th>Tiêu đề</th>
+        <th>Phạm vi</th>
+        <th>Thời gian bắt đầu</th>
+        <th>Thời gian kết thúc</th>
+        <th>Thời gian tạo</th>
+        <th>Người tạo</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="event : ${currentPage}" class="row-value">
+        <td th:text="${event.id}" class="id-td"></td>
+        <td th:text="${event.title}" class="title-td"></td>
+        <td th:text="${event.scope.title}"></td>
+        <td th:text="${#temporals.format(event.startAt, 'HH:mm dd/MM/yyyy')}"></td>
+        <td th:text="${#temporals.format(event.endAt, 'HH:mm dd/MM/yyyy')}"></td>
+        <td th:text="${#temporals.format(event.createdAt, 'HH:mm dd/MM/yyyy')}"></td>
+        <td th:text="${event.creator.lastName} + ' ' + ${event.creator.firstName}"></td>
+        <td class="button-control">
+          <a th:href="@{'/events/' + ${event.id}}" class="btn btn-success">Xem</a>
+        </td>
+        <td class="button-control">
+          <a th:href="@{/events/edit(id=${event.id})}" class="btn btn-warning"
+               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
+        </td>
+        <td class="button-control">
+          <form th:action="@{/events/delete}" method="post">
+          <input type="hidden" name="id" th:value="${event.id}" />
+          <button type="submit" class="btn btn-danger"
+                  onclick="return confirm('Bạn có chắc muốn xóa sự kiện này?')"
+                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Xóa</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+<!--pagination nav for list page-->
+  <nav aria-label="..." th:if="${currentPage.totalPages > 0 && type == 'list'}">
+    <ul class="pagination justify-content-center">
+
+      <!--page item fist and previous -->
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           class="page-link"
+           th:href="@{/events/(page=1)}"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           th:class="'page-link'"
+           th:href="@{/events/(page=${currentPage.number})}"><
+        </a>
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><
+        </a>
+      </li>
+
+      <!--page item number page -->
+      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+          th:each="pageNumber : ${pageNumbers}">
+        <a th:if="${pageNumber <= currentPage.number - 2}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber >= currentPage.number + 4}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber > currentPage.number - 2
+        && pageNumber < currentPage.number + 4}"
+           th:href="@{/events/(page=${pageNumber})}"
+           th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
+           th:text="${pageNumber}">
+        </a>
+      </li>
+
+      <!--page item next and last -->
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           th:class="'page-link'"
+           th:href="@{/events/(page=${currentPage.number+2})}">>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           class="page-link"
+           th:href="@{/events/(page=${currentPage.totalPages})}">>>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+<!--  Navigation for filter page-->
+  <nav aria-label="..." th:if="${currentPage.totalPages > 0 && type == 'filter'}">
+    <ul class="pagination justify-content-center">
+      <!--page item fist and previous -->
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           class="page-link"
+           th:href="@{/events/filter/(page=1, startAt=${startAt}, endAt=${endAt},
+            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           th:class="'page-link'"
+           th:href="@{/events/filter/(page=${currentPage.number})}"><
+        </a>
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><
+        </a>
+      </li>
+
+      <!--page item number page -->
+      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+          th:each="pageNumber : ${pageNumbers}">
+        <a th:if="${pageNumber <= currentPage.number - 2}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber >= currentPage.number + 4}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber > currentPage.number - 2
+        && pageNumber < currentPage.number + 4}"
+           th:href="@{/events/filter/(page=${pageNumber}, startAt=${startAt}, endAt=${endAt},
+            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}"
+           th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
+           th:text="${pageNumber}">
+        </a>
+      </li>
+
+      <!--page item next and last -->
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           th:class="'page-link'"
+           th:href="@{/events/filter/(page=${currentPage.number+2}, startAt=${startAt}, endAt=${endAt},
+            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}">>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           class="page-link"
+           th:href="@{/events/filter/(page=${currentPage.totalPages}, startAt=${startAt}, endAt=${endAt},
+            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}">>>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+<!--  Navigation for search-->
+  <nav aria-label="..." th:if="${currentPage.totalPages > 0 && type == 'search'}">
+    <ul class="pagination justify-content-center">
+      <!--page item fist and previous -->
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           class="page-link"
+           th:href="@{/events/search/(page=1,search=${search})}"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           th:class="'page-link'"
+           th:href="@{/events/search/(page=${currentPage.number}, search=${search})}"><
+        </a>
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><
+        </a>
+      </li>
+
+      <!--page item number page -->
+      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+          th:each="pageNumber : ${pageNumbers}">
+        <a th:if="${pageNumber <= currentPage.number - 2}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber >= currentPage.number + 4}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber > currentPage.number - 2
+        && pageNumber < currentPage.number + 4}"
+           th:href="@{/events/search/(page=${pageNumber}, search=${search})}"
+           th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
+           th:text="${pageNumber}">
+        </a>
+      </li>
+
+      <!--page item next and last -->
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           th:class="'page-link'"
+           th:href="@{/events/search/(page=${currentPage.number+2}, search=${search})}">>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           class="page-link"
+           th:href="@{/events/search/(page=${currentPage.totalPages}, search=${search})}">>>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+</body>
+</html>
