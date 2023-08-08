@@ -18,16 +18,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - uses: actions/checkout@v3
-      - name: Docker build
-        run: docker-compose up -d
-      - name: network
-        run: docker run --network container:adqualtech appropriate/curl -s --retry 10 --retry-connrefused http://localhost:8080/
-        env:
-          MYSQL_ROOT_PASSWORD: {{MYSQL_ROOT_PASSWORD}}
-          MYSQL_DATABASE: {{MYSQL_DATABASE}}
-          MYSQL_USER: {{MYSQL_USER}}
-          MYSQL_PASSWORD: {{MYSQL_PASSWORD}}
 
       - name: Cache SonarQube packages
         uses: actions/cache@v1
@@ -41,16 +31,16 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
+      - name: Login Dockerhub
+        run: echo docker login docker.io -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Docker build
+        run: echo docker-compose -f "docker-compose.yml" up
+
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TTS_Java_Nguyen_Xuan_Nghia -Dsonar.projectName='TTS_Java_Nguyen_Xuan_Nghia'
-
-volumes:
-  db-data:
-
-networks:
-  spring-network:
-    driver: bridge
+        run: echo mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TTS_Java_Nguyen_Xuan_Nghia -Dsonar.projectName='TTS_Java_Nguyen_Xuan_Nghia'
