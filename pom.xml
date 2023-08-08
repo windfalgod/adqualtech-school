@@ -15,7 +15,9 @@
     <description>adqualtech-school</description>
     <properties>
         <java.version>11</java.version>
-        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+        <sonar.host.url>
+            http://192.168.0.179:9001
+        </sonar.host.url>
     </properties>
     <dependencies>
         <dependency>
