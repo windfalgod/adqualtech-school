@@ -33,7 +33,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Login Dockerhub
-        run: echo ${{secrets.DOCKERHUB_PASSWORD}} | docker login docker.io -u ${{secrets.DOCKERHUB_USERNAME}} --password-stdin
+        run: echo `docker login docker.io -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_PASSWORD}}`
 
       - name: Docker build
         run: docker-compose -f "docker-compose.yml" up
