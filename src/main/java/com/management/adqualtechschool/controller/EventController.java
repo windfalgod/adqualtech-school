@@ -71,26 +71,13 @@ public class EventController {
     @GetMapping("")
     public String showEventsPage(Model model, Authentication auth,
                                  @RequestParam("page") Optional<Integer> page) {
-            int currentPage = page.orElse(1);
+        int currentPage = page.orElse(1);
+        Page<EventDTO> eventDTOPage = eventService
+                .getListEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth);
 
-            Page<EventDTO> eventDTOPage = eventService
-                    .getListEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth);
-
-            model.addAttribute(CURRENT_PAGE, eventDTOPage);
-            int totalPages = eventDTOPage.getTotalPages();
-
-            if (totalPages > 0) {
-                List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                        .boxed()
-                        .collect(Collectors.toList());
-                model.addAttribute(PAGE_NUMBERS, pageNumbers);
-            }
-
-            List<ScopeDTO> scopeList = scopeService.getAllScope();
-            List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
-            model.addAttribute(TYPE,LIST);
-            model.addAttribute(SCOPE_LIST, scopeList);
-            model.addAttribute(ACCOUNT_LIST, accountDTOList);
+        definedCurrentPageAndAddAttrToModel(model, eventDTOPage);
+        addAttrScopeListAndCreatorListToModel(model);
+        model.addAttribute(TYPE,LIST);
         return "pages/event/list";
     }
 
@@ -98,9 +85,9 @@ public class EventController {
     public String filterEvents(Model model, Authentication auth,
                                @RequestParam("page") Optional<Integer> page,
                                @RequestParam(value = "startAt", required = false)
-                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startAt,
+                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startAt,
                                @RequestParam(value = "endAt", required = false)
-                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endAt,
+                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endAt,
                                @RequestParam(value = "createdAt", required = false) String createdAt,
                                @RequestParam(value = "scopeName", required = false) String scopeName,
                                @RequestParam(value = "creatorName", required = false) String creatorName) {
@@ -109,21 +96,10 @@ public class EventController {
         Page<EventDTO> eventDTOPage = eventService
                 .filterEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE),
                         auth, startAt, endAt, createdAt, scopeName, creatorName);
-        model.addAttribute(CURRENT_PAGE, eventDTOPage);
 
-        int totalPages = eventDTOPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-
-        List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        definedCurrentPageAndAddAttrToModel(model, eventDTOPage);
+        addAttrScopeListAndCreatorListToModel(model);
         model.addAttribute(TYPE,FILTER);
-        model.addAttribute(SCOPE_LIST, scopeList);
-        model.addAttribute(ACCOUNT_LIST, accountDTOList);
         model.addAttribute(START_AT, startAt);
         model.addAttribute(END_AT, endAt);
         model.addAttribute(CREATED_AT, createdAt);
@@ -139,21 +115,11 @@ public class EventController {
         int currentPage = page.orElse(1);
         Page<EventDTO> eventDTOPage = eventService
                 .searchEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth, search);
-        model.addAttribute(CURRENT_PAGE, eventDTOPage);
 
-        int totalPages = eventDTOPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-        List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        definedCurrentPageAndAddAttrToModel(model, eventDTOPage);
+        addAttrScopeListAndCreatorListToModel(model);
         model.addAttribute(TYPE, SEARCH);
         model.addAttribute(SEARCH, search);
-        model.addAttribute(SCOPE_LIST, scopeList);
-        model.addAttribute(ACCOUNT_LIST, accountDTOList);
         return "pages/event/list";
     }
 
@@ -241,5 +207,23 @@ public class EventController {
             attr.addFlashAttribute(FAILED, DELETE_EVENT_FAILED);
         }
         return "redirect:/events";
+    }
+
+    private void definedCurrentPageAndAddAttrToModel(Model model, Page<EventDTO> eventDTOPage) {
+        model.addAttribute(CURRENT_PAGE, eventDTOPage);
+        int totalPages = eventDTOPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute(PAGE_NUMBERS, pageNumbers);
+        }
+    }
+
+    private void addAttrScopeListAndCreatorListToModel(Model model) {
+        List<ScopeDTO> scopeList = scopeService.getAllScope();
+        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        model.addAttribute(SCOPE_LIST, scopeList);
+        model.addAttribute(ACCOUNT_LIST, accountDTOList);
     }
 }
