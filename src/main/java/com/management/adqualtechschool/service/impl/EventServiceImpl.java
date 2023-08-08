@@ -103,7 +103,7 @@ public class EventServiceImpl implements EventService {
             throw new DateTimeException(Message.START_BEFORE_END_EVENT);
         }
 
-        if (event.getEndAt().isAfter(event.getCreatedAt())) {
+        if (event.getEndAt().isBefore(event.getCreatedAt())) {
             throw new DateTimeException(Message.CREATE_BEFORE_END_EVENT);
         }
 

@@ -28,7 +28,7 @@ public class CustomEventDTOFilterChain {
         eventDTOList = eventDTOList.stream()
                 .filter(eventDTO -> eventDTO.getStartAt().isAfter(startAt))
                 .collect(Collectors.toList());
-       return new CustomEventDTOFilterChain(eventDTOList);
+        return new CustomEventDTOFilterChain(eventDTOList);
     }
 
     public CustomEventDTOFilterChain filterByEndAt(LocalDateTime endAt) {
