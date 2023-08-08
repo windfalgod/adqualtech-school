@@ -41,14 +41,9 @@ jobs:
       - name: Docker build
         run: docker-compose up -d
 
-
-
-      - name: Test SonarQube Server Accessibility
-        run: |
-          curl -I http://192.168.0.179:9001
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=TTS_Java_Nguyen_Xuan_Nghia -Dsonar.projectName='TTS_Java_Nguyen_Xuan_Nghia'
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -D sonar.projectKey=TTS_Java_Nguyen_Xuan_Nghia -D sonar.projectName='TTS_Java_Nguyen_Xuan_Nghia'
