@@ -39,7 +39,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Docker build
-        run: docker-compose up
+        run: docker-compose up -d
 
       - name: Build and analyze
         env:
