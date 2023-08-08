@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - main
+      - feature/T5_docker_sonar
 
 
 jobs:
