@@ -41,6 +41,11 @@ jobs:
       - name: Docker build
         run: docker-compose up -d
 
+
+
+      - name: Test SonarQube Server Accessibility
+        run: |
+          curl -I http://192.168.0.179:9001
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
