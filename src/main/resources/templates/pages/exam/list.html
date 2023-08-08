@@ -45,25 +45,7 @@
     <div class="select-group col-12 d-flex flex-row">
       <form th:action="@{/exam-library/filter}" class="row w-100" method="get">
 
-        <!--Filter theo ngày diễn ra đề thi thử -->
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="input_from">Ngày diễn ra</label>
-            <input type="date" class="form-control"
-                   id="input_from" placeholder="Start Date" name="startAt" th:value="${startAt}">
-          </div>
-        </div>
-
-        <!--Filter theo ngày kết thúc đề thi thử -->
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="input_to">Ngày kết thúc</label>
-            <input type="date" class="form-control"
-                   id="input_to" placeholder="End Date" name="endAt" th:value="${endAt}">
-          </div>
-        </div>
-
-        <!--Filter theo ngày tạo đề thi thử -->
+        <!--Filter created date -->
         <select class="form-select" aria-label="Default" name="createdAt">
           <option>Ngày tạo</option>
           <option th:selected="${createdAt == 'Hôm nay'}">Hôm nay</option>
@@ -73,7 +55,7 @@
           <option th:selected="${createdAt == '1 năm gần đây'}">1 năm gần đây</option>
         </select>
 
-        <!--Filter phạm vi đề thi thử hoạt động-->
+        <!--Filter by scope-->
         <select class="form-select ms-3" aria-label="Default" name="scopeName">
           <option selected>Phạm vi</option>
           <option th:each="scope : ${scopeList}"
@@ -83,7 +65,17 @@
           </option>
         </select>
 
-        <!--Filter theo người tạo đề thi thử -->
+        <!--Filter by subject-->
+        <select class="form-select ms-3" aria-label="Default" name="subjectName">
+          <option selected>Môn</option>
+          <option th:each="subject : ${subjectList}"
+                  th:value="${subject.name}"
+                  th:text="${subject.name}"
+                  th:selected="${subjectName == subject.name}">
+          </option>
+        </select>
+
+        <!--Filter by creator -->
         <select class="form-select ms-3" aria-label="Default" name="creatorName">
           <option selected>Người tạo</option>
           <option th:each="account : ${accountList}"
@@ -127,8 +119,7 @@
         <td th:text="${exam.id}" class="id-td"></td>
         <td th:text="${exam.title}" class="title-td"></td>
         <td th:text="${exam.scope.title}"></td>
-        <td th:text="${#temporals.format(exam.startAt, 'HH:mm dd/MM/yyyy')}"></td>
-        <td th:text="${#temporals.format(exam.endAt, 'HH:mm dd/MM/yyyy')}"></td>
+        <td th:text="${exam.subject.name}"></td>
         <td th:text="${#temporals.format(exam.createdAt, 'HH:mm dd/MM/yyyy')}"></td>
         <td th:text="${exam.creator.lastName} + ' ' + ${exam.creator.firstName}"></td>
         <td class="button-control">
@@ -139,7 +130,7 @@
           <form th:action="@{/exam-library/delete}" method="post">
           <input type="hidden" name="id" th:value="${exam.id}" />
           <button type="submit" class="btn btn-danger"
-                  onclick="return confirm('Bạn có chắc muốn xóa đề thi thử này?')"
+                  onclick="return confirm('Bạn có chắc muốn xóa đề thi này?')"
                   sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Xóa</button>
           </form>
         </td>
