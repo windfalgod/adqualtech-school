@@ -33,8 +33,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Login Dockerhub
-        env:
-
         run: echo ${{secrets.DOCKERHUB_PASSWORD}} | docker login -u ${{secrets.DOCKERHUB_USERNAME}} --password-stdin
 
       - name: Docker build
