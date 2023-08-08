@@ -5,7 +5,6 @@ on:
     branches:
       - feature/T5_docker_sonar
 
-
 jobs:
   build:
     name: Build
@@ -46,4 +45,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -D sonar.projectKey=TTS_Java_Nguyen_Xuan_Nghia -D sonar.projectName='TTS_Java_Nguyen_Xuan_Nghia'
+        run: mvn -X verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -D sonar.projectKey=TTS_Java_Nguyen_Xuan_Nghia -D sonar.projectName='TTS_Java_Nguyen_Xuan_Nghia'
