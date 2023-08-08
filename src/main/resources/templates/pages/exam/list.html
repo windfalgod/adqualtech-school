@@ -34,7 +34,7 @@
         <i class="fa fa-search position-absolute search-icon"></i>
         <label for="form-search"></label>
         <input type="text" class="form-control form-input rounded w-100"
-               id="form-search" name="search" placeholder="Search anything...">
+               id="form-search" name="search" placeholder="Nhập tên tiêu đề đề thi hoặc tên người tạo">
         <button type="submit" class="btn btn-primary search-button">Tìm kiếm</button>
       </form>
     </div>
@@ -46,13 +46,13 @@
       <form th:action="@{/exam-library/filter}" class="row w-100" method="get">
 
         <!--Filter created date -->
-        <select class="form-select" aria-label="Default" name="createdAt">
-          <option>Ngày tạo</option>
-          <option th:selected="${createdAt == 'Hôm nay'}">Hôm nay</option>
-          <option th:selected="${createdAt == 'Hôm qua'}">Hôm qua</option>
-          <option th:selected="${createdAt == '7 Ngày gần đây'}">7 Ngày gần đây</option>
-          <option th:selected="${createdAt == '1 tháng gần đây'}">1 tháng gần đây</option>
-          <option th:selected="${createdAt == '1 năm gần đây'}">1 năm gần đây</option>
+        <select class="form-select" aria-label="Default" name="updatedAt">
+          <option>Ngày cập nhật</option>
+          <option th:selected="${updatedAt == 'Hôm nay'}">Hôm nay</option>
+          <option th:selected="${updatedAt == 'Hôm qua'}">Hôm qua</option>
+          <option th:selected="${updatedAt == '7 Ngày gần đây'}">7 Ngày gần đây</option>
+          <option th:selected="${updatedAt == '1 tháng gần đây'}">1 tháng gần đây</option>
+          <option th:selected="${updatedAt == '1 năm gần đây'}">1 năm gần đây</option>
         </select>
 
         <!--Filter by scope-->
@@ -105,9 +105,8 @@
         <th class="text-center">#</th>
         <th>Tiêu đề</th>
         <th>Phạm vi</th>
-        <th>Thời gian bắt đầu</th>
-        <th>Thời gian kết thúc</th>
-        <th>Thời gian tạo</th>
+        <th>Môn học</th>
+        <th>Thời gian cập nhật</th>
         <th>Người tạo</th>
         <th></th>
         <th></th>
@@ -120,7 +119,7 @@
         <td th:text="${exam.title}" class="title-td"></td>
         <td th:text="${exam.scope.title}"></td>
         <td th:text="${exam.subject.name}"></td>
-        <td th:text="${#temporals.format(exam.createdAt, 'HH:mm dd/MM/yyyy')}"></td>
+        <td th:text="${#temporals.format(exam.updatedAt, 'HH:mm dd/MM/yyyy')}"></td>
         <td th:text="${exam.creator.lastName} + ' ' + ${exam.creator.firstName}"></td>
         <td class="button-control">
           <a th:href="@{/exam-library/edit(id=${exam.id})}" class="btn btn-warning"
@@ -135,6 +134,9 @@
           </form>
         </td>
         <td class="button-control">
+          <a th:href="@{/exam-library/download/(id=${exam.id})}" download class="text-dark">
+            <i class="fa-solid fa-file-arrow-down fa-2xl"></i>
+          </a>
         </td>
       </tr>
     </tbody>

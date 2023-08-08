@@ -26,4 +26,10 @@ public class SubjectServiceImpl implements SubjectService {
                 .map(subject -> modelMapper.map(subject, SubjectDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public SubjectDTO getSubjectByName(String name) {
+        Subject subject = subjectRepository.findByName(name);
+        return modelMapper.map(subject, SubjectDTO.class);
+    }
 }

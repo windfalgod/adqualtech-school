@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PrepareExamRepository extends JpaRepository<PrepareExam, Long> {
 
-    @Query(value = "select p from PrepareExam p order by p.createdAt")
-    List<PrepareExam> findAllOrderByCreatedAtDesc();
+    @Query(value = "select p from PrepareExam p order by p.updatedAt desc")
+    List<PrepareExam> findAllOrderByUpdatedAtDesc();
 
     @Query(value = "select p from PrepareExam p inner join Scope s on p.scope.id = s.id where s.title like :gradeName")
     List<PrepareExam> findExamsByScope_IdOrderByCreatedAtDesc(@Param("gradeName")String gradeName);

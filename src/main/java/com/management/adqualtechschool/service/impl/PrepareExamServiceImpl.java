@@ -2,12 +2,27 @@ package com.management.adqualtechschool.service.impl;
 
 import com.management.adqualtechschool.common.Message;
 import com.management.adqualtechschool.config.CustomExamDTOFilterChain;
+import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.PrepareExamDTO;
+import com.management.adqualtechschool.dto.ScopeDTO;
+import com.management.adqualtechschool.dto.SubjectDTO;
+import com.management.adqualtechschool.entity.Account;
 import com.management.adqualtechschool.entity.PrepareExam;
+import com.management.adqualtechschool.entity.Scope;
+import com.management.adqualtechschool.entity.Subject;
 import com.management.adqualtechschool.repository.PrepareExamRepository;
+import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.PrepareExamService;
+import com.management.adqualtechschool.service.ScopeService;
+import com.management.adqualtechschool.service.SubjectService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
@@ -20,6 +35,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.management.adqualtechschool.common.SaveFileDir.EXAM_DIR;
+import static com.management.adqualtechschool.common.SaveFileDir.STATIC_DIR;
+
 @Service
 public class PrepareExamServiceImpl implements PrepareExamService {
 
@@ -29,9 +47,18 @@ public class PrepareExamServiceImpl implements PrepareExamService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private ScopeService scopeService;
+
+    @Autowired
+    private SubjectService subjectService;
+
     @Override
     public List<PrepareExamDTO> getAllPrepareExam() {
-        List<PrepareExam> examList = prepareExamRepository.findAll();
+        List<PrepareExam> examList = prepareExamRepository.findAllOrderByUpdatedAtDesc();
         return examList.stream()
                 .map(prepareExam -> modelMapper.map(prepareExam,PrepareExamDTO.class))
                 .collect(Collectors.toList());
@@ -53,7 +80,38 @@ public class PrepareExamServiceImpl implements PrepareExamService {
 
     @Override
     public void saveOrUpdatePrepareExam(PrepareExamDTO exam, String username, MultipartFile examUpload) {
+        AccountDTO accountDTO = accountService.getAccountByUsername(username);
+        exam.setCreator(modelMapper.map(accountDTO, Account.class));
 
+        ScopeDTO scopeDTO = scopeService.getScopeByTitle(exam.getScope().getTitle());
+        exam.setScope(modelMapper.map(scopeDTO, Scope.class));
+
+        SubjectDTO subjectDTO = subjectService.getSubjectByName(exam.getSubject().getName());
+        exam.setSubject(modelMapper.map(subjectDTO, Subject.class));
+
+        if (exam.getId() == null) {
+            exam.setCreatedAt(LocalDateTime.now());
+        } else {
+            prepareExamRepository.findById(exam.getId())
+                    .ifPresent(examSaved -> exam.setCreatedAt(examSaved.getCreatedAt()));
+        }
+        exam.setUpdatedAt(LocalDateTime.now());
+
+        String examFileName = String.valueOf(examUpload.getOriginalFilename());
+        if (examFileName.equals("")) {
+            throw new NoSuchElementException(Message.NOT_EXAM_NAME);
+        }
+        try {
+            byte[] imageBytes = examUpload.getBytes();
+            if (!(EXAM_DIR + examFileName).equals(exam.getContent())) {
+                Path imagePath = Paths.get(STATIC_DIR + EXAM_DIR , examFileName);
+                Files.write(imagePath, imageBytes);
+            }
+            exam.setContent(EXAM_DIR + examFileName);
+            prepareExamRepository.save(modelMapper.map(exam, PrepareExam.class));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -63,10 +121,10 @@ public class PrepareExamServiceImpl implements PrepareExamService {
     }
 
     @Override
-    public Page<PrepareExamDTO> filterPrepareExam(Pageable pageable, String createdAt, String subjectName,
+    public Page<PrepareExamDTO> filterPrepareExam(Pageable pageable, String updatedAt, String subjectName,
                                                   String scopeName, String creatorName) {
         List<PrepareExamDTO> examDTOList = getAllPrepareExam();
-        examDTOList = filterEvents(examDTOList, createdAt, subjectName, scopeName, creatorName);
+        examDTOList = filterEvents(examDTOList, updatedAt, subjectName, scopeName, creatorName);
         return paginate(pageable, examDTOList);
     }
 
@@ -88,11 +146,11 @@ public class PrepareExamServiceImpl implements PrepareExamService {
     }
 
 
-    private List<PrepareExamDTO> filterEvents(List<PrepareExamDTO> examDTOList, String createdAt,
+    private List<PrepareExamDTO> filterEvents(List<PrepareExamDTO> examDTOList, String updatedAt,
                                         String subjectName, String scopeName, String creatorName) {
         return new CustomExamDTOFilterChain(examDTOList)
                 .filterBySubjectName(subjectName)
-                .filterByCreatedAt(createdAt)
+                .filterByUpdatedAt(updatedAt)
                 .filterByScopeName(scopeName)
                 .filterByCreatorName(creatorName)
                 .getExamDTOList();

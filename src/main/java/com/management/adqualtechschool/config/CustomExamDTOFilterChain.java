@@ -22,30 +22,30 @@ public class CustomExamDTOFilterChain {
         this.examDTOList = listValue;
     }
 
-    public CustomExamDTOFilterChain filterByCreatedAt(String createdAt) {
-        if (createdAt == null) {
+    public CustomExamDTOFilterChain filterByUpdatedAt(String updatedAt) {
+        if (updatedAt == null) {
             return new CustomExamDTOFilterChain(examDTOList);
         }
         examDTOList = examDTOList.stream()
                 .filter(eventDTO -> {
-                    switch (createdAt) {
-                        case TODAY: return eventDTO.getCreatedAt()
+                    switch (updatedAt) {
+                        case TODAY: return eventDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now()
                                         .minusHours(LocalDateTime.now().getHour())
                                         .minusMinutes(LocalDateTime.now().getMinute())
                                         .minusSeconds(LocalDateTime.now().getSecond())
                                 );
-                        case YESTERDAY: return eventDTO.getCreatedAt()
+                        case YESTERDAY: return eventDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now().minusDays(1)
                                         .minusHours(LocalDateTime.now().getHour())
                                         .minusMinutes(LocalDateTime.now().getMinute())
                                         .minusSeconds(LocalDateTime.now().getSecond())
                                 );
-                        case WEEK_AGO: return eventDTO.getCreatedAt()
+                        case WEEK_AGO: return eventDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now().minusWeeks(1));
-                        case MONTH_AGO: return eventDTO.getCreatedAt()
+                        case MONTH_AGO: return eventDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now().minusMonths(1));
-                        case YEAR_AGO:return eventDTO.getCreatedAt()
+                        case YEAR_AGO:return eventDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now().minusYears(1));
                         default: return true;
                     }

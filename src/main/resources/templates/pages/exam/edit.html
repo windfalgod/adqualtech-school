@@ -47,39 +47,33 @@
                     <span th:errorclass="error" th:if="${#fields.hasErrors('title')}"
                             th:errors="*{title}"></span>
                 </div>
-                <select class="form-select" aria-label="Default" name="scope" th:field="*{scope.title}">
-                    <option selected value="Phạm vi">Phạm vi</option>
-                    <option th:each="scopeItem : ${scopeList}"
-                            th:value="${scopeItem.title}"
-                            th:text="${scopeItem.title}"
-                            th:selected="${scopeItem.title eq exam.scope.title}">
-                    </option>
-                </select>
-                <span th:errorclass="error" th:if="${#fields.hasErrors('scope')}"
-                      th:errors="*{scope}"></span>
-                <select class="form-select" aria-label="Default" name="scope" th:field="*{scope.title}">
-                    <option selected value="Phạm vi">Môn</option>
-                    <option th:each="scopeItem : ${scopeList}"
-                            th:value="${scopeItem.title}"
-                            th:text="${scopeItem.title}"
-                            th:selected="${scopeItem.title eq exam.scope.title}">
-                    </option>
-                </select>
-                <span th:errorclass="error" th:if="${#fields.hasErrors('scope')}"
-                        th:errors="*{scope}"></span>
-                <div class="col-6">
-                    <label for="unit-input" class="mb-1">Tên tiêu đề đề thi thử(*)</label>
-                    <input type="number" class="form-control form-input rounded w-100"
-                           id="unit-input" name="exam-title" placeholder="Nhập tên tiêu đề"
-                           th:field="*{unit}">
-                    <span th:errorclass="error" th:if="${#fields.hasErrors('unit')}"
-                          th:errors="*{unit}"></span>
+                <div class="col-12 d-flex flex-row">
+                    <select class="form-select me-3" aria-label="Default" name="scope" th:field="*{scope.title}">
+                        <option selected value="Phạm vi">Phạm vi</option>
+                        <option th:each="scopeItem : ${scopeList}"
+                                th:value="${scopeItem.title}"
+                                th:text="${scopeItem.title}"
+                                th:selected="${scopeItem.title eq exam.scope.title}">
+                        </option>
+                    </select>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('scope.title')}"
+                          th:errors="*{scope.title}"></span>
+                    <select class="form-select" aria-label="Default" name="subject" th:field="*{subject.name}">
+                        <option selected value="Môn học">Môn</option>
+                        <option th:each="subject : ${subjectList}"
+                                th:value="${subject.name}"
+                                th:text="${subject.name}"
+                                th:selected="${subject.name eq exam.subject.name}">
+                        </option>
+                    </select>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('subject.name')}"
+                          th:errors="*{subject.name}"></span>
                 </div>
-                <div class="mb-3 col-md-6">
+                <div class="mb-3 col-md-6 mt-3">
                     <label for="formImage" class="form-label mb-1">Tải đề thi lên(*)</label>
-                    <input class="form-control" type="file" id="formImage" accept="image/png, image/jpeg, image/jpg"
+                    <input class="form-control" type="file" id="formImage"
                             name="imageUpload" th:field="*{multipartFile}">
-                    <span th:errorclass="error" th:if="${#fields.hasErrors('image')}"
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('multipartFile')}"
                             th:errors="*{multipartFile}"></span>
                 </div>
                 <div class="button-update-exam-wrapper d-flex flex-row justify-content-end mt-4">

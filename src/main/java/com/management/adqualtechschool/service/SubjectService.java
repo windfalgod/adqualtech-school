@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface SubjectService {
     List<SubjectDTO> getAllSubject();
+    SubjectDTO getSubjectByName(String name);
 }

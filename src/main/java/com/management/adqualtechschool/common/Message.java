@@ -14,6 +14,12 @@ public class Message {
     public final static String UPDATE_EVENT_FAILED = "Cập nhật sự kiện không thành công!";
     public final static String DELETE_EVENT_SUCCESS = "Xóa sự kiện thành công!";
     public final static String DELETE_EVENT_FAILED = "Xóa sự kiện không thành công!";
+    public final static String CREATE_EXAM_SUCCESS = "Thêm đề thi thành công!";
+    public final static String CREATE_EXAM_FAILED = "Thêm đề thi không thành công!";
+    public final static String UPDATE_EXAM_SUCCESS = "Cập nhật đề thi thành công!";
+    public final static String UPDATE_EXAM_FAILED = "Cập nhật đề thi không thành công!";
+    public final static String DELETE_EXAM_SUCCESS = "Xóa đề thi thành công!";
+    public final static String DELETE_EXAM_FAILED = "Xóa đề thi không thành công!";
     public final static String START_BEFORE_END_EVENT = "Thời gian diễn ra luôn trước thời gian kết thúc sự kiện!";
     public final static String CREATE_BEFORE_END_EVENT = "Thời gian tạo luôn trước thời gian kết thúc sự kiện!";
     public final static String NOT_FOUND_ACCOUNT_ID = "Not found account by id!";
@@ -22,4 +28,7 @@ public class Message {
     public final static String NOT_FOUND_SCOPE= "Not found scope ";
     public final static String NO_IMAGE= "Not found image name!";
     public static final String NOT_FOUND_EXAM = "Not found exam!";
+    public static final String NOT_EXAM_NAME = "Not found exam file name!";
+    public final static String EXAM_TITLE_NOT_EMPTY = "Tên tiêu đề đề thi không được để trống!";
+    public static final String EXAM_CONTENT_NOT_EMPTY = "Tệp đề thi không được để trống!";
 }

@@ -16,6 +16,7 @@ public class DisplayTypeAndFilterAndPaginationType {
     public final static String SCOPE_LIST = "scopeList";
     public final static String ACCOUNT_LIST = "accountList";
     public final static String CREATED_AT = "createdAt";
+    public final static String UPDATED_AT = "updatedAt";
     public final static String START_AT = "startAt";
     public final static String END_AT = "endAt";
     public final static String CURRENT_PAGE = "currentPage";
@@ -24,4 +25,7 @@ public class DisplayTypeAndFilterAndPaginationType {
     public final static String CREATOR_NAME= "creatorName";
     public final static String SUBJECT_LIST = "subjectList";
     public final static String SUBJECT = "Môn";
+    public final static String SUBJECT_NAME = "subjectName";
+    public final static String CLASS_NAME = "Lớp";
+    public final static String GRADE_NAME = "Khối";
 }

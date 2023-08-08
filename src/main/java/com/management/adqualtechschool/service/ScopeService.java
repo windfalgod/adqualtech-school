@@ -6,4 +6,5 @@ import java.util.List;
 public interface ScopeService {
     List<ScopeDTO> getAllScope();
     ScopeDTO getScopeByTitle(String title);
+    List<ScopeDTO> getAllGradeScope();
 }
