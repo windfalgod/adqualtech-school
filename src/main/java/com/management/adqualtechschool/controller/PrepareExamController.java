@@ -9,7 +9,6 @@ import com.management.adqualtechschool.service.PrepareExamService;
 import com.management.adqualtechschool.service.ScopeService;
 import com.management.adqualtechschool.service.SubjectService;
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
@@ -88,20 +87,11 @@ public class PrepareExamController {
         Page<PrepareExamDTO> examLibraryPage = prepareExamService
                 .getListExamsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE));
 
-        model.addAttribute(CURRENT_PAGE, examLibraryPage);
-        int totalPages = examLibraryPage.getTotalPages();
-
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-
+        definedCurrentPageAndAddAttrToModel(model, examLibraryPage);
         addAttrScopeListAndSubjectList(model);
-        model.addAttribute(TYPE,LIST);
         List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
+        model.addAttribute(TYPE,LIST);
         return "pages/exam/list";
     }
 
@@ -114,51 +104,36 @@ public class PrepareExamController {
                                @RequestParam(value = "creatorName", required = false) String creatorName) {
         int currentPage = page.orElse(1);
 
-        Page<PrepareExamDTO> examDTOPage = prepareExamService
+        Page<PrepareExamDTO> examLibraryPage = prepareExamService
                 .filterPrepareExam(PageRequest.of(currentPage - 1, PAGE_SIZE),
                         updatedAt, subjectName, scopeName, creatorName);
-        model.addAttribute(CURRENT_PAGE, examDTOPage);
 
-        int totalPages = examDTOPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        definedCurrentPageAndAddAttrToModel(model, examLibraryPage);
         addAttrScopeListAndSubjectList(model);
-        model.addAttribute(TYPE,FILTER);
+        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
         model.addAttribute(UPDATED_AT, updatedAt);
         model.addAttribute(SUBJECT_NAME, subjectName);
         model.addAttribute(SCOPE_NAME,scopeName);
         model.addAttribute(CREATOR_NAME, creatorName);
+        model.addAttribute(TYPE,FILTER);
         return "pages/exam/list";
     }
 
     @GetMapping("/search")
     public String searchExams(Model model,
-                               @RequestParam("page") Optional<Integer> page,
-                               @RequestParam("search") String search) {
+                              @RequestParam("page") Optional<Integer> page,
+                              @RequestParam("search") String search) {
         int currentPage = page.orElse(1);
-        Page<PrepareExamDTO> examDTOPage = prepareExamService
+        Page<PrepareExamDTO> examLibraryPage = prepareExamService
                 .searchExamsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), search);
-        model.addAttribute(CURRENT_PAGE, examDTOPage);
 
-        int totalPages = examDTOPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        definedCurrentPageAndAddAttrToModel(model, examLibraryPage);
         addAttrScopeListAndSubjectList(model);
-        model.addAttribute(TYPE, SEARCH);
+        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
         model.addAttribute(SEARCH, search);
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
+        model.addAttribute(TYPE, SEARCH);
         return "pages/exam/list";
     }
 
@@ -258,6 +233,16 @@ public class PrepareExamController {
                 .body(resource);
     }
 
+    private void definedCurrentPageAndAddAttrToModel(Model model, Page<PrepareExamDTO> examDTOPage) {
+        model.addAttribute(CURRENT_PAGE, examDTOPage);
+        int totalPages = examDTOPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute(PAGE_NUMBERS, pageNumbers);
+        }
+    }
 
     // add attribute scopeList and subjectList to model
     private void addAttrScopeListAndSubjectList(Model model) {
