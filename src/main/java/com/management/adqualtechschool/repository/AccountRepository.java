@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByUsername(String username);
-
     @Query(value = "select a from Account a where a.username like 'te%' or a.username like 'ma%'")
     List<Account> findAllTeacherManager();
+    List<Account> findAllByPositionLikeOrderByCreatedAtDesc(String position);
 }

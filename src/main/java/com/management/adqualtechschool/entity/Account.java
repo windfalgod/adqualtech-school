@@ -68,6 +68,9 @@ public class Account {
     @Column(name = "level", length = 30)
     private String level;
 
+    @Column(name = "position", length = 50)
+    private String position;
+
     @Column(name = "class_in_charged_id", length = 20)
     private Long classInChargedId;
 

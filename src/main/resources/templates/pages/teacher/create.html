@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm giáo viên</title>
+    <link rel="stylesheet" href="/css/validation-error.css">
+    <script src="/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#my-textarea'
+        });
+    </script>
+</head>
+<body>
+<div class="teachers-create-wrapper p-4" th:fragment="content">
+    <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
+    <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/teachers">Danh sách giáo viên</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page">Tạo giáo viên
+            </li>
+        </ol>
+    </nav>
+
+    <h3 class="teacher-creation-title mt-4 mb-4">Tạo giáo viên</h3>
+
+    <div class="create-teacher-container ps-md-5 pe-md-5">
+        <form th:action="@{/teachers/create-processing}" th:object="${teacher}" enctype="multipart/form-data"
+              method="post" class="d-flex flex-column" id="create-teacher-form">
+            <div class="col-6">
+                <label for="title-input" class="mb-1">Tên tiêu đề giáo viên(*)</label>
+                <input type="text" class="form-control form-input rounded w-100"
+                       id="title-input" name="teacher-title" placeholder="Nhập tên tiêu đề"
+                th:field="*{title}">
+                <span th:errorclass="error" th:if="${#fields.hasErrors('title')}"
+                      th:errors="*{title}"></span>
+            </div>
+            <select class="form-select" aria-label="Default" name="scope" th:field="*{scope.title}">
+                <option selected value="Phạm vi">Môn học</option>
+                <option th:each="scopeItem : ${scopeList}"
+                        th:value="${scopeItem.title}"
+                        th:text="${scopeItem.title}"
+                        th:selected="${scopeItem.title eq teacher.scope.title}">
+                </option>
+            </select>
+            <span th:errorclass="error" th:if="${#fields.hasErrors('scope.title')}"
+                  th:errors="*{scope.title}"></span>
+            <div class="row filter-teacher mt-4 mb-3">
+                <div class="select-group col-6 d-flex flex-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="startDate" class="mb-1">Ngày sinh(*)</label>
+                            <input type="date" class="form-control datepicker"
+                                   id="startDate" name="startAt" value=""
+                            th:field="*{startAt}">
+                            <span th:errorclass="error" th:if="${#fields.hasErrors('startAt')}"
+                                  th:errors="*{startAt}"></span>
+                        </div>
+                    </div>
+
+            </div>
+            <div class="button-create-event-wrapper d-flex flex-row justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary">Thêm</button>
+                <a th:href="@{/teachers}" class="btn btn-warning ms-3"
+                   onclick="return confirm('Bạn có chắc muốn hủy?')">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

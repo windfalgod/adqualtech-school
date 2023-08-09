@@ -17,5 +17,7 @@ public class AccountDTO {
     private String phone;
     private String email;
     private String level;
+    private String position;
+    private String rank;
     private Long classInChargedId;
 }
