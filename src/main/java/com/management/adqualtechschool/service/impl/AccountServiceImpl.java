@@ -2,9 +2,11 @@ package com.management.adqualtechschool.service.impl;
 
 import com.management.adqualtechschool.dto.AccountCreationDTO;
 import com.management.adqualtechschool.dto.AccountDTO;
+import com.management.adqualtechschool.dto.SubjectDTO;
 import com.management.adqualtechschool.entity.Account;
 import com.management.adqualtechschool.repository.AccountRepository;
 import com.management.adqualtechschool.service.AccountService;
+import com.management.adqualtechschool.service.SubjectService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,9 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private SubjectService subjectService;
+
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
@@ -51,6 +56,11 @@ public class AccountServiceImpl implements AccountService {
         return modelMapper.map(account, AccountDTO.class);
         }
         throw new EntityNotFoundException(NOT_FOUND_ACCOUNT_ID);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        accountRepository.deleteById(id);
     }
 
     @Override
@@ -82,6 +92,36 @@ public class AccountServiceImpl implements AccountService {
     public Page<AccountDTO> getListTeacherPaginated(Pageable pageable) {
         List<AccountDTO> teacherList = getAllTeacherAccount(TEACHER_POSITION);
         return paginate(pageable, teacherList);
+    }
+
+    @Override
+    public Page<AccountDTO> filterTeacherPaginatedBySubjectName(Pageable pageable, String subjectName) {
+        SubjectDTO subjectDTO = subjectService.getSubjectByName(subjectName);
+        List<Account> teacherList = subjectDTO.getAccounts();
+        List<AccountDTO> teacherListDTO = teacherList
+                .stream()
+                .map(teacher -> modelMapper.map(teacher, AccountDTO.class))
+                .collect(Collectors.toList());
+        return paginate(pageable, teacherListDTO);
+    }
+
+    @Override
+    public Page<AccountDTO> searchTeachersPaginated(Pageable pageable, String search) {
+        List<AccountDTO> accountDTOList = getAllTeacherAccount(TEACHER_POSITION);
+        if (search.equals("")) {
+            return paginate(pageable, accountDTOList);
+        }
+        String searchString = search.toLowerCase().trim();
+        accountDTOList = accountDTOList.stream()
+                .filter(accountDTO -> (accountDTO.getLastName() + " " + accountDTO.getFirstName())
+                                    .toLowerCase().contains(searchString)
+                || accountDTO.getPhone().toLowerCase().contains(searchString)
+                || accountDTO.getEmail().toLowerCase().contains(searchString)
+                || accountDTO.getPosition().toLowerCase().contains(searchString)
+                || accountDTO.getLevel().toLowerCase().contains(searchString)
+                || accountDTO.getRank().toLowerCase().contains(searchString))
+                .collect(Collectors.toList());
+        return paginate(pageable, accountDTOList);
     }
 
     private Page<AccountDTO> paginate(Pageable pageable, List<AccountDTO> accountDTOList) {

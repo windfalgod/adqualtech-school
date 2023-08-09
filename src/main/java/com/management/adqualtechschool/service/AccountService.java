@@ -9,8 +9,11 @@ import org.springframework.data.domain.Pageable;
 public interface AccountService {
     AccountCreationDTO getAccountCreationByUsername(String username);
     AccountDTO getAccountById(Long id);
+    void deleteById(Long id);
     AccountDTO getAccountByUsername(String username);
     List<AccountDTO> getAllTeacherAdminAccount();
     List<AccountDTO> getAllTeacherAccount(String position);
     Page<AccountDTO> getListTeacherPaginated(Pageable pageable);
+    Page<AccountDTO> filterTeacherPaginatedBySubjectName(Pageable pageable, String subjectName);
+    Page<AccountDTO> searchTeachersPaginated(Pageable pageable, String search);
 }

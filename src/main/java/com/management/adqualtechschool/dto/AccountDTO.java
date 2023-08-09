@@ -1,7 +1,9 @@
 package com.management.adqualtechschool.dto;
 
 import com.management.adqualtechschool.entity.Classroom;
+import com.management.adqualtechschool.entity.Subject;
 import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -19,5 +21,6 @@ public class AccountDTO {
     private String level;
     private String position;
     private String rank;
+    private Set<Subject> subjects;
     private Long classInChargedId;
 }
