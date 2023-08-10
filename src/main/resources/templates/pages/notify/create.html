@@ -36,7 +36,7 @@
     <h3 class="notify-creation-title mt-4 mb-4">Tạo thông báo</h3>
 
     <div class="create-notify-container ps-md-5 pe-md-5">
-        <form th:action="@{/notifies/create-processing}" th:object="${notify}" enctype="multipart/form-data"
+        <form th:action="@{/notifies/create-processing}" th:object="${notify}"
               method="post" class="d-flex flex-column" id="create-notify-form">
             <div class="col-6">
                 <label for="title-input" class="mb-1">Tên tiêu đề thông báo(*)</label>
@@ -57,7 +57,7 @@
             <span th:errorclass="error" th:if="${#fields.hasErrors('scope.title')}"
                   th:errors="*{scope.title}"></span>
             <div>
-                <label for="my-textarea" class="mb-1">Nhập nội dung cho thông báo(*)</label>
+                <label for="my-textarea" class="mb-1 mt-3">Nhập nội dung cho thông báo(*)</label>
                 <textarea id="my-textarea" th:field="*{content}" name="content"></textarea>
                 <span th:errorclass="error" th:if="${#fields.hasErrors('content')}"
                       th:errors="*{content}"></span>

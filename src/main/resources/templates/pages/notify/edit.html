@@ -58,7 +58,7 @@
             <span th:errorclass="error" th:if="${#fields.hasErrors('scope')}"
                   th:errors="*{scope}"></span>
             <div>
-                <label for="my-textarea" class="mb-1">Nhập nội dung cho thông báo(*)</label>
+                <label for="my-textarea" class="mb-1 mt-3">Nhập nội dung cho thông báo(*)</label>
                 <textarea id="my-textarea" th:field="*{content}" name="content"></textarea>
                 <span th:errorclass="error" th:if="${#fields.hasErrors('content')}"
                       th:errors="*{content}"></span>
