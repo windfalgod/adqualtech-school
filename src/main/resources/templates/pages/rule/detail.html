@@ -39,12 +39,12 @@
         <h4 th:text="${rule.title}" class="text-center fw-bold mb-4"></h4>
         <div class="rule-detail-content mx-3">
             <div class="start-date-detail d-flex">
-                <p><strong>Thời gian diễn ra:</strong></p>
+                <p><strong>Thời gian có hiệu lực:</strong></p>
                 <p class="rule-start-date ms-2"
                    th:text="${#temporals.format(rule.startAt, 'HH:mm dd/MM/yyyy')}"></p>
             </div>
             <div class="end-date-detail d-flex mb-4">
-                <p><strong>Thời gian kết thúc:</strong></p>
+                <p><strong>Thời gian hết hiệu lực:</strong></p>
                 <p class="rule-end-date ms-2"
                    th:text="${#temporals.format(rule.endAt, 'HH:mm dd/MM/yyyy')}"></p>
             </div>

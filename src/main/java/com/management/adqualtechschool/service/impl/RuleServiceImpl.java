@@ -150,6 +150,7 @@ public class RuleServiceImpl implements RuleService {
         return paginate(pageable, RuleDTOList);
     }
 
+    // filter rule and paginate to page to display
     @Override
     public Page<RuleDTO> filterRulesPaginated(Pageable pageable, Authentication auth,
                                               LocalDate startAt, LocalDate endAt, String createdAt,
@@ -169,6 +170,7 @@ public class RuleServiceImpl implements RuleService {
         return paginate(pageable, RuleDTOList);
     }
 
+    // search rule follow search and paginate to page to display
     @Override
     public Page<RuleDTO> searchRulesPaginated(Pageable pageable, Authentication auth, String search) {
         List<RuleDTO> RuleDTOList = getRulesFollowAuth(auth);
@@ -176,6 +178,8 @@ public class RuleServiceImpl implements RuleService {
             return paginate(pageable, RuleDTOList);
         }
         String searchString = search.toLowerCase().trim();
+
+        // filter by rule title or by last name and first name
         RuleDTOList = RuleDTOList.stream()
                 .filter(RuleDTO -> RuleDTO.getTitle().toLowerCase().contains(searchString)
                         || (RuleDTO.getCreator().getLastName()
@@ -198,6 +202,7 @@ public class RuleServiceImpl implements RuleService {
                 .getRuleDTOList();
     }
 
+    // get rule based on authorization
     private List<RuleDTO> getRulesFollowAuth(Authentication auth) {
         AccountDetailsImpl accountDetails = (AccountDetailsImpl) auth.getPrincipal();
         Long accountId = accountDetails.getId();
@@ -213,6 +218,7 @@ public class RuleServiceImpl implements RuleService {
         return RuleDTOList;
     }
 
+    // paginate list of rule to page
     private Page<RuleDTO> paginate(Pageable pageable, List<RuleDTO> RuleDTOList) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
