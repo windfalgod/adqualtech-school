@@ -1,5 +1,6 @@
 package com.management.adqualtechschool.service.impl;
 
+import com.management.adqualtechschool.common.Message;
 import com.management.adqualtechschool.config.CustomNotifyDTOFilterChain;
 import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.NotifyDTO;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,7 +32,6 @@ import org.springframework.stereotype.Service;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
-import static com.management.adqualtechschool.common.Message.NOT_FOUND_NOTIFY;
 import static com.management.adqualtechschool.common.RoleType.STUDENT;
 
 @Service
@@ -55,7 +56,7 @@ public class NotifyServiceImpl implements NotifyService {
         if (notify.isPresent()) {
             return modelMapper.map(notify, NotifyDTO.class);
         }
-        throw new NoSuchElementException(NOT_FOUND_NOTIFY);
+        throw new EntityNotFoundException(Message.NOT_FOUND_NOTIFY);
     }
 
     @Override
