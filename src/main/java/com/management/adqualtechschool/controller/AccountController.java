@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,14 +31,24 @@ public class AccountController {
     }
 
     @PostMapping("doing-change")
-    public String postChangePwd(@RequestParam("oldPassword") String oldPassword,
+    public String postChangePwd(@RequestParam("currentPassword") String currentPassword,
                                 @RequestParam("newPassword") String newPassword,
                                 @ModelAttribute("account") AccountCreationDTO account,
+                                BindingResult result,
                                 Authentication auth,
                                 RedirectAttributes attr) {
+
+        if (result.hasErrors()) {
+            return "change-password";
+        }
         try {
-            accountService.changePassword(account, oldPassword, newPassword);
-            attr.addFlashAttribute(Message.SUCCESS, Message.CHANGE_PWD_SUCCESS);
+            String status = accountService.changePassword(account, currentPassword, newPassword);
+            if (status.equals(Message.CHANGE_PWD_SUCCESS)) {
+                attr.addFlashAttribute(Message.SUCCESS, Message.CHANGE_PWD_SUCCESS);
+            } else {
+                attr.addFlashAttribute(Message.FAILED, Message.PASSWORD_NOT_MATCH);
+                return "redirect:/change-password";
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             attr.addFlashAttribute(Message.FAILED, Message.CHANGE_PWD_FAILED);
