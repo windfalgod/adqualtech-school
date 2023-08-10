@@ -35,4 +35,17 @@ public interface Message {
    String NOT_FOUND_NOTIFY = "Not found notify!";
    String NOTIFY_TITLE_NOT_EMPTY = "Tên tiêu đề thông báo không được để trống!";
    String NOTIFY_CONTENT_NOT_EMPTY = "Nội dung thông báo không được để trống!";
+   String RULE_TITLE_NOT_EMPTY = "Tên tiêu đề nội quy không được để trống!";
+   String RULE_CONTENT_NOT_EMPTY = "Nội dung nội quy không được để trống!";
+   String CREATE_RULE_SUCCESS = "Thêm nội quy thành công!";
+   String CREATE_RULE_FAILED = "Thêm nội quy không thành công!";
+   String UPDATE_RULE_SUCCESS = "Cập nhật nội quy thành công!";
+   String UPDATE_RULE_FAILED = "Cập nhật nội quy không thành công!";
+   String DELETE_RULE_SUCCESS= "Xóa nội quy thành công!";
+   String DELETE_RULE_FAILED = "Xóa nội quy không thành công!";
+   String START_BEFORE_END_RULE = "Thời gian bắt đầu luôn trước thời gian kết thúc nội quy!";
+   String CREATE_BEFORE_START_RULE = "Thời gian tạo luôn trước thời gian bắt đầu nội quy!";
+   String RULE_START_AT_NOT_NULL = "Thời gian nội quy có hiệu lực không được để trống!";
+   String RULE_END_AT_NOT_NULL = "Thời gian nội quy hết hiệu lực không được để trống!";
+   String NOT_FOUND_RULE= "Not found rule ";
 }
