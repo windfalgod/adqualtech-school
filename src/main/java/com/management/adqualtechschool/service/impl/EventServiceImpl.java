@@ -37,10 +37,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATED_AT;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
-import static com.management.adqualtechschool.common.ImageDir.eventImagesDir;
+import static com.management.adqualtechschool.common.SaveFileDir.eventImagesDir;
 import static com.management.adqualtechschool.common.RoleType.STUDENT;
 
 @Service
@@ -161,7 +163,8 @@ public class EventServiceImpl implements EventService {
         }
         String nameClass = account.getClassRoom().getName();
         List<EventDTO> classEvents = getEventsByClassName(nameClass);
-        List<EventDTO> gradeEvents = getEventsByGradeName(nameClass.substring(0, nameClass.length() - 1));
+        String gradeName = nameClass.replace(CLASS_NAME, GRADE_NAME).substring(0, nameClass.length() - 1);
+        List<EventDTO> gradeEvents = getEventsByGradeName(gradeName);
         List<EventDTO> schoolEvents = getEventsBySchoolWide();
         classEvents.addAll(gradeEvents);
         classEvents.addAll(schoolEvents);
