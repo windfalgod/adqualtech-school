@@ -26,4 +26,13 @@ public interface Message {
    String NOT_NULL = "Mật khẩu không được trống";
    String REGEXP = "Mật khẩu phải chứa 1 chữ số, 1 chữ in hoa, 1 chữ thường, 1 ký tự đặc biệt";
    String NOT_MATCH = "Mật khẩu hiện tại không khớp!";
+   String CREATE_NOTIFY_SUCCESS = "Thêm thông báo thành công!";
+   String CREATE_NOTIFY_FAILED = "Thêm thông báo không thành công!";
+   String UPDATE_NOTIFY_SUCCESS = "Cập nhật thông báo thành công!";
+   String UPDATE_NOTIFY_FAILED = "Cập nhật thông báo không thành công!";
+   String DELETE_NOTIFY_SUCCESS = "Xóa thông báo thành công!";
+   String DELETE_NOTIFY_FAILED = "Xóa thông báo không thành công!";
+   String NOT_FOUND_NOTIFY = "Not found notify!";
+   String NOTIFY_TITLE_NOT_EMPTY = "Tên tiêu đề thông báo không được để trống!";
+   String NOTIFY_CONTENT_NOT_EMPTY = "Nội dung thông báo không được để trống!";
 }

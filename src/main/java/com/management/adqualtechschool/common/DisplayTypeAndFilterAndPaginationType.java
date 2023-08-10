@@ -20,6 +20,6 @@ public interface DisplayTypeAndFilterAndPaginationType {
     String END_AT = "endAt";
     String CURRENT_PAGE = "currentPage";
     String PAGE_NUMBERS = "pageNumbers";
-    String SCOPE_NAME= "scopeName";
     String CREATOR_NAME= "creatorName";
+    String SCOPE_NAME = "scopeName";
 }
