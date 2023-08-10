@@ -43,15 +43,15 @@ public class AccountController {
         }
         try {
             String status = accountService.changePassword(account, currentPassword, newPassword);
-            if (status.equals(Message.CHANGE_PWD_SUCCESS)) {
-                attr.addFlashAttribute(Message.SUCCESS, Message.CHANGE_PWD_SUCCESS);
+            if (status.equals(Message.CHANGE_SUCCESS)) {
+                attr.addFlashAttribute(Message.SUCCESS, Message.CHANGE_SUCCESS);
             } else {
-                attr.addFlashAttribute(Message.FAILED, Message.PASSWORD_NOT_MATCH);
+                attr.addFlashAttribute(Message.FAILED, Message.NOT_MATCH);
                 return "redirect:/change-password";
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            attr.addFlashAttribute(Message.FAILED, Message.CHANGE_PWD_FAILED);
+            attr.addFlashAttribute(Message.FAILED, Message.CHANGE_FAILED);
             return "redirect:/change-password";
         }
         if (auth.getName().startsWith(MANAGER_USERNAME)) {
