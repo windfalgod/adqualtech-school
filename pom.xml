@@ -15,9 +15,6 @@
     <description>adqualtech-school</description>
     <properties>
         <java.version>11</java.version>
-        <sonar.host.url>
-            http://192.168.0.179:9001
-        </sonar.host.url>
     </properties>
     <dependencies>
         <dependency>
@@ -96,13 +93,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.9.1.2184</version>
-            </plugin>
         </plugins>
         <finalName>adqualtech-school</finalName>
     </build>
-
 </project>
