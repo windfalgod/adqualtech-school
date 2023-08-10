@@ -26,9 +26,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATED_AT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
@@ -66,7 +68,7 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Override
     public List<NotifyDTO> getAllNotify() {
-        List<Notify> notifyList = notifyRepository.findAll();
+        List<Notify> notifyList = notifyRepository.findAll(Sort.by(Sort.Direction.DESC, CREATED_AT));
         return notifyList.stream()
                 .map(Notify -> modelMapper.map(Notify, NotifyDTO.class))
                 .collect(Collectors.toList());
