@@ -114,7 +114,7 @@ public class NotifyController {
     }
 
     @GetMapping("/{id}")
-    public String detailEvent(@PathVariable("id") Long id, Model model) {
+    public String detailNotify(@PathVariable("id") Long id, Model model) {
         NotifyDTO NotifyDTO = notifyService.getNotifyById(id);
         model.addAttribute(NOTIFY, NotifyDTO);
         return "pages/notify/detail";
@@ -122,23 +122,25 @@ public class NotifyController {
 
     @GetMapping("/create")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
-    public String createEvent(Model model) {
-        addAttrScopeListAndCreatorListToModel(model);
+    public String createNotify(Model model) {
+        List<ScopeDTO> scopeList = scopeService.getAllScope();
+        model.addAttribute(SCOPE_LIST, scopeList);
         model.addAttribute(NOTIFY, new NotifyDTO());
         return "pages/notify/create";
     }
 
     @PostMapping("/create-processing")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
-    public String postCreateEvent(@Valid @ModelAttribute("event") NotifyDTO event,
-                                  BindingResult result, Authentication auth,
-                                  Model model, RedirectAttributes attr) {
+    public String postCreateNotify(@Valid @ModelAttribute("notify") NotifyDTO notify,
+                                   BindingResult result, Authentication auth,
+                                   Model model, RedirectAttributes attr) {
         if (result.hasErrors()) {
-            addAttrScopeListAndCreatorListToModel(model);
+            List<ScopeDTO> scopeList = scopeService.getAllScope();
+            model.addAttribute(SCOPE_LIST, scopeList);
             return "pages/notify/create";
         }
         try {
-            notifyService.saveOrUpdateNotify(event, auth.getName());
+            notifyService.saveOrUpdateNotify(notify, auth.getName());
             attr.addFlashAttribute(SUCCESS, CREATE_NOTIFY_SUCCESS);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -150,7 +152,7 @@ public class NotifyController {
 
     @GetMapping("/edit")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
-    public String editEvent(@RequestParam("id") Long id, Model model) {
+    public String editNotify(@RequestParam("id") Long id, Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
         NotifyDTO NotifyDTO = notifyService.getNotifyById(id);
@@ -161,20 +163,21 @@ public class NotifyController {
 
     @PostMapping("/edit-processing")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
-    public String postEditEvent(@Valid @ModelAttribute("event") NotifyDTO event,
-                                BindingResult result, Authentication auth,
-                                Model model, RedirectAttributes attr) {
+    public String postEditNotify(@Valid @ModelAttribute("notify") NotifyDTO notify,
+                                 BindingResult result, Authentication auth,
+                                 Model model, RedirectAttributes attr) {
         if (result.hasErrors()) {
-            addAttrScopeListAndCreatorListToModel(model);
+            List<ScopeDTO> scopeList = scopeService.getAllScope();
+            model.addAttribute(SCOPE_LIST, scopeList);
             return "pages/notify/edit";
         }
         try {
-            notifyService.saveOrUpdateNotify(event, auth.getName());
+            notifyService.saveOrUpdateNotify(notify, auth.getName());
             attr.addFlashAttribute(SUCCESS, UPDATE_NOTIFY_SUCCESS);
         } catch (Exception ex) {
             ex.printStackTrace();
             attr.addFlashAttribute(FAILED, UPDATE_NOTIFY_FAILED);
-            attr.addAttribute("id", event.getId());
+            attr.addAttribute("id", notify.getId());
             return "redirect:/notifies/edit?id={id}";
         }
         return "redirect:/notifies";
@@ -182,7 +185,7 @@ public class NotifyController {
 
     @PostMapping("/delete")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
-    public String deleteEvent(@RequestParam("id") Long id, RedirectAttributes attr) {
+    public String deleteNotify(@RequestParam("id") Long id, RedirectAttributes attr) {
         try {
             notifyService.deleteById(id);
             attr.addFlashAttribute(SUCCESS, DELETE_NOTIFY_SUCCESS);

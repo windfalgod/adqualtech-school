@@ -33,4 +33,6 @@ public interface Message {
    String DELETE_NOTIFY_SUCCESS = "Xóa thông báo thành công!";
    String DELETE_NOTIFY_FAILED = "Xóa thông báo không thành công!";
    String NOT_FOUND_NOTIFY = "Not found notify!";
+   String NOTIFY_TITLE_NOT_EMPTY = "Tên tiêu đề thông báo không được để trống!";
+   String NOTIFY_CONTENT_NOT_EMPTY = "Nội dung thông báo không được để trống!";
 }
