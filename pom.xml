@@ -15,6 +15,11 @@
     <description>adqualtech-school</description>
     <properties>
         <java.version>11</java.version>
+        <sonar.projectKey>TTS_Java_Nguyen_Xuan_Nghia</sonar.projectKey>
+        <sonar.projectName>TTS_Java_Nguyen_Xuan_Nghia</sonar.projectName>
+        <sonar.host.url>http://192.168.0.179:9001</sonar.host.url>
+        <sonar.login>java.tts</sonar.login>
+        <sonar.password>javatts@2023</sonar.password>
     </properties>
     <dependencies>
         <dependency>
@@ -92,6 +97,12 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <!-- Plugin sonar -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.9.1.2184</version>
             </plugin>
         </plugins>
         <finalName>adqualtech-school</finalName>
