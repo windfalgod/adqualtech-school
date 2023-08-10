@@ -90,4 +90,7 @@ public class Account {
 
     @OneToMany(mappedBy = "creator")
     private List<Notify> notifies;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Notify> rules;
 }

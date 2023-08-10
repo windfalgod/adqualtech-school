@@ -9,4 +9,5 @@ public interface AccountService {
     AccountDTO getAccountById(Long id);
     AccountDTO getAccountByUsername(String username);
     List<AccountDTO> getAllTeacherAdminAccount();
+    String changePassword(AccountCreationDTO account, String currentPassword, String newPassword);
 }

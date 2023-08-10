@@ -1,7 +1,7 @@
 package com.management.adqualtechschool.common;
 
-public class RoleType {
-    public final static String STUDENT = "ROLE_STUDENT";
-    public final static String TEACHER = "ROLE_TEACHER";
-    public final static String ADMIN = "ADMIN";
+public interface RoleType {
+     String STUDENT = "ROLE_STUDENT";
+     String TEACHER = "ROLE_TEACHER";
+     String ADMIN = "ADMIN";
 }
