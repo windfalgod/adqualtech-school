@@ -98,8 +98,11 @@
         <td th:text="${teacher.email}"></td>
         <td th:text="${teacher.phone}"></td>
         <td class="button-control">
-          <a th:href="@{/teachers/update-role}" class="btn btn-primary"
-               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Nâng quyền</a>
+          <form th:action="@{/teachers/upgrading-role}" method="post">
+            <input type="hidden" name="id" th:value="${teacher.id}" />
+            <button type="submit" th:class="'btn btn-primary ' + ${teacher.roles.iterator().next().name == 'ROLE_MANAGER'}"
+                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Nâng quyền</button>
+          </form>
         </td>
         <td class="button-control">
           <form th:action="@{/teachers/delete}" method="post">
@@ -187,8 +190,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number > 0}"
            class="page-link"
-           th:href="@{/teachers/filter/(page=1, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}"><<
+           th:href="@{/teachers/filter/(page=1, subjectName=${subjectName})}"><<
         </a>
       </li>
       <li class="page-item">
@@ -219,8 +221,7 @@
         </a>
         <a th:if="${pageNumber > currentPage.number - 2
         && pageNumber < currentPage.number + 4}"
-           th:href="@{/teachers/filter/(page=${pageNumber}, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}"
+           th:href="@{/teachers/filter/(page=${pageNumber},  subjectName=${subjectName})}"
            th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
            th:text="${pageNumber}">
         </a>
@@ -230,8 +231,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            th:class="'page-link'"
-           th:href="@{/teachers/filter/(page=${currentPage.number+2}, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}">>
+           th:href="@{/teachers/filter/(page=${currentPage.number+2},  subjectName=${subjectName})}">>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>
@@ -240,8 +240,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            class="page-link"
-           th:href="@{/teachers/filter/(page=${currentPage.totalPages}, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}">>>
+           th:href="@{/teachers/filter/(page=${currentPage.totalPages},  subjectName=${subjectName})}">>>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>>

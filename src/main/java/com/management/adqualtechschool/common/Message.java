@@ -16,12 +16,15 @@ public class Message {
     public final static String DELETE_EVENT_FAILED = "Xóa sự kiện không thành công!";
     public final static String DELETE_TEACHER_SUCCESS = "Xóa giáo viên thành công!";
     public final static String DELETE_TEACHER_FAILED = "Xóa giáo viên không thành công!";
+    public final static String UPGRADE_TEACHER_ROLE_SUCCESS = "Nâng quyền giáo viên thành công!";
+    public final static String UPGRADE_TEACHER_ROLE_FAILED = "Nâng quyền giáo viên không thành công!";
     public final static String START_BEFORE_END_EVENT = "Thời gian diễn ra luôn trước thời gian kết thúc sự kiện!";
     public final static String CREATE_BEFORE_END_EVENT = "Thời gian tạo luôn trước thời gian kết thúc sự kiện!";
     public final static String NOT_FOUND_ACCOUNT_ID = "Not found account by id!";
     public final static String NOT_FOUND_ACCOUNT_USERNAME = "Not found account by username ";
     public final static String NOT_FOUND_EVENT = "Not found event!";
     public final static String NOT_FOUND_SCOPE= "Not found scope ";
+    public final static String NOT_FOUND_ROLE_NAME= "Not found role name ";
     public final static String NO_IMAGE= "Not found image name!";
     public final static String SUBJECT_LIST = "subjectList";
     public final static String SUBJECT_NAME = "subjectName";

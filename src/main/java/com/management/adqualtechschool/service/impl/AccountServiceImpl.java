@@ -1,15 +1,21 @@
 package com.management.adqualtechschool.service.impl;
 
+import com.management.adqualtechschool.common.RoleType;
 import com.management.adqualtechschool.dto.AccountCreationDTO;
 import com.management.adqualtechschool.dto.AccountDTO;
+import com.management.adqualtechschool.dto.RoleDTO;
 import com.management.adqualtechschool.dto.SubjectDTO;
 import com.management.adqualtechschool.entity.Account;
+import com.management.adqualtechschool.entity.Role;
 import com.management.adqualtechschool.repository.AccountRepository;
 import com.management.adqualtechschool.service.AccountService;
+import com.management.adqualtechschool.service.RoleService;
 import com.management.adqualtechschool.service.SubjectService;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -35,6 +41,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private SubjectService subjectService;
+
+    @Autowired
+    private RoleService roleService;
 
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -122,6 +131,21 @@ public class AccountServiceImpl implements AccountService {
                 || accountDTO.getRank().toLowerCase().contains(searchString))
                 .collect(Collectors.toList());
         return paginate(pageable, accountDTOList);
+    }
+
+    @Override
+    public void upgradeTeacherRole(Long id) {
+        Account account = accountRepository.findById(id).orElse(null);
+        if (account == null) {
+            throw new EntityNotFoundException(NOT_FOUND_ACCOUNT_ID);
+        }
+        Set<Role> roleList = account.getRoles();
+        if (roleList.iterator().next().getName().equals(RoleType.TEACHER)) {
+            RoleDTO role = roleService.getRoleByName(RoleType.MANAGER);
+            Role roleSave = modelMapper.map(role, Role.class);
+            account.setRoles(new HashSet<>(Set.of(roleSave)));
+            accountRepository.save(account);
+        }
     }
 
     private Page<AccountDTO> paginate(Pageable pageable, List<AccountDTO> accountDTOList) {

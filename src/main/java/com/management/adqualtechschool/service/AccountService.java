@@ -16,4 +16,5 @@ public interface AccountService {
     Page<AccountDTO> getListTeacherPaginated(Pageable pageable);
     Page<AccountDTO> filterTeacherPaginatedBySubjectName(Pageable pageable, String subjectName);
     Page<AccountDTO> searchTeachersPaginated(Pageable pageable, String search);
+    void upgradeTeacherRole(Long id);
 }

@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,14 +26,14 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PAGE_NUMBERS;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SEARCH;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TYPE;
-import static com.management.adqualtechschool.common.Message.DELETE_EVENT_FAILED;
-import static com.management.adqualtechschool.common.Message.DELETE_EVENT_SUCCESS;
 import static com.management.adqualtechschool.common.Message.DELETE_TEACHER_FAILED;
 import static com.management.adqualtechschool.common.Message.DELETE_TEACHER_SUCCESS;
 import static com.management.adqualtechschool.common.Message.FAILED;
 import static com.management.adqualtechschool.common.Message.SUBJECT_LIST;
 import static com.management.adqualtechschool.common.Message.SUBJECT_NAME;
 import static com.management.adqualtechschool.common.Message.SUCCESS;
+import static com.management.adqualtechschool.common.Message.UPGRADE_TEACHER_ROLE_FAILED;
+import static com.management.adqualtechschool.common.Message.UPGRADE_TEACHER_ROLE_SUCCESS;
 
 @Controller
 public class AccountController {
@@ -87,6 +88,18 @@ public class AccountController {
         model.addAttribute(TYPE, SEARCH);
         model.addAttribute(SEARCH, search);
         return "pages/teacher/list";
+    }
+
+    @PostMapping("/teachers/upgrading-role")
+    public String upgradeRole(@RequestParam("id") Long id, RedirectAttributes attr) {
+        try {
+            accountService.upgradeTeacherRole(id);
+            attr.addFlashAttribute(SUCCESS, UPGRADE_TEACHER_ROLE_SUCCESS);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            attr.addFlashAttribute(FAILED, UPGRADE_TEACHER_ROLE_FAILED);
+        }
+        return "redirect:/teachers";
     }
 
     @PostMapping("/teachers/delete")
