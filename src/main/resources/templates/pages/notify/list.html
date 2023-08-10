@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách thông báo</title>
+  <script src="/js/jquery/lib/jquery.js"></script>
+  <script src="/js/alert.js"></script>
+</head>
+<body>
+<!--Breadcrumb-->
+<div class="notifies-content-wrapper p-4" th:fragment="content">
+  <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
+  <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/">Trang chủ</a>
+      </li>
+      <li class="breadcrumb-item active"
+          aria-current="page">Danh sách thông báo
+      </li>
+    </ol>
+  </nav>
+
+  <!--Header of notifies page-->
+  <div class="row header-notifies d-flex flex-row align-items-center mb-3 mt-5">
+    <div class="col-12 position-relative">
+      <form th:action="@{/notifies/search}" method="get"
+            class="form-search d-flex flex-row align-items-center w-100">
+        <i class="fa fa-search position-absolute notifies-search-icon"></i>
+        <label for="form-search-notifies"></label>
+        <input type="text" class="form-control form-input rounded w-100"
+               id="form-search-notifies" name="search" placeholder="Search anything...">
+        <button type="submit" class="btn btn-primary notifies-search-button">Tìm kiếm</button>
+      </form>
+    </div>
+  </div>
+
+  <!--Filter-->
+  <div class="row filter-notify mt-4 mb-3">
+    <div class="select-group col-12 d-flex flex-row">
+      <form th:action="@{/notifies/filter}" class="row w-100" method="get">
+
+        <!--Filter theo ngày tạo thông báo -->
+        <select class="form-select" aria-label="Default" name="createdAt">
+          <option>Ngày tạo</option>
+          <option th:selected="${createdAt == 'Hôm nay'}">Hôm nay</option>
+          <option th:selected="${createdAt == 'Hôm qua'}">Hôm qua</option>
+          <option th:selected="${createdAt == '7 Ngày gần đây'}">7 Ngày gần đây</option>
+          <option th:selected="${createdAt == '1 tháng gần đây'}">1 tháng gần đây</option>
+          <option th:selected="${createdAt == '1 năm gần đây'}">1 năm gần đây</option>
+        </select>
+
+        <!--Filter phạm vi thông báo hoạt động-->
+        <select class="form-select ms-3" aria-label="Default" name="scopeName">
+          <option selected>Phạm vi</option>
+          <option th:each="scope : ${scopeList}"
+                  th:value="${scope.title}"
+                  th:text="${scope.title}"
+                  th:selected="${scopeName == scope.title}">
+          </option>
+        </select>
+
+        <!--Filter theo người tạo thông báo -->
+        <select class="form-select ms-3" aria-label="Default" name="creatorName">
+          <option selected>Người tạo</option>
+          <option th:each="account : ${accountList}"
+                  th:value="${account.lastName} + ' ' + ${account.firstName}"
+                  th:text="${account.lastName} + ' ' + ${account.firstName}"
+                  th:selected="${creatorName == account.lastName + ' ' + account.firstName}">
+          </option>
+        </select>
+        <div class="col-md-1 ms-3 filter-button">
+          <button type="submit" class="btn btn-primary">Lọc</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!--Addition button-->
+  <div class="addition-button-wrapper d-flex flex-row justify-content-end">
+    <a th:href="@{/notifies/create/}" class="btn btn-primary addition-notify-button"
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Thêm thông báo</a>
+  </div>
+
+  <!--Table-->
+  <h3 th:if="${currentPage.totalPages <= 0}">Không có thông báo nào!</h3>
+  <table class="table table-striped table-hover" id="notifies-table" th:if="${currentPage.totalPages > 0}">
+    <thead>
+    <tr>
+      <th class="text-center">#</th>
+      <th>Tiêu đề</th>
+      <th>Phạm vi</th>
+      <th>Thời gian tạo</th>
+      <th>Người tạo</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="notify : ${currentPage}" class="row-notify-value">
+      <td th:text="${notify.id}" class="id-td"></td>
+      <td th:text="${notify.title}" class="title-td"></td>
+      <td th:text="${notify.scope.title}"></td>
+      <td th:text="${#temporals.format(notify.createdAt, 'HH:mm dd/MM/yyyy')}"></td>
+      <td th:text="${notify.creator.lastName} + ' ' + ${notify.creator.firstName}"></td>
+      <td class="btn-control">
+        <a th:href="@{'/notifies/' + ${notify.id}}" class="btn btn-success">Xem</a>
+      </td>
+      <td class="btn-control">
+        <a th:href="@{/notifies/edit(id=${notify.id})}" class="btn btn-warning"
+             sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
+      </td>
+      <td class="btn-control">
+        <form th:action="@{/notifies/delete}" method="post">
+          <input type="hidden" name="id" th:value="${notify.id}" />
+          <button type="submit" class="btn btn-danger"
+                  onclick="return confirm('Bạn có chắc muốn xóa thông báo này?')"
+                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Xóa</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!--pagination nav for list page-->
+  <nav aria-label="..." th:if="${currentPage.totalPages > 0 && type == 'list'}">
+    <ul class="pagination justify-content-center">
+
+      <!--page item fist and previous -->
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           class="page-link"
+           th:href="@{/notifies/(page=1)}"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           th:class="'page-link'"
+           th:href="@{/notifies/(page=${currentPage.number})}"><
+        </a>
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><
+        </a>
+      </li>
+
+      <!--page item number page -->
+      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+          th:each="pageNumber : ${pageNumbers}">
+        <a th:if="${pageNumber <= currentPage.number - 2}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber >= currentPage.number + 4}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber > currentPage.number - 2
+        && pageNumber < currentPage.number + 4}"
+           th:href="@{/notifies/(page=${pageNumber})}"
+           th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
+           th:text="${pageNumber}">
+        </a>
+      </li>
+
+      <!--page item next and last -->
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           th:class="'page-link'"
+           th:href="@{/notifies/(page=${currentPage.number+2})}">>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           class="page-link"
+           th:href="@{/notifies/(page=${currentPage.totalPages})}">>>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!--  Navigation for filter page-->
+  <nav aria-label="..." th:if="${currentPage.totalPages > 0 && type == 'filter'}">
+    <ul class="pagination justify-content-center">
+      <!--page item fist and previous -->
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           class="page-link"
+           th:href="@{/notifies/filter/(page=1, createdAt=${createdAt},
+            scopeName=${scopeName}, creatorName=${creatorName})}"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           th:class="'page-link'"
+           th:href="@{/notifies/filter/(page=${currentPage.number})}"><
+        </a>
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><
+        </a>
+      </li>
+
+      <!--page item number page -->
+      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+          th:each="pageNumber : ${pageNumbers}">
+        <a th:if="${pageNumber <= currentPage.number - 2}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber >= currentPage.number + 4}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber > currentPage.number - 2
+        && pageNumber < currentPage.number + 4}"
+           th:href="@{/notifies/filter/(page=${pageNumber},createdAt=${createdAt},
+            scopeName=${scopeName}, creatorName=${creatorName})}"
+           th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
+           th:text="${pageNumber}">
+        </a>
+      </li>
+
+      <!--page item next and last -->
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           th:class="'page-link'"
+           th:href="@{/notifies/filter/(page=${currentPage.number+2},createdAt=${createdAt},
+            scopeName=${scopeName}, creatorName=${creatorName})}">>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           class="page-link"
+           th:href="@{/notifies/filter/(page=${currentPage.totalPages},createdAt=${createdAt},
+            scopeName=${scopeName}, creatorName=${creatorName})}">>>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!--  Navigation for search-->
+  <nav aria-label="..." th:if="${currentPage.totalPages > 0 && type == 'search'}">
+    <ul class="pagination justify-content-center">
+      <!--page item fist and previous -->
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           class="page-link"
+           th:href="@{/notifies/search/(page=1,search=${search})}"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><<
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number > 0}"
+           th:class="'page-link'"
+           th:href="@{/notifies/search/(page=${currentPage.number}, search=${search})}"><
+        </a>
+        <a th:if="${currentPage.number <= 0}"
+           th:class="'page-link disabled'"><
+        </a>
+      </li>
+
+      <!--page item number page -->
+      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+          th:each="pageNumber : ${pageNumbers}">
+        <a th:if="${pageNumber <= currentPage.number - 2}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber >= currentPage.number + 4}"
+           th:class="'page-link disabled'"
+           th:text="'...'">
+        </a>
+        <a th:if="${pageNumber > currentPage.number - 2
+        && pageNumber < currentPage.number + 4}"
+           th:href="@{/notifies/search/(page=${pageNumber}, search=${search})}"
+           th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
+           th:text="${pageNumber}">
+        </a>
+      </li>
+
+      <!--page item next and last -->
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           th:class="'page-link'"
+           th:href="@{/notifies/search/(page=${currentPage.number+2}, search=${search})}">>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>
+        </a>
+      </li>
+      <li class="page-item">
+        <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
+           class="page-link"
+           th:href="@{/notifies/search/(page=${currentPage.totalPages}, search=${search})}">>>
+        </a>
+        <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
+           th:class="'page-link disabled'">>>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+</body>
+</html>
