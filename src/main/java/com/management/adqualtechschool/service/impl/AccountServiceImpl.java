@@ -1,11 +1,13 @@
 package com.management.adqualtechschool.service.impl;
 
+import com.management.adqualtechschool.common.Message;
 import com.management.adqualtechschool.dto.AccountCreationDTO;
 import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.entity.Account;
 import com.management.adqualtechschool.repository.AccountRepository;
 import com.management.adqualtechschool.service.AccountService;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
@@ -69,13 +71,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePassword(AccountCreationDTO account, String passwordNew) {
+    public void changePassword(AccountCreationDTO account, String oldPassword, String newPassword) {
         Optional<Account> accountOptional = accountRepository.findById(account.getId());
         if (!accountOptional.isPresent()) {
             throw new EntityNotFoundException(NOT_FOUND_ACCOUNT_USERNAME);
         }
         Account accountSave = accountOptional.orElse(null);
-        accountSave.setPassword(encoder.encode(passwordNew));
+        if (!encoder.matches(oldPassword, accountSave.getPassword())) {
+            throw new NoSuchElementException(Message.PASSWORD_NOT_MATCH);
+        }
+        accountSave.setPassword(encoder.encode(newPassword));
         accountRepository.save(accountSave);
     }
 }
