@@ -15,7 +15,6 @@ import com.management.adqualtechschool.service.ScopeService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -60,7 +59,7 @@ public class EventServiceImpl implements EventService {
     private ScopeService scopeService;
 
     @Value("${spring.servlet.multipart.location}")
-    private String uploadDir;
+    private String staticDir;
 
     @Override
     public EventDTO getEventById(Long id) {
@@ -112,7 +111,7 @@ public class EventServiceImpl implements EventService {
         try {
             byte[] imageBytes = imageUpload.getBytes();
             if (!(eventImagesDir + imageName).equals(event.getImage())) {
-                Path imagePath = Paths.get(uploadDir + eventImagesDir , imageName);
+                Path imagePath = Path.of(staticDir + eventImagesDir + imageName);
                 Files.write(imagePath, imageBytes);
             }
             event.setImage(eventImagesDir + imageName);
