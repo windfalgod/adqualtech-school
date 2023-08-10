@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
+import static com.management.adqualtechschool.common.Message.NOT_FOUND_NOTIFY;
 import static com.management.adqualtechschool.common.RoleType.STUDENT;
 
 @Service
@@ -50,8 +51,11 @@ public class NotifyServiceImpl implements NotifyService {
     
     @Override
     public NotifyDTO getNotifyById(Long id) {
-        Optional<Notify> Notify = notifyRepository.findById(id);
-        return modelMapper.map(Notify, NotifyDTO.class);
+        Optional<Notify> notify = notifyRepository.findById(id);
+        if (notify.isPresent()) {
+            return modelMapper.map(notify, NotifyDTO.class);
+        }
+        throw new NoSuchElementException(NOT_FOUND_NOTIFY);
     }
 
     @Override

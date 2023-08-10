@@ -32,4 +32,5 @@ public interface Message {
    String UPDATE_NOTIFY_FAILED = "Cập nhật thông báo không thành công!";
    String DELETE_NOTIFY_SUCCESS = "Xóa thông báo thành công!";
    String DELETE_NOTIFY_FAILED = "Xóa thông báo không thành công!";
+   String NOT_FOUND_NOTIFY = "Not found notify!";
 }
