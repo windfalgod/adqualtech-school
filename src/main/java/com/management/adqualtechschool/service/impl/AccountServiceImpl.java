@@ -77,10 +77,10 @@ public class AccountServiceImpl implements AccountService {
         }
         Account accountSave = accountOptional.orElse(null);
         if (!encoder.matches(currentPassword, accountSave.getPassword())) {
-            return Message.PASSWORD_NOT_MATCH;
+            return Message.NOT_MATCH;
         }
         accountSave.setPassword(encoder.encode(newPassword));
         accountRepository.save(accountSave);
-        return Message.CHANGE_PWD_SUCCESS;
+        return Message.CHANGE_SUCCESS;
     }
 }
