@@ -1,5 +1,6 @@
 package com.management.adqualtechschool.service.impl;
 
+import com.management.adqualtechschool.common.Message;
 import com.management.adqualtechschool.common.RoleType;
 import com.management.adqualtechschool.dto.AccountCreationDTO;
 import com.management.adqualtechschool.dto.AccountDTO;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
@@ -38,6 +40,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     @Autowired
     private SubjectService subjectService;
@@ -87,6 +92,21 @@ public class AccountServiceImpl implements AccountService {
         return accountList.stream()
                 .map(account -> modelMapper.map(account, AccountDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String changePassword(AccountCreationDTO account, String currentPassword, String newPassword) {
+        Optional<Account> accountOptional = accountRepository.findById(account.getId());
+        if (!accountOptional.isPresent()) {
+            throw new EntityNotFoundException(NOT_FOUND_ACCOUNT_USERNAME);
+        }
+        Account accountSave = accountOptional.orElse(null);
+        if (!encoder.matches(currentPassword, accountSave.getPassword())) {
+            return Message.NOT_MATCH;
+        }
+        accountSave.setPassword(encoder.encode(newPassword));
+        accountRepository.save(accountSave);
+        return Message.CHANGE_SUCCESS;
     }
 
     @Override

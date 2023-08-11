@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/resources/**",
                         "/static/**",
                         "/images/**",
+                        "/exams/**",
                         "/css/**",
                         "/js/**",
                         "/dist/**",
@@ -56,7 +57,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/tinymce/**",
                         "eventImages/**",
                         "accountImages/**",
-                        "datetimepicker/**",
                         "/static/favicon.ico"
                         )
                 .permitAll()

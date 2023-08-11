@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"
+        xmlns:layout="http://www.w3.org/1999/xhtml"
+        layout:decorate="~{fragments/layout}"
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cập nhật đề thi thử</title>
+<link rel="stylesheet" href="/css/validation-error.css">
+<script src="/tinymce/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+        tinymce.init({
+        selector: '#my-textarea'
+        });
+</script>
+</head>
+<body>
+    <div class="exams-edit-wrapper p-4" th:fragment="content">
+        <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
+        <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/">Trang chủ</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="/exam-library">Thư viện đề thi thử</a>
+                </li>
+                <li class="breadcrumb-item active"
+                        aria-current="page">Cập nhật đề thi thử
+                </li>
+            </ol>
+        </nav>
+
+        <h3 class="exam-update-title mt-4 mb-4">Cập nhật đề thi thử</h3>
+
+        <div class="update-exam-container ps-md-5 pe-md-5">
+            <form th:action="@{/exam-library/edit-processing}" th:object="${exam}" enctype="multipart/form-data"
+                    method="post" class="d-flex flex-column">
+                <input th:field="*{id}" type="hidden" name="id"/>
+                <div class="col-6">
+                    <label for="title-input" class="mb-1">Tên tiêu đề đề thi thử(*)</label>
+                    <input type="text" class="form-control form-input rounded w-100"
+                            id="title-input" name="exam-title" placeholder="Nhập tên tiêu đề"
+                            th:field="*{title}">
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('title')}"
+                            th:errors="*{title}"></span>
+                </div>
+                <div class="col-12 d-flex flex-row">
+                    <select class="form-select me-3" aria-label="Default" name="scope" th:field="*{scope.title}">
+                        <option selected value="Phạm vi">Phạm vi</option>
+                        <option th:each="scopeItem : ${scopeList}"
+                                th:value="${scopeItem.title}"
+                                th:text="${scopeItem.title}"
+                                th:selected="${scopeItem.title eq exam.scope.title}">
+                        </option>
+                    </select>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('scope.title')}"
+                          th:errors="*{scope.title}"></span>
+                    <select class="form-select" aria-label="Default" name="subject" th:field="*{subject.name}">
+                        <option selected value="Môn học">Môn</option>
+                        <option th:each="subject : ${subjectList}"
+                                th:value="${subject.name}"
+                                th:text="${subject.name}"
+                                th:selected="${subject.name eq exam.subject.name}">
+                        </option>
+                    </select>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('subject.name')}"
+                          th:errors="*{subject.name}"></span>
+                </div>
+                <div class="mb-3 col-md-6 mt-3">
+                    <label for="formImage" class="form-label mb-1">Tải đề thi lên(*)</label>
+                    <input class="form-control" type="file" id="formImage"
+                            name="imageUpload" th:field="*{multipartFile}">
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('multipartFile')}"
+                            th:errors="*{multipartFile}"></span>
+                </div>
+                <div class="button-update-exam-wrapper d-flex flex-row justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    <a th:href="@{/exam-library}" class="btn btn-warning ms-3"
+                            onclick="return confirm('Bạn có chắc muốn hủy?')">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -15,7 +15,6 @@ import com.management.adqualtechschool.service.ScopeService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,10 +37,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATED_AT;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
-import static com.management.adqualtechschool.common.ImageDir.eventImagesDir;
+import static com.management.adqualtechschool.common.SaveFileDir.eventImagesDir;
 import static com.management.adqualtechschool.common.RoleType.STUDENT;
 
 @Service
@@ -60,7 +61,7 @@ public class EventServiceImpl implements EventService {
     private ScopeService scopeService;
 
     @Value("${spring.servlet.multipart.location}")
-    private String uploadDir;
+    private String staticDir;
 
     @Override
     public EventDTO getEventById(Long id) {
@@ -112,7 +113,7 @@ public class EventServiceImpl implements EventService {
         try {
             byte[] imageBytes = imageUpload.getBytes();
             if (!(eventImagesDir + imageName).equals(event.getImage())) {
-                Path imagePath = Paths.get(uploadDir + eventImagesDir , imageName);
+                Path imagePath = Path.of(staticDir + eventImagesDir + imageName);
                 Files.write(imagePath, imageBytes);
             }
             event.setImage(eventImagesDir + imageName);
@@ -162,7 +163,8 @@ public class EventServiceImpl implements EventService {
         }
         String nameClass = account.getClassRoom().getName();
         List<EventDTO> classEvents = getEventsByClassName(nameClass);
-        List<EventDTO> gradeEvents = getEventsByGradeName(nameClass.substring(0, nameClass.length() - 1));
+        String gradeName = nameClass.replace(CLASS_NAME, GRADE_NAME).substring(0, nameClass.length() - 1);
+        List<EventDTO> gradeEvents = getEventsByGradeName(gradeName);
         List<EventDTO> schoolEvents = getEventsBySchoolWide();
         classEvents.addAll(gradeEvents);
         classEvents.addAll(schoolEvents);

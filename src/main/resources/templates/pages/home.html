@@ -7,9 +7,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang chủ</title>
+    <script src="/js/jquery/lib/jquery.js"></script>
+    <script src="/js/alert.js"></script>
 </head>
 <body>
 <div class="content-wrapper mt-5 mx-3" th:fragment="content">
+    <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"></div>
     <div class="events-group">
         <div class="events-home-title">
             <h3>Sự kiện gần đây</h3>
