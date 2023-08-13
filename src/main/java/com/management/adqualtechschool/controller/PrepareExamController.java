@@ -4,7 +4,6 @@ import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.PrepareExamDTO;
 import com.management.adqualtechschool.dto.ScopeDTO;
 import com.management.adqualtechschool.dto.SubjectDTO;
-import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.PrepareExamService;
 import com.management.adqualtechschool.service.ScopeService;
 import com.management.adqualtechschool.service.SubjectService;

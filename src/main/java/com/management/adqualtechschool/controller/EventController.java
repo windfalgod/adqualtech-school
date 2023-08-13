@@ -3,7 +3,6 @@ package com.management.adqualtechschool.controller;
 import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.EventDTO;
 import com.management.adqualtechschool.dto.ScopeDTO;
-import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.EventService;
 import com.management.adqualtechschool.service.ScopeService;
 import java.time.LocalDate;
