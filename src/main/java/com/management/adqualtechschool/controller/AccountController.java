@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +30,11 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.LIST;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PAGE_NUMBERS;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SEARCH;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TEACHER;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TEACHER_INFO;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TYPE;
+import static com.management.adqualtechschool.common.Message.CREATE_TEACHER_FAILED;
+import static com.management.adqualtechschool.common.Message.CREATE_TEACHER_SUCCESS;
 import static com.management.adqualtechschool.common.Message.DELETE_TEACHER_FAILED;
 import static com.management.adqualtechschool.common.Message.DELETE_TEACHER_SUCCESS;
 import static com.management.adqualtechschool.common.Message.FAILED;
@@ -45,12 +50,12 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    private final static String ACCOUNT = "account";
-    private final static String MANAGER_USERNAME = "ma";
-
     @Autowired
     private SubjectService subjectService;
 
+    private final static String ACCOUNT = "account";
+    private final static String MANAGER_USERNAME = "ma";
+    private final static String ADMIN_USERNAME = "admin";
     private static final int PAGE_SIZE = 30;
 
     @GetMapping("/change-password")
@@ -84,7 +89,7 @@ public class AccountController {
             attr.addFlashAttribute(Message.FAILED, Message.CHANGE_FAILED);
             return "redirect:/change-password";
         }
-        if (auth.getName().startsWith(MANAGER_USERNAME)) {
+        if (auth.getName().startsWith(MANAGER_USERNAME) || auth.getName().equals(ADMIN_USERNAME)) {
             return "redirect:/admin";
         }
         return "redirect:/";
@@ -129,16 +134,20 @@ public class AccountController {
                 .searchTeachersPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), search);
 
         definedCurrentPageAndAddAttrToModel(model, accountDTOPage);
+        List<SubjectDTO> subjectDTOList = subjectService.getAllSubject();
+        model.addAttribute(SUBJECT_LIST, subjectDTOList);
         model.addAttribute(TYPE, SEARCH);
         model.addAttribute(SEARCH, search);
         return "pages/teacher/list";
     }
 
     @PostMapping("/teachers/upgrading-role")
-    public String upgradeRole(@RequestParam("id") Long id, RedirectAttributes attr) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String upgradeToManagerRole(@RequestParam("id") Long id, Authentication auth, RedirectAttributes attr) {
         try {
-            accountService.upgradeTeacherRole(id);
+            accountService.upgradeToManagerRole(id);
             attr.addFlashAttribute(SUCCESS, UPGRADE_TEACHER_ROLE_SUCCESS);
+            System.out.println(auth.getAuthorities().iterator().next().getAuthority());
         } catch (Exception ex) {
             ex.printStackTrace();
             attr.addFlashAttribute(FAILED, UPGRADE_TEACHER_ROLE_FAILED);
@@ -147,7 +156,7 @@ public class AccountController {
     }
 
     @PostMapping("/teachers/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public String deleteTeacher(@RequestParam("id") Long id, RedirectAttributes attr) {
         try {
             accountService.deleteById(id);
@@ -157,6 +166,32 @@ public class AccountController {
             attr.addFlashAttribute(FAILED, DELETE_TEACHER_FAILED);
         }
         return "redirect:/teachers";
+    }
+
+    @GetMapping("/teachers/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String createTeacher(Model model) {
+        model.addAttribute(TEACHER, new AccountCreationDTO());
+        return "pages/teacher/create";
+    }
+
+    @PostMapping("/teachers/create-processing")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String doCreateTeacher(@Valid @ModelAttribute("teacher") AccountCreationDTO teacher,
+                                  BindingResult result, RedirectAttributes attr) {
+        if (result.hasErrors()) {
+            return "pages/teacher/create";
+        }
+        try {
+            AccountCreationDTO teacherAccount = accountService.saveTeacher(teacher);
+            attr.addFlashAttribute(TEACHER_INFO, teacherAccount);
+            attr.addFlashAttribute(SUCCESS, CREATE_TEACHER_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            attr.addFlashAttribute(FAILED, CREATE_TEACHER_FAILED);
+            return "redirect:/teachers/create";
+        }
+        return "redirect:/teachers/create";
     }
 
     private void definedCurrentPageAndAddAttrToModel(Model model, Page<AccountDTO> teacherDTOPage) {

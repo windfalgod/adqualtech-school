@@ -3,25 +3,27 @@
     import com.management.adqualtechschool.common.Message;
     import com.management.adqualtechschool.entity.Classroom;
     import com.management.adqualtechschool.entity.Role;
-    import java.time.LocalDateTime;
+    import java.time.LocalDate;
     import java.util.Set;
     import javax.validation.constraints.NotEmpty;
-    import javax.validation.constraints.Pattern;
+    import javax.validation.constraints.NotNull;
     import lombok.Data;
+    import org.springframework.format.annotation.DateTimeFormat;
 
     @Data
     public class AccountCreationDTO {
         private Long id;
         private String username;
-
-        @NotEmpty(message = Message.NOT_NULL)
-        @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,32}$",
-        message = Message.REGEXP)
         private String password;
+
+        @NotEmpty(message = Message.TEACHER_NAME_NOT_NULL)
         private String firstName;
         private String lastName;
         private Boolean gender;
-        private LocalDateTime birthday;
+
+        @NotNull(message = Message.BIRTHDAY_NOT_NULL)
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private LocalDate birthday;
         private String image;
         private Classroom classRoom;
         private String address;

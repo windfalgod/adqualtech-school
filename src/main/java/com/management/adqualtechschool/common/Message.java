@@ -58,6 +58,8 @@ public interface Message {
     String NOT_EXAM_NAME = "Not found exam file name!";
     String EXAM_TITLE_NOT_EMPTY = "Tên tiêu đề đề thi không được để trống!";
     String EXAM_CONTENT_NOT_EMPTY = "Tệp đề thi không được để trống!";
+    String CREATE_TEACHER_SUCCESS = "Thêm giáo viên thành công!";
+    String CREATE_TEACHER_FAILED = "Thêm giáo viên không thành công!";
     String DELETE_TEACHER_SUCCESS = "Xóa giáo viên thành công!";
     String DELETE_TEACHER_FAILED = "Xóa giáo viên không thành công!";
     String UPGRADE_TEACHER_ROLE_SUCCESS = "Nâng quyền giáo viên thành công!";
@@ -65,5 +67,11 @@ public interface Message {
     String NOT_FOUND_ROLE_NAME= "Not found role name ";
     String SUBJECT_LIST = "subjectList";
     String SUBJECT_NAME = "subjectName";
-    String TEACHER_LIST = "teacherList";
+    String NOT_CONTAIN_ROLE = "Set role not contains this role!";
+    String TEACHER_PREFIX = "te";
+    String TEACHER_NAME_NOT_NULL = "Tên giáo viên không được để trống!";
+    String BIRTHDAY_NOT_NULL = "Ngày sinh không được để trống";
+    String BIRTHDAY_NOT_VALID = "birthday not valid";
+    String GENERAL_TEACHER_SUBJECT = "Môn dạy";
+    String SEARCH_EMPTY = "";
 }

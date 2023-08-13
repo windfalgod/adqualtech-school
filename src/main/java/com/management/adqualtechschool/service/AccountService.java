@@ -13,9 +13,10 @@ public interface AccountService {
     AccountDTO getAccountByUsername(String username);
     List<AccountDTO> getAllTeacherAdminAccount();
     String changePassword(AccountCreationDTO account, String currentPassword, String newPassword);
-    List<AccountDTO> getAllTeacherAccount(String position);
+    List<AccountDTO> getAllTeacherAccount();
     Page<AccountDTO> getListTeacherPaginated(Pageable pageable);
     Page<AccountDTO> filterTeacherPaginatedBySubjectName(Pageable pageable, String subjectName);
     Page<AccountDTO> searchTeachersPaginated(Pageable pageable, String search);
-    void upgradeTeacherRole(Long id);
+    void upgradeToManagerRole(Long id);
+    AccountCreationDTO saveTeacher(AccountCreationDTO accountDTO);
 }
