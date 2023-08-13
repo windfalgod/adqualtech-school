@@ -44,7 +44,7 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
 import static com.management.adqualtechschool.common.SaveFileDir.eventImagesDir;
-import static com.management.adqualtechschool.common.RoleType.STUDENT;
+import static com.management.adqualtechschool.common.RoleType.PUPIL;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -157,7 +157,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDTO> getEventsByStudentAccount(Long id) {
+    public List<EventDTO> getEventsByPupilAccount(Long id) {
         AccountDTO account = accountService.getAccountById(id);
         if (account == null) {
             throw new NoSuchElementException(Message.NOT_FOUND_ACCOUNT_ID);
@@ -233,8 +233,8 @@ public class EventServiceImpl implements EventService {
 
         List<EventDTO> eventDTOList;
 
-        if (role.equals(STUDENT)) {
-            eventDTOList = getEventsByStudentAccount(accountId);
+        if (role.equals(PUPIL)) {
+            eventDTOList = getEventsByPupilAccount(accountId);
         } else {
             eventDTOList = getAllEvent();
         }
