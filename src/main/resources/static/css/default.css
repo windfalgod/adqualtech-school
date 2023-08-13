@@ -31,6 +31,10 @@
     margin-left: 20px;
 }
 
+.select-group-birthday {
+    width: 44.333% !important;
+}
+
 .row-value {
     height: 100px;
     vertical-align: middle;
@@ -58,9 +62,28 @@
 }
 
 .button-control {
-    width: 30px;
+    width: 70px;
+}
+
+.button-control-upgrade, .upgrade-form {
+    width: 112px;
 }
 
 .detail-container {
     box-shadow: rgba(0, 0, 0, 0.35) 10px 10px 10px 10px;
+}
+
+.inputShowAccount {
+    width: 150px;
+    background: white;
+    border: 0;
+}
+
+.labelForShowAccount {
+    width: 110px;
+}
+
+.clipboard-button {
+    border: 0;
+    background: white;
 }

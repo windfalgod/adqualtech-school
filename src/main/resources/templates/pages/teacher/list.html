@@ -64,7 +64,7 @@
 <!--Addition button-->
   <div class="addition-button-wrapper d-flex flex-row justify-content-end">
     <a th:href="@{/teachers/create/}" class="btn btn-primary addition-teacher-button"
-       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Thêm giáo viên</a>
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Thêm giáo viên</a>
   </div>
 
 <!--Table-->
@@ -82,7 +82,6 @@
         <th>Số điện thoại</th>
         <th></th>
         <th></th>
-        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -97,19 +96,18 @@
         </td>
         <td th:text="${teacher.email}"></td>
         <td th:text="${teacher.phone}"></td>
-        <td class="button-control">
-          <form th:action="@{/teachers/upgrading-role}" method="post">
+        <td class="button-control-upgrade" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">
+          <form th:action="@{/teachers/upgrading-role}" method="post" class="upgrade-form">
             <input type="hidden" name="id" th:value="${teacher.id}" />
-            <button type="submit" th:class="'btn btn-primary ' + ${teacher.roles.iterator().next().name == 'ROLE_MANAGER'}"
-                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Nâng quyền</button>
+            <button type="submit" th:class="'btn btn-primary ' + ${teacher.roles.iterator().next().name == 'ROLE_MANAGER'
+             || teacher.roles.iterator().next().name == 'ROLE_ADMIN' ?  'disabled' : '' }">Nâng quyền</button>
           </form>
         </td>
-        <td class="button-control">
+        <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">
           <form th:action="@{/teachers/delete}" method="post">
           <input type="hidden" name="id" th:value="${teacher.id}" />
           <button type="submit" class="btn btn-danger"
-                  onclick="return confirm('Bạn có chắc muốn xóa giáo viên này?')"
-                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Xóa</button>
+                  onclick="return confirm('Bạn có chắc muốn xóa giáo viên này?')">Xóa</button>
           </form>
         </td>
       </tr>
