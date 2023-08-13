@@ -43,8 +43,9 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
-import static com.management.adqualtechschool.common.SaveFileDir.eventImagesDir;
 import static com.management.adqualtechschool.common.RoleType.PUPIL;
+import static com.management.adqualtechschool.common.SaveFileDir.EVENT_IMAGE_DIR;
+import static com.management.adqualtechschool.common.SaveFileDir.STATIC_DIR;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -60,9 +61,6 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private ScopeService scopeService;
-
-    @Value("${spring.servlet.multipart.location}")
-    private String staticDir;
 
     @Override
     public EventDTO getEventById(Long id) {
@@ -113,11 +111,11 @@ public class EventServiceImpl implements EventService {
         }
         try {
             byte[] imageBytes = imageUpload.getBytes();
-            if (!(eventImagesDir + imageName).equals(event.getImage())) {
-                Path imagePath = Path.of(staticDir + eventImagesDir + imageName);
+            if (!(EVENT_IMAGE_DIR + imageName).equals(event.getImage())) {
+                Path imagePath = Path.of(STATIC_DIR + EVENT_IMAGE_DIR + imageName);
                 Files.write(imagePath, imageBytes);
             }
-            event.setImage(eventImagesDir + imageName);
+            event.setImage(EVENT_IMAGE_DIR + imageName);
             eventRepository.save(modelMapper.map(event, Event.class));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -212,6 +210,14 @@ public class EventServiceImpl implements EventService {
                         .toLowerCase().contains(searchString))
                 .collect(Collectors.toList());
         return paginate(pageable, eventDTOList);
+    }
+
+    @Override
+    public List<AccountDTO> getAllCreator() {
+        List<Account> creatorList = eventRepository.findAllEventCreator();
+        return creatorList.stream()
+                .map(creator -> modelMapper.map(creator, AccountDTO.class))
+                .collect(Collectors.toList());
     }
 
     private List<EventDTO> filterEvents(List<EventDTO> eventDTOList, LocalDateTime startAt,

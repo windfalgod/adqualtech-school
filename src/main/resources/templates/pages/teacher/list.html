@@ -64,7 +64,7 @@
 <!--Addition button-->
   <div class="addition-button-wrapper d-flex flex-row justify-content-end">
     <a th:href="@{/teachers/create/}" class="btn btn-primary addition-teacher-button"
-       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Thêm giáo viên</a>
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">Thêm giáo viên</a>
   </div>
 
 <!--Table-->
@@ -80,8 +80,8 @@
         <th>Môn dạy</th>
         <th>Email</th>
         <th>Số điện thoại</th>
-        <th></th>
-        <th></th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')"></th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')"></th>
       </tr>
     </thead>
     <tbody>

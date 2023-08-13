@@ -172,6 +172,14 @@ public class NotifyServiceImpl implements NotifyService {
         return paginate(pageable, notifyDTOList);
     }
 
+    @Override
+    public List<AccountDTO> getAllCreator() {
+        List<Account> creatorList = notifyRepository.findAllNotifyCreator();
+        return creatorList.stream()
+                .map(creator -> modelMapper.map(creator, AccountDTO.class))
+                .collect(Collectors.toList());
+    }
+
     private List<NotifyDTO> filterNotifies(List<NotifyDTO> notifyDTOList, String createdAt,
                                         String scopeName, String creatorName) {
         return new CustomNotifyDTOFilterChain(notifyDTOList)

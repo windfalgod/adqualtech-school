@@ -1,5 +1,6 @@
 package com.management.adqualtechschool.service;
 
+import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.PrepareExamDTO;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -15,4 +16,5 @@ public interface PrepareExamService {
     Page<PrepareExamDTO> filterPrepareExam(Pageable pageable, String createdAt, String subjectName,
                                            String scopeName, String creatorName);
     Page<PrepareExamDTO> searchExamsPaginated(Pageable pageable, String search);
+    List<AccountDTO> getAllCreator();
 }

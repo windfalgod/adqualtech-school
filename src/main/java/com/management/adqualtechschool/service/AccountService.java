@@ -11,7 +11,6 @@ public interface AccountService {
     AccountDTO getAccountById(Long id);
     void deleteById(Long id);
     AccountDTO getAccountByUsername(String username);
-    List<AccountDTO> getAllTeacherAdminAccount();
     String changePassword(AccountCreationDTO account, String currentPassword, String newPassword);
     List<AccountDTO> getAllTeacherAccount();
     Page<AccountDTO> getListTeacherPaginated(Pageable pageable);

@@ -191,6 +191,14 @@ public class RuleServiceImpl implements RuleService {
         return paginate(pageable, RuleDTOList);
     }
 
+    @Override
+    public List<AccountDTO> getAllCreator() {
+        List<Account> creatorList = ruleRepository.findAllRuleCreator();
+        return creatorList.stream()
+                .map(creator -> modelMapper.map(creator, AccountDTO.class))
+                .collect(Collectors.toList());
+    }
+
     private List<RuleDTO> filterRules(List<RuleDTO> ruleDTOList, LocalDateTime startAt,
                                       LocalDateTime endAt, String createdAt,
                                       String scopeName, String creatorName) {

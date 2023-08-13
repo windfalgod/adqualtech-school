@@ -108,8 +108,8 @@
         <th>Môn học</th>
         <th>Thời gian cập nhật</th>
         <th>Người tạo</th>
-        <th></th>
-        <th></th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></th>
         <th></th>
       </tr>
     </thead>
@@ -121,16 +121,14 @@
         <td th:text="${exam.subject.name}"></td>
         <td th:text="${#temporals.format(exam.updatedAt, 'HH:mm dd/MM/yyyy')}"></td>
         <td th:text="${exam.creator.lastName} + ' ' + ${exam.creator.firstName}"></td>
-        <td class="button-control">
-          <a th:href="@{/exam-library/edit(id=${exam.id})}" class="btn btn-warning"
-               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Sửa</a>
+        <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
+          <a th:href="@{/exam-library/edit(id=${exam.id})}" class="btn btn-warning">Sửa</a>
         </td>
-        <td class="button-control">
+        <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
           <form th:action="@{/exam-library/delete}" method="post">
           <input type="hidden" name="id" th:value="${exam.id}" />
           <button type="submit" class="btn btn-danger"
-                  onclick="return confirm('Bạn có chắc muốn xóa đề thi này?')"
-                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Xóa</button>
+                  onclick="return confirm('Bạn có chắc muốn xóa đề thi này?')">Xóa</button>
           </form>
         </td>
         <td class="button-control">

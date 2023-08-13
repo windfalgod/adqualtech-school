@@ -94,14 +94,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountDTO> getAllTeacherAdminAccount() {
-        List<Account> accountList = accountRepository.findAllTeacherManager();
-        return accountList.stream()
-                .map(account -> modelMapper.map(account, AccountDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public String changePassword(AccountCreationDTO account, String currentPassword, String newPassword) {
         Optional<Account> accountOptional = accountRepository.findById(account.getId());
         if (!accountOptional.isPresent()) {
