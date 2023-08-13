@@ -112,9 +112,10 @@ public class EventServiceImpl implements EventService {
             throw new NoSuchElementException(Message.NO_IMAGE);
         }
         try {
+            String projectLocation = System.getProperty("user.dir");
             byte[] imageBytes = imageUpload.getBytes();
             if (!(eventImagesDir + imageName).equals(event.getImage())) {
-                Path imagePath = Path.of(staticDir + eventImagesDir + imageName);
+                Path imagePath = Path.of(projectLocation + staticDir + eventImagesDir + imageName);
                 Files.write(imagePath, imageBytes);
             }
             event.setImage(eventImagesDir + imageName);
@@ -212,6 +213,14 @@ public class EventServiceImpl implements EventService {
                         .toLowerCase().contains(searchString))
                 .collect(Collectors.toList());
         return paginate(pageable, eventDTOList);
+    }
+
+    @Override
+    public List<AccountDTO> getAllCreator() {
+        List<Account> creatorList = eventRepository.findAllEventCreators();
+        return creatorList.stream()
+                .map(creator -> modelMapper.map(creator, AccountDTO.class))
+                .collect(Collectors.toList());
     }
 
     private List<EventDTO> filterEvents(List<EventDTO> eventDTOList, LocalDateTime startAt,

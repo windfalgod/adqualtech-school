@@ -1,5 +1,6 @@
 package com.management.adqualtechschool.repository;
 
+import com.management.adqualtechschool.entity.Account;
 import com.management.adqualtechschool.entity.Event;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query(value = "select e from Event e inner join Scope s on e.scope.id = s.id where s.title like 'Toàn trường'")
     List<Event> findEventsBySchoolWideOrderByCreatedAtDesc();
+
+    @Query(value = "select distinct (e.creator) from Event e group by e.creator order by e.creator.firstName, e.creator.lastName asc ")
+    List<Account> findAllEventCreators();
 }
