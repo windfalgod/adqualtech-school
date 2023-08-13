@@ -21,5 +21,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEventsBySchoolWideOrderByCreatedAtDesc();
 
     @Query(value = "select distinct (e.creator) from Event e group by e.creator order by e.creator.firstName, e.creator.lastName asc ")
-    List<Account> findAllEventCreators();
+    List<Account> findAllEventCreator();
 }

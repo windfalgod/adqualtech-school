@@ -62,9 +62,6 @@ public class RuleController {
     @Autowired
     private ScopeService scopeService;
 
-    @Autowired
-    private AccountService accountService;
-
     private final static String RULE = "rule";
     private final static int PAGE_SIZE = 30;
 
@@ -223,7 +220,7 @@ public class RuleController {
     // add scope list and creator list to model for filter
     private void addAttrScopeListAndCreatorListToModel(Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        List<AccountDTO> accountDTOList = ruleService.getAllCreator();
         model.addAttribute(SCOPE_LIST, scopeList);
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
     }

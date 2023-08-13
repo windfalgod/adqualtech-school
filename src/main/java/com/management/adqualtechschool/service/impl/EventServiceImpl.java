@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -43,8 +42,9 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
-import static com.management.adqualtechschool.common.SaveFileDir.eventImagesDir;
+import static com.management.adqualtechschool.common.SaveFileDir.EVENT_IMAGE_DIR;
 import static com.management.adqualtechschool.common.RoleType.STUDENT;
+import static com.management.adqualtechschool.common.SaveFileDir.STATIC_DIR;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -60,9 +60,6 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private ScopeService scopeService;
-
-    @Value("${spring.servlet.multipart.location}")
-    private String staticDir;
 
     @Override
     public EventDTO getEventById(Long id) {
@@ -112,13 +109,12 @@ public class EventServiceImpl implements EventService {
             throw new NoSuchElementException(Message.NO_IMAGE);
         }
         try {
-            String projectLocation = System.getProperty("user.dir");
             byte[] imageBytes = imageUpload.getBytes();
-            if (!(eventImagesDir + imageName).equals(event.getImage())) {
-                Path imagePath = Path.of(projectLocation + staticDir + eventImagesDir + imageName);
+            if (!(EVENT_IMAGE_DIR + imageName).equals(event.getImage())) {
+                Path imagePath = Path.of(STATIC_DIR + EVENT_IMAGE_DIR + imageName);
                 Files.write(imagePath, imageBytes);
             }
-            event.setImage(eventImagesDir + imageName);
+            event.setImage(EVENT_IMAGE_DIR + imageName);
             eventRepository.save(modelMapper.map(event, Event.class));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -217,7 +213,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<AccountDTO> getAllCreator() {
-        List<Account> creatorList = eventRepository.findAllEventCreators();
+        List<Account> creatorList = eventRepository.findAllEventCreator();
         return creatorList.stream()
                 .map(creator -> modelMapper.map(creator, AccountDTO.class))
                 .collect(Collectors.toList());

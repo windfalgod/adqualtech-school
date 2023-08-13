@@ -57,9 +57,6 @@ public class NotifyController {
     @Autowired
     private ScopeService scopeService;
 
-    @Autowired
-    private AccountService accountService;
-
     private final static String NOTIFY = "notify";
     private final static int PAGE_SIZE = 30;
 
@@ -209,7 +206,7 @@ public class NotifyController {
 
     private void addAttrScopeListAndCreatorListToModel(Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        List<AccountDTO> accountDTOList = notifyService.getAllCreator();
         model.addAttribute(SCOPE_LIST, scopeList);
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
     }

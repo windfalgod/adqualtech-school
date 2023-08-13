@@ -72,9 +72,6 @@ public class PrepareExamController {
     private ScopeService scopeService;
 
     @Autowired
-    private AccountService accountService;
-
-    @Autowired
     private SubjectService subjectService;
 
     private final static int PAGE_SIZE = 30;
@@ -89,7 +86,7 @@ public class PrepareExamController {
 
         definedCurrentPageAndAddAttrToModel(model, examLibraryPage);
         addAttrScopeListAndSubjectList(model);
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        List<AccountDTO> accountDTOList = prepareExamService.getAllCreator();
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
         model.addAttribute(TYPE,LIST);
         return "pages/exam/list";
@@ -110,7 +107,7 @@ public class PrepareExamController {
 
         definedCurrentPageAndAddAttrToModel(model, examLibraryPage);
         addAttrScopeListAndSubjectList(model);
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        List<AccountDTO> accountDTOList = prepareExamService.getAllCreator();
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
         model.addAttribute(UPDATED_AT, updatedAt);
         model.addAttribute(SUBJECT_NAME, subjectName);
@@ -130,7 +127,7 @@ public class PrepareExamController {
 
         definedCurrentPageAndAddAttrToModel(model, examLibraryPage);
         addAttrScopeListAndSubjectList(model);
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        List<AccountDTO> accountDTOList = prepareExamService.getAllCreator();
         model.addAttribute(SEARCH, search);
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
         model.addAttribute(TYPE, SEARCH);

@@ -140,6 +140,14 @@ public class PrepareExamServiceImpl implements PrepareExamService {
         return paginate(pageable, examDTOList);
     }
 
+    @Override
+    public List<AccountDTO> getAllCreator() {
+        List<Account> creatorList = prepareExamRepository.findAllExamCreator();
+        return creatorList.stream()
+                .map(creator -> modelMapper.map(creator, AccountDTO.class))
+                .collect(Collectors.toList());
+    }
+
 
     private List<PrepareExamDTO> filterEvents(List<PrepareExamDTO> examDTOList, String updatedAt,
                                         String subjectName, String scopeName, String creatorName) {
