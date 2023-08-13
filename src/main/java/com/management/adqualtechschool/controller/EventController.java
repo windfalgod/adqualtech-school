@@ -131,7 +131,7 @@ public class EventController {
     }
 
     @GetMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String createEvent(Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -140,7 +140,7 @@ public class EventController {
     }
 
     @PostMapping("/create-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postCreateEvent(@Valid @ModelAttribute("event") EventDTO event,
                                   BindingResult result, Authentication auth,
                                   Model model, RedirectAttributes attr) {
@@ -162,7 +162,7 @@ public class EventController {
     }
 
     @GetMapping("/edit")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String editEvent(@RequestParam("id") Long id, Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -173,7 +173,7 @@ public class EventController {
 
 
     @PostMapping("/edit-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postEditEvent(@Valid @ModelAttribute("event") EventDTO event,
                                 BindingResult result, Authentication auth,
                                 Model model, RedirectAttributes attr) {
@@ -197,7 +197,7 @@ public class EventController {
 
 
     @PostMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String deleteEvent(@RequestParam("id") Long id, RedirectAttributes attr) {
         try {
             eventService.deleteById(id);

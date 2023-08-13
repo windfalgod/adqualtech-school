@@ -42,6 +42,7 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
+import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
 import static com.management.adqualtechschool.common.SaveFileDir.eventImagesDir;
 import static com.management.adqualtechschool.common.RoleType.STUDENT;
 
@@ -199,7 +200,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public Page<EventDTO> searchEventsPaginated(Pageable pageable, Authentication auth, String search) {
         List<EventDTO> eventDTOList = getEventsFollowAuth(auth);
-        if (search.equals("")) {
+        if (search.equals(SEARCH_EMPTY)) {
             return paginate(pageable, eventDTOList);
         }
         String searchString = search.toLowerCase().trim();

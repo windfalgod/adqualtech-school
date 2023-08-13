@@ -34,6 +34,7 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
+import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
 import static com.management.adqualtechschool.common.RoleType.STUDENT;
 
 @Service
@@ -157,7 +158,7 @@ public class NotifyServiceImpl implements NotifyService {
     @Override
     public Page<NotifyDTO> searchNotifiesPaginated(Pageable pageable, Authentication auth, String search) {
         List<NotifyDTO> notifyDTOList = getNotifiesFollowAuth(auth);
-        if (search.equals("")) {
+        if (search.equals(SEARCH_EMPTY)) {
             return paginate(pageable, notifyDTOList);
         }
         String searchString = search.toLowerCase().trim();

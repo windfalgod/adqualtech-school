@@ -132,7 +132,7 @@ public class RuleController {
     }
 
     @GetMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String createRule(Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -141,7 +141,7 @@ public class RuleController {
     }
 
     @PostMapping("/create-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postCreateRule(@Valid @ModelAttribute("rule") RuleDTO rule,
                                   BindingResult result, Authentication auth,
                                   Model model, RedirectAttributes attr) {
@@ -162,7 +162,7 @@ public class RuleController {
     }
 
     @GetMapping("/edit")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String editRule(@RequestParam("id") Long id, Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -173,7 +173,7 @@ public class RuleController {
 
 
     @PostMapping("/edit-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postEditRule(@Valid @ModelAttribute("rule") RuleDTO rule,
                                 BindingResult result, Authentication auth,
                                 Model model, RedirectAttributes attr) {
@@ -196,7 +196,7 @@ public class RuleController {
 
 
     @PostMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String deleteRule(@RequestParam("id") Long id, RedirectAttributes attr) {
         try {
             ruleService.deleteById(id);
