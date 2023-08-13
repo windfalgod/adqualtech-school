@@ -34,7 +34,7 @@
                        >Bảng điểm</a>
                 </li>
                 <li class="nav-item mx-3 text-white"
-                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">
+                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
                     <a href="/score-addition"
                        th:class="'link-score-addition ' +
                    ${#httpServletRequest.requestURI == '/score-addition'

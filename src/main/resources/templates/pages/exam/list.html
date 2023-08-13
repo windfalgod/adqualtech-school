@@ -94,7 +94,7 @@
 <!--Addition button-->
   <div class="addition-button-wrapper d-flex flex-row justify-content-end">
     <a th:href="@{/exam-library/create/}" class="btn btn-primary addition-exam-button"
-       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Thêm đề thi thử</a>
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Thêm đề thi thử</a>
   </div>
 
 <!--Table-->
@@ -123,14 +123,14 @@
         <td th:text="${exam.creator.lastName} + ' ' + ${exam.creator.firstName}"></td>
         <td class="button-control">
           <a th:href="@{/exam-library/edit(id=${exam.id})}" class="btn btn-warning"
-               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
+               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Sửa</a>
         </td>
         <td class="button-control">
           <form th:action="@{/exam-library/delete}" method="post">
           <input type="hidden" name="id" th:value="${exam.id}" />
           <button type="submit" class="btn btn-danger"
                   onclick="return confirm('Bạn có chắc muốn xóa đề thi này?')"
-                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Xóa</button>
+                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Xóa</button>
           </form>
         </td>
         <td class="button-control">

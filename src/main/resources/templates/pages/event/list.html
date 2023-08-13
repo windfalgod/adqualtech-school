@@ -102,7 +102,7 @@
 <!--Addition button-->
   <div class="addition-button-wrapper d-flex flex-row justify-content-end">
     <a th:href="@{/events/create/}" class="btn btn-primary addition-event-button"
-       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Thêm sự kiện</a>
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Thêm sự kiện</a>
   </div>
 
 <!--Table-->
@@ -136,14 +136,14 @@
         </td>
         <td class="button-control">
           <a th:href="@{/events/edit(id=${event.id})}" class="btn btn-warning"
-               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
+               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Sửa</a>
         </td>
         <td class="button-control">
           <form th:action="@{/events/delete}" method="post">
           <input type="hidden" name="id" th:value="${event.id}" />
           <button type="submit" class="btn btn-danger"
                   onclick="return confirm('Bạn có chắc muốn xóa sự kiện này?')"
-                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Xóa</button>
+                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Xóa</button>
           </form>
         </td>
       </tr>

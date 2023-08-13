@@ -84,7 +84,7 @@
   <!--Addition button-->
   <div class="addition-button-wrapper d-flex flex-row justify-content-end">
     <a th:href="@{/notifies/create/}" class="btn btn-primary addition-notify-button"
-       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Thêm thông báo</a>
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Thêm thông báo</a>
   </div>
 
   <!--Table-->
@@ -114,14 +114,14 @@
       </td>
       <td class="button-control">
         <a th:href="@{/notifies/edit(id=${notify.id})}" class="btn btn-warning"
-             sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
+             sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Sửa</a>
       </td>
       <td class="button-control">
         <form th:action="@{/notifies/delete}" method="post">
           <input type="hidden" name="id" th:value="${notify.id}" />
           <button type="submit" class="btn btn-danger"
                   onclick="return confirm('Bạn có chắc muốn xóa thông báo này?')"
-                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Xóa</button>
+                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Xóa</button>
         </form>
       </td>
     </tr>

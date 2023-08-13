@@ -102,7 +102,7 @@
 <!--Addition button-->
   <div class="addition-button-wrapper d-flex flex-row justify-content-end">
     <a th:href="@{/rules/create/}" class="btn btn-primary addition-rule-button"
-       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Thêm nội quy</a>
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Thêm nội quy</a>
   </div>
 
 <!--Table-->
@@ -136,14 +136,14 @@
         </td>
         <td class="button-control">
           <a th:href="@{/rules/edit(id=${rule.id})}" class="btn btn-warning"
-               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
+               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Sửa</a>
         </td>
         <td class="button-control">
           <form th:action="@{/rules/delete}" method="post">
           <input type="hidden" name="id" th:value="${rule.id}" />
           <button type="submit" class="btn btn-danger"
                   onclick="return confirm('Bạn có chắc muốn xóa nội quy này?')"
-                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Xóa</button>
+                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Xóa</button>
           </form>
         </td>
       </tr>
