@@ -26,7 +26,7 @@
 
     <h3 class="notify-detail-title mt-5 mb-5">Chi tiết thông báo</h3>
     <div class="button-update-notify-wrapper d-flex flex-row justify-content-end mt-4 mb-4 rounded"
-         sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">
+         sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
         <a th:href="@{/notifies/edit(id=${notify.id})}" class="btn btn-primary me-2">Cập nhật</a>
         <form th:action="@{/notifies/delete}" method="post" class="delete-form me-2">
             <input type="hidden" name="id" th:value="${notify.id}" />

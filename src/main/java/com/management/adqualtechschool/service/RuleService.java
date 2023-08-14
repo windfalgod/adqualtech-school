@@ -1,5 +1,6 @@
 package com.management.adqualtechschool.service;
 
+import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.RuleDTO;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,4 +23,5 @@ public interface RuleService {
                                          String scopeName, String creatorName);
     Page<RuleDTO> searchRulesPaginated(Pageable pageable, Authentication auth,
                                          String search);
+    List<AccountDTO> getAllCreator();
 }

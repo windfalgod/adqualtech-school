@@ -28,4 +28,6 @@ public interface DisplayTypeAndFilterAndPaginationType {
     String SUBJECT_NAME = "subjectName";
     String CLASS_NAME = "Lớp";
     String GRADE_NAME = "Khối";
+    String TEACHER = "teacher";
+    String TEACHER_INFO = "teacherInfo";
 }

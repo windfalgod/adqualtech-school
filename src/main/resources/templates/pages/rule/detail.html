@@ -26,7 +26,7 @@
 
     <h3 class="rule-detail-title mt-5 mb-5">Chi tiết nội quy</h3>
     <div class="button-update-rule-wrapper d-flex flex-row justify-content-end mt-4 mb-4 rounded"
-         sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">
+         sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
         <a th:href="@{/rules/edit(id=${rule.id})}" class="btn btn-primary me-2">Cập nhật</a>
         <form th:action="@{/rules/delete}" method="post" class="delete-form me-2">
             <input type="hidden" name="id" th:value="${rule.id}" />

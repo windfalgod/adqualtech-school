@@ -1,18 +1,48 @@
 package com.management.adqualtechschool.controller;
 
-import com.management.adqualtechschool.common.Message;
-import com.management.adqualtechschool.dto.AccountCreationDTO;
+import com.management.adqualtechschool.dto.AccountDTO;
+import com.management.adqualtechschool.dto.SubjectDTO;
 import com.management.adqualtechschool.service.AccountService;
+import com.management.adqualtechschool.service.SubjectService;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.management.adqualtechschool.common.Message;
+import com.management.adqualtechschool.dto.AccountCreationDTO;
+import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CURRENT_PAGE;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.FILTER;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.LIST;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PAGE_NUMBERS;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SEARCH;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TEACHER;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TEACHER_INFO;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TYPE;
+import static com.management.adqualtechschool.common.Message.CREATE_TEACHER_FAILED;
+import static com.management.adqualtechschool.common.Message.CREATE_TEACHER_SUCCESS;
+import static com.management.adqualtechschool.common.Message.DELETE_TEACHER_FAILED;
+import static com.management.adqualtechschool.common.Message.DELETE_TEACHER_SUCCESS;
+import static com.management.adqualtechschool.common.Message.FAILED;
+import static com.management.adqualtechschool.common.Message.SUBJECT_LIST;
+import static com.management.adqualtechschool.common.Message.SUBJECT_NAME;
+import static com.management.adqualtechschool.common.Message.SUCCESS;
+import static com.management.adqualtechschool.common.Message.UPGRADE_TEACHER_ROLE_FAILED;
+import static com.management.adqualtechschool.common.Message.UPGRADE_TEACHER_ROLE_SUCCESS;
 
 @Controller
 public class AccountController {
@@ -20,8 +50,13 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private SubjectService subjectService;
+
     private final static String ACCOUNT = "account";
     private final static String MANAGER_USERNAME = "ma";
+    private final static String ADMIN_USERNAME = "admin";
+    private static final int PAGE_SIZE = 30;
 
     @GetMapping("/change-password")
     public String showChangePwdPage(Model model, Authentication auth) {
@@ -54,9 +89,119 @@ public class AccountController {
             attr.addFlashAttribute(Message.FAILED, Message.CHANGE_FAILED);
             return "redirect:/change-password";
         }
-        if (auth.getName().startsWith(MANAGER_USERNAME)) {
+        if (auth.getName().startsWith(MANAGER_USERNAME) || auth.getName().equals(ADMIN_USERNAME)) {
             return "redirect:/admin";
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/teachers")
+    public String showListTeacher(Model model, @RequestParam("page") Optional<Integer> page) {
+        int currentPage = page.orElse(1);
+        Page<AccountDTO> accountDTOPage = accountService
+                .getListTeacherPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE));
+
+        definedCurrentPageAndAddAttrToModel(model, accountDTOPage);
+        List<SubjectDTO> subjectDTOList = subjectService.getAllSubject();
+        model.addAttribute(SUBJECT_LIST, subjectDTOList);
+        model.addAttribute(TYPE,LIST);
+        return "pages/teacher/list";
+    }
+
+    @GetMapping("/teachers/filter")
+    public String filterEvents(Model model,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam(value = "subjectName", required = false) String subjectName) {
+        int currentPage = page.orElse(1);
+
+        Page<AccountDTO> accountDTOPage = accountService.filterTeacherPaginatedBySubjectName
+                (PageRequest.of(currentPage - 1, PAGE_SIZE), subjectName);
+
+        definedCurrentPageAndAddAttrToModel(model, accountDTOPage);
+        List<SubjectDTO> subjectDTOList = subjectService.getAllSubject();
+        model.addAttribute(SUBJECT_LIST, subjectDTOList);
+        model.addAttribute(SUBJECT_NAME, subjectName);
+        model.addAttribute(TYPE,FILTER);
+        return "pages/teacher/list";
+    }
+
+    @GetMapping("/teachers/search")
+    public String searchEvents(Model model,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("search") String search) {
+        int currentPage = page.orElse(1);
+        Page<AccountDTO> accountDTOPage = accountService
+                .searchTeachersPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), search);
+
+        definedCurrentPageAndAddAttrToModel(model, accountDTOPage);
+        List<SubjectDTO> subjectDTOList = subjectService.getAllSubject();
+        model.addAttribute(SUBJECT_LIST, subjectDTOList);
+        model.addAttribute(TYPE, SEARCH);
+        model.addAttribute(SEARCH, search);
+        return "pages/teacher/list";
+    }
+
+    @PostMapping("/teachers/upgrading-role")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String upgradeToManagerRole(@RequestParam("id") Long id, Authentication auth, RedirectAttributes attr) {
+        try {
+            accountService.upgradeToManagerRole(id);
+            attr.addFlashAttribute(SUCCESS, UPGRADE_TEACHER_ROLE_SUCCESS);
+            System.out.println(auth.getAuthorities().iterator().next().getAuthority());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            attr.addFlashAttribute(FAILED, UPGRADE_TEACHER_ROLE_FAILED);
+        }
+        return "redirect:/teachers";
+    }
+
+    @PostMapping("/teachers/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String deleteTeacher(@RequestParam("id") Long id, RedirectAttributes attr) {
+        try {
+            accountService.deleteById(id);
+            attr.addFlashAttribute(SUCCESS, DELETE_TEACHER_SUCCESS);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            attr.addFlashAttribute(FAILED, DELETE_TEACHER_FAILED);
+        }
+        return "redirect:/teachers";
+    }
+
+    @GetMapping("/teachers/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String createTeacher(Model model) {
+        model.addAttribute(TEACHER, new AccountCreationDTO());
+        return "pages/teacher/create";
+    }
+
+    @PostMapping("/teachers/create-processing")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String doCreateTeacher(@Valid @ModelAttribute("teacher") AccountCreationDTO teacher,
+                                  BindingResult result, RedirectAttributes attr) {
+        if (result.hasErrors()) {
+            return "pages/teacher/create";
+        }
+        try {
+            AccountCreationDTO teacherAccount = accountService.saveTeacher(teacher);
+            attr.addFlashAttribute(TEACHER_INFO, teacherAccount);
+            attr.addFlashAttribute(SUCCESS, CREATE_TEACHER_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            attr.addFlashAttribute(FAILED, CREATE_TEACHER_FAILED);
+            return "redirect:/teachers/create";
+        }
+        return "redirect:/teachers/create";
+    }
+
+    private void definedCurrentPageAndAddAttrToModel(Model model, Page<AccountDTO> teacherDTOPage) {
+        model.addAttribute(CURRENT_PAGE, teacherDTOPage);
+        int totalPages = teacherDTOPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute(PAGE_NUMBERS, pageNumbers);
+        }
     }
 }

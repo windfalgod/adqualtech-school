@@ -3,7 +3,6 @@ package com.management.adqualtechschool.controller;
 import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.NotifyDTO;
 import com.management.adqualtechschool.dto.ScopeDTO;
-import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.NotifyService;
 import com.management.adqualtechschool.service.ScopeService;
 import java.util.List;
@@ -56,9 +55,6 @@ public class NotifyController {
 
     @Autowired
     private ScopeService scopeService;
-
-    @Autowired
-    private AccountService accountService;
 
     private final static String NOTIFY = "notify";
     private final static int PAGE_SIZE = 30;
@@ -121,7 +117,7 @@ public class NotifyController {
     }
 
     @GetMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String createNotify(Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -130,7 +126,7 @@ public class NotifyController {
     }
 
     @PostMapping("/create-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postCreateNotify(@Valid @ModelAttribute("notify") NotifyDTO notify,
                                    BindingResult result, Authentication auth,
                                    Model model, RedirectAttributes attr) {
@@ -151,7 +147,7 @@ public class NotifyController {
     }
 
     @GetMapping("/edit")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String editNotify(@RequestParam("id") Long id, Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -162,7 +158,7 @@ public class NotifyController {
 
 
     @PostMapping("/edit-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postEditNotify(@Valid @ModelAttribute("notify") NotifyDTO notify,
                                  BindingResult result, Authentication auth,
                                  Model model, RedirectAttributes attr) {
@@ -184,7 +180,7 @@ public class NotifyController {
     }
 
     @PostMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String deleteNotify(@RequestParam("id") Long id, RedirectAttributes attr) {
         try {
             notifyService.deleteById(id);
@@ -209,7 +205,7 @@ public class NotifyController {
 
     private void addAttrScopeListAndCreatorListToModel(Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        List<AccountDTO> accountDTOList = notifyService.getAllCreator();
         model.addAttribute(SCOPE_LIST, scopeList);
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
     }

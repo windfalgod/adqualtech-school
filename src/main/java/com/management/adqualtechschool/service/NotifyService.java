@@ -1,5 +1,6 @@
 package com.management.adqualtechschool.service;
 
+import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.NotifyDTO;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -20,4 +21,5 @@ public interface NotifyService {
                                          String scopeName, String creatorName);
     Page<NotifyDTO> searchNotifiesPaginated(Pageable pageable, Authentication auth,
                                            String search);
+    List<AccountDTO> getAllCreator();
 }

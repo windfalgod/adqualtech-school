@@ -68,6 +68,12 @@ public class Account {
     @Column(name = "level", length = 30)
     private String level;
 
+    @Column(name = "rank", length = 50)
+    private String rank;
+
+    @Column(name = "position", length = 50)
+    private String position;
+
     @Column(name = "class_in_charged_id", length = 20)
     private Long classInChargedId;
 
@@ -93,4 +99,15 @@ public class Account {
 
     @OneToMany(mappedBy = "creator")
     private List<Notify> rules;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<Account> accounts;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "teach_subject",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id")
+    )
+    private Set<Subject> subjects;
 }

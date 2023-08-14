@@ -1,5 +1,6 @@
 package com.management.adqualtechschool.service;
 
+import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.EventDTO;
 import java.time.LocalDate;
 import java.util.List;
@@ -23,4 +24,5 @@ public interface EventService {
                                          String scopeName, String creatorName);
     Page<EventDTO> searchEventsPaginated(Pageable pageable, Authentication auth,
                                          String search);
+    List<AccountDTO> getAllCreator();
 }

@@ -1,10 +1,8 @@
 package com.management.adqualtechschool.controller;
 
 import com.management.adqualtechschool.dto.AccountDTO;
-import com.management.adqualtechschool.dto.EventDTO;
 import com.management.adqualtechschool.dto.RuleDTO;
 import com.management.adqualtechschool.dto.ScopeDTO;
-import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.RuleService;
 import com.management.adqualtechschool.service.ScopeService;
 import java.time.LocalDate;
@@ -61,9 +59,6 @@ public class RuleController {
 
     @Autowired
     private ScopeService scopeService;
-
-    @Autowired
-    private AccountService accountService;
 
     private final static String RULE = "rule";
     private final static int PAGE_SIZE = 30;
@@ -132,7 +127,7 @@ public class RuleController {
     }
 
     @GetMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String createRule(Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -141,7 +136,7 @@ public class RuleController {
     }
 
     @PostMapping("/create-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postCreateRule(@Valid @ModelAttribute("rule") RuleDTO rule,
                                   BindingResult result, Authentication auth,
                                   Model model, RedirectAttributes attr) {
@@ -162,7 +157,7 @@ public class RuleController {
     }
 
     @GetMapping("/edit")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String editRule(@RequestParam("id") Long id, Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -173,7 +168,7 @@ public class RuleController {
 
 
     @PostMapping("/edit-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postEditRule(@Valid @ModelAttribute("rule") RuleDTO rule,
                                 BindingResult result, Authentication auth,
                                 Model model, RedirectAttributes attr) {
@@ -196,7 +191,7 @@ public class RuleController {
 
 
     @PostMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String deleteRule(@RequestParam("id") Long id, RedirectAttributes attr) {
         try {
             ruleService.deleteById(id);
@@ -223,7 +218,7 @@ public class RuleController {
     // add scope list and creator list to model for filter
     private void addAttrScopeListAndCreatorListToModel(Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        List<AccountDTO> accountDTOList = ruleService.getAllCreator();
         model.addAttribute(SCOPE_LIST, scopeList);
         model.addAttribute(ACCOUNT_LIST, accountDTOList);
     }

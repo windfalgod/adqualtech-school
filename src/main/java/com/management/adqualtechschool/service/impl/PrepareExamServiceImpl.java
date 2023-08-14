@@ -35,6 +35,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
 import static com.management.adqualtechschool.common.SaveFileDir.EXAM_DIR;
 import static com.management.adqualtechschool.common.SaveFileDir.STATIC_DIR;
 
@@ -130,19 +131,21 @@ public class PrepareExamServiceImpl implements PrepareExamService {
 
     @Override
     public Page<PrepareExamDTO> searchExamsPaginated(Pageable pageable, String search) {
-        List<PrepareExamDTO> examDTOList = getAllPrepareExam();
-        if (search.equals("")) {
-            return paginate(pageable, examDTOList);
+        List<PrepareExam> examList = prepareExamRepository.searchByTitleOrCreatorNameOrderByUpdatedAtDesc(search);
+        if (search.equals(SEARCH_EMPTY)) {
+            return paginate(pageable, getAllPrepareExam());
         }
-        String searchString = search.toLowerCase().trim();
-        examDTOList = examDTOList.stream()
-                .filter(examDTO -> examDTO.getTitle().toLowerCase().contains(searchString)
-                        || (examDTO.getCreator().getLastName()
-                        + " "
-                        + examDTO.getCreator().getFirstName())
-                        .toLowerCase().contains(searchString))
+        List<PrepareExamDTO> examDTOList = examList.stream().map(exam -> modelMapper.map(exam, PrepareExamDTO.class))
                 .collect(Collectors.toList());
         return paginate(pageable, examDTOList);
+    }
+
+    @Override
+    public List<AccountDTO> getAllCreator() {
+        List<Account> creatorList = prepareExamRepository.findAllExamCreator();
+        return creatorList.stream()
+                .map(creator -> modelMapper.map(creator, AccountDTO.class))
+                .collect(Collectors.toList());
     }
 
 

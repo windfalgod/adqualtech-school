@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATED_AT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
+import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
 import static com.management.adqualtechschool.common.RoleType.STUDENT;
 
 @Service
@@ -174,7 +175,7 @@ public class RuleServiceImpl implements RuleService {
     @Override
     public Page<RuleDTO> searchRulesPaginated(Pageable pageable, Authentication auth, String search) {
         List<RuleDTO> RuleDTOList = getRulesFollowAuth(auth);
-        if (search.equals("")) {
+        if (search.equals(SEARCH_EMPTY)) {
             return paginate(pageable, RuleDTOList);
         }
         String searchString = search.toLowerCase().trim();
@@ -188,6 +189,14 @@ public class RuleServiceImpl implements RuleService {
                         .toLowerCase().contains(searchString))
                 .collect(Collectors.toList());
         return paginate(pageable, RuleDTOList);
+    }
+
+    @Override
+    public List<AccountDTO> getAllCreator() {
+        List<Account> creatorList = ruleRepository.findAllRuleCreator();
+        return creatorList.stream()
+                .map(creator -> modelMapper.map(creator, AccountDTO.class))
+                .collect(Collectors.toList());
     }
 
     private List<RuleDTO> filterRules(List<RuleDTO> ruleDTOList, LocalDateTime startAt,
