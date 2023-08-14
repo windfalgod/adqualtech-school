@@ -36,14 +36,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATED_AT;
-import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
+import static com.management.adqualtechschool.common.RoleType.PUPIL_ROLE;
 import static com.management.adqualtechschool.common.SaveFileDir.EVENT_IMAGE_DIR;
-import static com.management.adqualtechschool.common.RoleType.STUDENT;
 import static com.management.adqualtechschool.common.SaveFileDir.STATIC_DIR;
 
 @Service
@@ -154,14 +154,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDTO> getEventsByStudentAccount(Long id) {
+    public List<EventDTO> getEventsByPupilAccount(Long id) {
         AccountDTO account = accountService.getAccountById(id);
         if (account == null) {
             throw new NoSuchElementException(Message.NOT_FOUND_ACCOUNT_ID);
         }
         String nameClass = account.getClassRoom().getName();
         List<EventDTO> classEvents = getEventsByClassName(nameClass);
-        String gradeName = nameClass.replace(CLASS_NAME, GRADE_NAME).substring(0, nameClass.length() - 1);
+        String gradeName = nameClass.replace(CLASS_NAME_DEFAULT, GRADE_NAME_DEFAULT).substring(0, nameClass.length() - 1);
         List<EventDTO> gradeEvents = getEventsByGradeName(gradeName);
         List<EventDTO> schoolEvents = getEventsBySchoolWide();
         classEvents.addAll(gradeEvents);
@@ -238,8 +238,8 @@ public class EventServiceImpl implements EventService {
 
         List<EventDTO> eventDTOList;
 
-        if (role.equals(STUDENT)) {
-            eventDTOList = getEventsByStudentAccount(accountId);
+        if (role.equals(PUPIL_ROLE)) {
+            eventDTOList = getEventsByPupilAccount(accountId);
         } else {
             eventDTOList = getAllEvent();
         }

@@ -36,7 +36,7 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
-import static com.management.adqualtechschool.common.RoleType.STUDENT;
+import static com.management.adqualtechschool.common.RoleType.PUPIL_ROLE;
 
 @Service
 public class RuleServiceImpl implements RuleService {
@@ -219,7 +219,7 @@ public class RuleServiceImpl implements RuleService {
 
         List<RuleDTO> RuleDTOList;
 
-        if (role.equals(STUDENT)) {
+        if (role.equals(PUPIL_ROLE)) {
             RuleDTOList = getRulesByStudentAccount(accountId);
         } else {
             RuleDTOList = getAllRule();

@@ -5,10 +5,10 @@ $(document).ready(function () {
         window.location.href = '/teachers';
     });
 
-    let studentModel = $('#studentModel');
+    let studentModel = $('#pupilModal');
     studentModel.modal('show')
     studentModel.on('hidden.bs.modal', function () {
-        window.location.href = '/student';
+        window.location.href = '/pupils';
     });
 
     $('#copyBtnUsername').click(function () {

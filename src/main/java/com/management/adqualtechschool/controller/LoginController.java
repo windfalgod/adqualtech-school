@@ -3,7 +3,6 @@ package com.management.adqualtechschool.controller;
 import com.management.adqualtechschool.dto.AccountCreationDTO;
 import com.management.adqualtechschool.dto.EventDTO;
 import com.management.adqualtechschool.dto.NotifyDTO;
-import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.EventService;
 import com.management.adqualtechschool.service.NotifyService;
 import com.management.adqualtechschool.service.impl.AccountDetailsImpl;
@@ -15,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import static com.management.adqualtechschool.common.RoleType.ADMIN;
-import static com.management.adqualtechschool.common.RoleType.STUDENT;
+import static com.management.adqualtechschool.common.RoleType.ADMIN_ROLE;
+import static com.management.adqualtechschool.common.RoleType.PUPIL_ROLE;
 
 @Controller
 public class LoginController {
@@ -36,7 +35,7 @@ public class LoginController {
             return "login";
         }
         if (auth.getAuthorities().iterator().next()
-                .getAuthority().equals(ADMIN)) {
+                .getAuthority().equals(ADMIN_ROLE)) {
             return "redirect:./admin";
         }
         return "redirect:./";
@@ -48,9 +47,9 @@ public class LoginController {
         List<EventDTO> eventDTOList;
         List<NotifyDTO> notifyDTOList;
         if (auth.getAuthorities().iterator().next()
-                .getAuthority().equals(STUDENT)) {
-            eventDTOList = eventService.getEventsByStudentAccount(accountDetails.getId());
-            notifyDTOList = notifyService.getNotifiesByStudentAccount(accountDetails.getId());
+                .getAuthority().equals(PUPIL_ROLE)) {
+            eventDTOList = eventService.getEventsByPupilAccount(accountDetails.getId());
+            notifyDTOList = notifyService.getNotifiesByPupilAccount(accountDetails.getId());
         } else {
             eventDTOList = eventService.getAllEvent();
             notifyDTOList = notifyService.getAllNotify();

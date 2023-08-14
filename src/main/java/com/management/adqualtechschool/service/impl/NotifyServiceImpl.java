@@ -35,7 +35,7 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
-import static com.management.adqualtechschool.common.RoleType.STUDENT;
+import static com.management.adqualtechschool.common.RoleType.PUPIL_ROLE;
 
 @Service
 public class NotifyServiceImpl implements NotifyService {
@@ -125,7 +125,7 @@ public class NotifyServiceImpl implements NotifyService {
     }
 
     @Override
-    public List<NotifyDTO> getNotifiesByStudentAccount(Long id) {
+    public List<NotifyDTO> getNotifiesByPupilAccount(Long id) {
         AccountDTO account = accountService.getAccountById(id);
         if (account == null) {
             throw new NoSuchElementException(NOT_FOUND_ACCOUNT_ID);
@@ -196,8 +196,8 @@ public class NotifyServiceImpl implements NotifyService {
 
         List<NotifyDTO> notifyDTOList;
 
-        if (role.equals(STUDENT)) {
-            notifyDTOList = getNotifiesByStudentAccount(accountId);
+        if (role.equals(PUPIL_ROLE)) {
+            notifyDTOList = getNotifiesByPupilAccount(accountId);
         } else {
             notifyDTOList = getAllNotify();
         }

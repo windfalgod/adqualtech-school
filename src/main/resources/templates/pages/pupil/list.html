@@ -6,11 +6,13 @@
       xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title>Thư viện đề thi thử</title>
+  <title>Danh sách học sinh</title>
+  <script src="/js/jquery/lib/jquery.js"></script>
+  <script src="/js/alert.js"></script>
 </head>
 <body>
 <!--Breadcrumb-->
-<div class="exams-content-wrapper p-4" th:fragment="content">
+<div class="pupils-content-wrapper p-4" th:fragment="content">
   <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
   <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
   <nav aria-label="breadcrumb">
@@ -19,67 +21,46 @@
         <a href="/">Trang chủ</a>
       </li>
       <li class="breadcrumb-item active"
-          aria-current="page">Thư viện đề thi thử
+          aria-current="page">Danh sách học sinh
       </li>
     </ol>
   </nav>
 
-<!--Header of exams page-->
-  <div class="row header-exams d-flex flex-row align-items-center mb-3 mt-5">
+<!--Header of pupils page-->
+  <div class="row header-pupils d-flex flex-row align-items-center mb-3 mt-5">
     <div class="col-12 position-relative">
-      <form th:action="@{/exam-library/search}" method="get"
+      <form th:action="@{/pupils/search}" method="get"
             class="form-search d-flex flex-row align-items-center w-100">
         <i class="fa fa-search position-absolute search-icon"></i>
         <label for="form-search"></label>
         <input type="text" class="form-control form-input rounded w-100"
-               id="form-search" name="search" placeholder="Nhập tên tiêu đề đề thi hoặc tên người tạo">
+                 id="form-search" name="search" placeholder="Nhập tên học sinh,...">
         <button type="submit" class="btn btn-primary search-button">Tìm kiếm</button>
       </form>
     </div>
   </div>
 
 <!--Filter-->
-  <div class="row filter-exam mt-4 mb-3">
+  <div class="row filter-pupil mt-4 mb-3">
     <div class="select-group col-12 d-flex flex-row">
-      <form th:action="@{/exam-library/filter}" class="row w-100" method="get">
+      <form th:action="@{/pupils/filter}" class="row w-100" method="get">
 
-        <!--Filter created date -->
-        <select class="form-select" aria-label="Default" name="updatedAt">
-          <option>Ngày cập nhật</option>
-          <option th:selected="${updatedAt == 'Hôm nay'}">Hôm nay</option>
-          <option th:selected="${updatedAt == 'Hôm qua'}">Hôm qua</option>
-          <option th:selected="${updatedAt == '7 Ngày gần đây'}">7 Ngày gần đây</option>
-          <option th:selected="${updatedAt == '1 tháng gần đây'}">1 tháng gần đây</option>
-          <option th:selected="${updatedAt == '1 năm gần đây'}">1 năm gần đây</option>
-        </select>
-
-        <!--Filter by scope-->
-        <select class="form-select ms-3" aria-label="Default" name="scopeName">
-          <option selected>Phạm vi</option>
-          <option th:each="scope : ${scopeList}"
-                  th:value="${scope.title}"
-                  th:text="${scope.title}"
-                  th:selected="${scopeName == scope.title}">
+        <!--Filter Khối học sinh thuộc-->
+        <select class="form-select ms-3 gradeSelect" aria-label="Default" name="gradeName">
+          <option selected>Khối</option>
+          <option th:each="grade : ${gradeList}"
+                  th:value="${grade.title}"
+                  th:text="${grade.title}"
+                  th:selected="${gradeName == grade.title}">
           </option>
         </select>
-
-        <!--Filter by subject-->
-        <select class="form-select ms-3" aria-label="Default" name="subjectName">
-          <option selected>Môn</option>
-          <option th:each="subject : ${subjectList}"
-                  th:value="${subject.name}"
-                  th:text="${subject.name}"
-                  th:selected="${subjectName == subject.name}">
-          </option>
-        </select>
-
-        <!--Filter by creator -->
-        <select class="form-select ms-3" aria-label="Default" name="creatorName">
-          <option selected>Người tạo</option>
-          <option th:each="account : ${accountList}"
-                  th:value="${account.lastName} + ' ' + ${account.firstName}"
-                  th:text="${account.lastName} + ' ' + ${account.firstName}"
-                  th:selected="${creatorName == account.lastName + ' ' + account.firstName}">
+        <!--Filter lớp học sinh thuộc-->
+        <select class="form-select ms-3 classSelect" aria-label="Default" name="className">
+          <option selected>Lớp</option>
+          <option th:each="class : ${classList}"
+                  th:value="${class.name}"
+                  th:text="${class.name}"
+                  th:selected="${class.name == className}">
           </option>
         </select>
         <div class="col-md-1 ms-3 filter-button">
@@ -91,48 +72,38 @@
 
 <!--Addition button-->
   <div class="addition-button-wrapper d-flex flex-row justify-content-end">
-    <a th:href="@{/exam-library/create/}" class="btn btn-primary addition-exam-button"
-       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Thêm đề thi thử</a>
+    <a th:href="@{/pupils/create/}" class="btn btn-primary addition-pupil-button"
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">Thêm học sinh</a>
   </div>
 
 <!--Table-->
-  <h3 th:if="${currentPage.totalPages <= 0}">Không có đề thi thử nào!</h3>
-  <table class="table table-striped table-hover" id="exams-table" th:if="${currentPage.totalPages > 0}">
+  <h3 th:if="${currentPage.totalPages <= 0}">Không có học sinh nào!</h3>
+  <table class="table table-striped table-hover" id="pupils-table" th:if="${currentPage.totalPages > 0}">
     <thead>
       <tr>
         <th class="text-center">#</th>
-        <th>Tiêu đề</th>
-        <th>Phạm vi</th>
-        <th>Môn học</th>
-        <th>Thời gian cập nhật</th>
-        <th>Người tạo</th>
-        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></th>
-        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></th>
-        <th></th>
+        <th>Họ tên</th>
+        <th>Lớp</th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Số điện thoại phụ huynh</th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Email phụ huynh</th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Địa chỉ</th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')"></th>
       </tr>
     </thead>
     <tbody>
-      <tr th:each="exam : ${currentPage}" class="row-value">
-        <td th:text="${exam.id}" class="id-td"></td>
-        <td th:text="${exam.title}" class="title-td"></td>
-        <td th:text="${exam.scope.title}"></td>
-        <td th:text="${exam.subject.name}"></td>
-        <td th:text="${#temporals.format(exam.updatedAt, 'HH:mm dd/MM/yyyy')}"></td>
-        <td th:text="${exam.creator.lastName} + ' ' + ${exam.creator.firstName}"></td>
-        <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
-          <a th:href="@{/exam-library/edit(id=${exam.id})}" class="btn btn-warning">Sửa</a>
-        </td>
-        <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
-          <form th:action="@{/exam-library/delete}" method="post">
-          <input type="hidden" name="id" th:value="${exam.id}" />
+      <tr th:each="pupil : ${currentPage}" class="row-value">
+        <td th:text="${pupil.id}" class="id-td"></td>
+        <td th:text="${pupil.lastName} + ' ' + ${pupil.firstName}"></td>
+        <td th:text="${pupil.classRoom.name}"></td>
+        <td th:text="${pupil.phone}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
+        <td th:text="${pupil.email}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
+        <td th:text="${pupil.address}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
+        <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">
+          <form th:action="@{/pupils/delete}" method="post">
+          <input type="hidden" name="id" th:value="${pupil.id}" />
           <button type="submit" class="btn btn-danger"
-                  onclick="return confirm('Bạn có chắc muốn xóa đề thi này?')">Xóa</button>
+                  onclick="return confirm('Bạn có chắc muốn xóa học sinh này?')">Xóa</button>
           </form>
-        </td>
-        <td class="button-control">
-          <a th:href="@{/exam-library/download/(id=${exam.id})}" download class="text-dark">
-            <i class="fa-solid fa-file-arrow-down fa-2xl"></i>
-          </a>
         </td>
       </tr>
     </tbody>
@@ -146,7 +117,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number > 0}"
            class="page-link"
-           th:href="@{/exam-library/(page=1)}"><<
+           th:href="@{/pupils/(page=1)}"><<
         </a>
       </li>
       <li class="page-item">
@@ -157,7 +128,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number > 0}"
            th:class="'page-link'"
-           th:href="@{/exam-library/(page=${currentPage.number})}"><
+           th:href="@{/pupils/(page=${currentPage.number})}"><
         </a>
         <a th:if="${currentPage.number <= 0}"
            th:class="'page-link disabled'"><
@@ -177,7 +148,7 @@
         </a>
         <a th:if="${pageNumber > currentPage.number - 2
         && pageNumber < currentPage.number + 4}"
-           th:href="@{/exam-library/(page=${pageNumber})}"
+           th:href="@{/pupils/(page=${pageNumber})}"
            th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
            th:text="${pageNumber}">
         </a>
@@ -187,7 +158,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            th:class="'page-link'"
-           th:href="@{/exam-library/(page=${currentPage.number+2})}">>
+           th:href="@{/pupils/(page=${currentPage.number+2})}">>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>
@@ -196,7 +167,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            class="page-link"
-           th:href="@{/exam-library/(page=${currentPage.totalPages})}">>>
+           th:href="@{/pupils/(page=${currentPage.totalPages})}">>>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>>
@@ -212,8 +183,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number > 0}"
            class="page-link"
-           th:href="@{/exam-library/filter/(page=1, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}"><<
+           th:href="@{/pupils/filter/(page=1)}"><<
         </a>
       </li>
       <li class="page-item">
@@ -224,7 +194,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number > 0}"
            th:class="'page-link'"
-           th:href="@{/exam-library/filter/(page=${currentPage.number})}"><
+           th:href="@{/pupils/filter/(page=${currentPage.number})}"><
         </a>
         <a th:if="${currentPage.number <= 0}"
            th:class="'page-link disabled'"><
@@ -244,8 +214,7 @@
         </a>
         <a th:if="${pageNumber > currentPage.number - 2
         && pageNumber < currentPage.number + 4}"
-           th:href="@{/exam-library/filter/(page=${pageNumber}, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}"
+           th:href="@{/pupils/filter/(page=${pageNumber})}"
            th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
            th:text="${pageNumber}">
         </a>
@@ -255,8 +224,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            th:class="'page-link'"
-           th:href="@{/exam-library/filter/(page=${currentPage.number+2}, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}">>
+           th:href="@{/pupils/filter/(page=${currentPage.number+2})}">>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>
@@ -265,8 +233,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            class="page-link"
-           th:href="@{/exam-library/filter/(page=${currentPage.totalPages}, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}">>>
+           th:href="@{/pupils/filter/(page=${currentPage.totalPages})}">>>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>>
@@ -282,7 +249,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number > 0}"
            class="page-link"
-           th:href="@{/exam-library/search/(page=1,search=${search})}"><<
+           th:href="@{/pupils/search/(page=1,search=${search})}"><<
         </a>
       </li>
       <li class="page-item">
@@ -293,7 +260,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number > 0}"
            th:class="'page-link'"
-           th:href="@{/exam-library/search/(page=${currentPage.number}, search=${search})}"><
+           th:href="@{/pupils/search/(page=${currentPage.number}, search=${search})}"><
         </a>
         <a th:if="${currentPage.number <= 0}"
            th:class="'page-link disabled'"><
@@ -313,7 +280,7 @@
         </a>
         <a th:if="${pageNumber > currentPage.number - 2
         && pageNumber < currentPage.number + 4}"
-           th:href="@{/exam-library/search/(page=${pageNumber}, search=${search})}"
+           th:href="@{/pupils/search/(page=${pageNumber}, search=${search})}"
            th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
            th:text="${pageNumber}">
         </a>
@@ -323,7 +290,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            th:class="'page-link'"
-           th:href="@{/exam-library/search/(page=${currentPage.number+2}, search=${search})}">>
+           th:href="@{/pupils/search/(page=${currentPage.number+2}, search=${search})}">>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>
@@ -332,7 +299,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            class="page-link"
-           th:href="@{/exam-library/search/(page=${currentPage.totalPages}, search=${search})}">>>
+           th:href="@{/pupils/search/(page=${currentPage.totalPages}, search=${search})}">>>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>>

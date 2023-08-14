@@ -4,6 +4,7 @@
       xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <script src="/js/popper.min.js"></script>
 </head>
 <body>
 <nav th:fragment="header"
@@ -26,7 +27,7 @@
                    ? 'active text-warning' : 'text-white'}">Xin phép</a>
                 </li>
                 <li class="nav-item mx-3 text-white"
-                    sec:authorize="hasRole('ROLE_STUDENT')">
+                    sec:authorize="hasRole('ROLE_PUPIL')">
                     <a href="/score-letter"
                        th:class="'link-score-letter ' +
                    ${#httpServletRequest.requestURI == '/score-letter'

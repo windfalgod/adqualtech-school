@@ -5,11 +5,10 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thêm giáo viên</title>
-    <script src="/js/jquery/lib/jquery.js"></script>
+    <title>Thêm học sinh</title>
 </head>
 <body>
-<div class="teachers-create-wrapper p-4" th:fragment="content">
+<div class="pupils-create-wrapper p-4" th:fragment="content">
     <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
     <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
 
@@ -20,23 +19,23 @@
                 <a href="/">Trang chủ</a>
             </li>
             <li class="breadcrumb-item">
-                <a href="/teachers">Danh sách giáo viên</a>
+                <a href="/pupils">Danh sách học sinh</a>
             </li>
             <li class="breadcrumb-item active"
-                aria-current="page">Thêm giáo viên
+                aria-current="page">Thêm học sinh
             </li>
         </ol>
     </nav>
 
-<!--Modal show information of teacher account-->
-    <div th:if="${success}" class="modal fade" id="teacherModal" tabindex="-1" role="dialog"
-         aria-labelledby="teacherModal" aria-hidden="true">
+<!--Modal show information of pupil account-->
+    <div th:if="${success}" class="modal fade" id="pupilModal" tabindex="-1" role="dialog"
+         aria-labelledby="pupilModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Thông tin tài khoản</h5>
                 </div>
-                <div class="modal-body" th:if="success" th:object="${teacherInfo}">
+                <div class="modal-body" th:if="success" th:object="${pupilInfo}">
                     <p>Thông tin tài khoản:</p>
                     <div class="d-flex mb-2">
                         <label for="usernameAccountInfo" class="labelForShowAccount">Tên tài khoản: </label>
@@ -60,27 +59,27 @@
         </div>
     </div>
 
-<!--Form create teacher account-->
-    <h3 class="teacher-creation-title mt-4 mb-4">Thêm giáo viên</h3>
-    <div class="create-teacher-container ps-md-5 pe-md-5 d-flex align-items-center justify-content-center">
-        <form th:action="@{/teachers/create-processing}" th:object="${teacher}" enctype="multipart/form-data"
-              method="post" class="d-flex flex-column w-75 h-100" id="create-teacher-form">
+<!--Form create pupil account-->
+    <h3 class="pupil-creation-title mt-4 mb-4">Thêm học sinh</h3>
+    <div class="create-pupil-container ps-md-5 pe-md-5 d-flex align-items-center justify-content-center">
+        <form th:action="@{/pupils/create-processing}" th:object="${pupil}" enctype="multipart/form-data"
+              method="post" class="d-flex flex-column w-75 h-100" id="create-pupil-form">
 
             <!-- input last name and first name-->
             <div class="create-container d-flex flex-column rounded">
-                <div class="teacher-name-container d-flex flex-row col-11">
+                <div class="pupil-name-container d-flex flex-row col-11">
                     <div class="col-5 me-2">
-                        <label for="last-name-input" class="mb-1">Họ giáo viên(*)</label>
+                        <label for="last-name-input" class="mb-1">Họ học sinh(*)</label>
                         <input type="text" class="form-control form-input rounded w-100"
-                               id="last-name-input" name="teacher-title" placeholder="Nhập họ của giáo viên"
+                               id="last-name-input" name="pupil-title" placeholder="Nhập họ của học sinh"
                                th:field="*{lastName}">
                         <span th:errorclass="error" th:if="${#fields.hasErrors('lastName')}"
                               th:errors="*{lastName}"></span>
                     </div>
                     <div class="col-5">
-                        <label for="first-name-input" class="mb-1">Tên giáo viên(*)</label>
+                        <label for="first-name-input" class="mb-1">Tên học sinh(*)</label>
                         <input type="text" class="form-control form-input rounded w-100"
-                               id="first-name-input" name="teacher-title" placeholder="Nhập tên của giáo viên"
+                               id="first-name-input" name="pupil-title" placeholder="Nhập tên của học sinh"
                                th:field="*{firstName}">
                         <span th:errorclass="error" th:if="${#fields.hasErrors('firstName')}"
                               th:errors="*{firstName}"></span>
@@ -110,13 +109,19 @@
                     </select>
                     <span th:errorclass="error" th:if="${#fields.hasErrors('gender')}"
                           th:errors="*{gender}"></span>
+
+                    <!-- select class-->
+                    <select class="form-select h-50 mt-5 col-6 ms-3" aria-label="Default" name="className">
+                        <option selected value="Lớp">Lớp</option>
+                        <option th:each="class : ${classList}" th:text="${class.name}"></option>
+                    </select>
                 </div>
             </div>
 
             <!--button-->
             <div class="button-create-event-wrapper d-flex flex-row justify-content-end mt-4">
                 <button type="submit" class="btn btn-primary">Thêm</button>
-                <a th:href="@{/teachers}" class="btn btn-warning ms-3"
+                <a th:href="@{/pupils}" class="btn btn-warning ms-3"
                    onclick="return confirm('Bạn có chắc muốn hủy?')">Hủy</a>
             </div>
         </form>

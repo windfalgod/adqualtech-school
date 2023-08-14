@@ -19,6 +19,7 @@ public interface NotifyRepository extends JpaRepository<Notify, Long> {
     @Query(value = "select n from Notify n join Scope s on n.scope.id = s.id where s.title like 'Toàn trường'")
     List<Notify> findNotifiesBySchoolWideOrderByCreatedAtDesc();
 
-    @Query(value = "select distinct (n.creator) from Notify n group by n.creator order by n.creator.firstName, n.creator.lastName asc ")
+    @Query(value = "select distinct (n.creator) from Notify n group by n.creator" +
+            " order by n.creator.firstName, n.creator.lastName asc ")
     List<Account> findAllNotifyCreator();
 }

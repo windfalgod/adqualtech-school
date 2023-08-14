@@ -6,8 +6,10 @@ import com.management.adqualtechschool.dto.AccountCreationDTO;
 import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.SubjectDTO;
 import com.management.adqualtechschool.entity.Account;
+import com.management.adqualtechschool.entity.Classroom;
 import com.management.adqualtechschool.entity.Role;
 import com.management.adqualtechschool.repository.AccountRepository;
+import com.management.adqualtechschool.repository.ClassroomRepository;
 import com.management.adqualtechschool.repository.RoleRepository;
 import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.SubjectService;
@@ -31,11 +33,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME_DEFAULT;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.Message.BIRTHDAY_NOT_VALID;
 import static com.management.adqualtechschool.common.Message.GENERAL_TEACHER_SUBJECT;
 import static com.management.adqualtechschool.common.Message.NOT_CONTAIN_ROLE;
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_USERNAME;
+import static com.management.adqualtechschool.common.Message.PUPIL_PREFIX;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
 import static com.management.adqualtechschool.common.Message.TEACHER_PREFIX;
 import static com.management.adqualtechschool.common.RoleType.TEACHER_POSITION;
@@ -56,6 +61,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ClassroomRepository classroomRepository;
 
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -138,7 +146,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Page<AccountDTO> searchTeachersPaginated(Pageable pageable, String search) {
-        List<Account> accountList = accountRepository.searchTeachers(search);
+        List<Account> accountList = accountRepository.searchTeachers(search.toLowerCase());
         if (search.equals(SEARCH_EMPTY)) {
             return paginate(pageable, getAllTeacherAccount());
         }
@@ -154,21 +162,18 @@ public class AccountServiceImpl implements AccountService {
         if (account == null) {
             throw new EntityNotFoundException(NOT_FOUND_ACCOUNT_ID);
         }
-
         Set<Role> roleSet = account.getRoles();
-        Role roleTeacher = roleRepository.findRoleByName(RoleType.TEACHER);
-        Role roleManager = roleRepository.findRoleByName(RoleType.MANAGER);
+        Role roleTeacher = roleRepository.findRoleByName(RoleType.TEACHER_ROLE);
+        Role roleManager = roleRepository.findRoleByName(RoleType.MANAGER_ROLE);
 
         if (!roleSet.contains(roleTeacher)) {
             throw new NoSuchElementException(NOT_CONTAIN_ROLE);
         }
-
         // Modify roles
         roleManager.getAccounts().add(account);
         roleTeacher.getAccounts().remove(account);
         roleSet.add(roleManager);
         roleSet.remove(roleTeacher);
-
         // Update roles and account
         roleRepository.saveAll(List.of(roleTeacher, roleManager));
         account.setUpdatedAt(LocalDateTime.now());
@@ -177,7 +182,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountCreationDTO saveTeacher(AccountCreationDTO accountDTO) {
-
         // set default username and password
         Long currentId = accountRepository.findMaxId();
         String defaultUsername = TEACHER_PREFIX + LocalDateTime.now().getYear() + (currentId+1);
@@ -199,7 +203,7 @@ public class AccountServiceImpl implements AccountService {
         account.setPosition(TEACHER_POSITION);
 
         // set role for account
-        Role roleTeacher = roleRepository.findRoleByName(RoleType.TEACHER);
+        Role roleTeacher = roleRepository.findRoleByName(RoleType.TEACHER_ROLE);
         account.setRoles(Set.of(roleTeacher));
         accountRepository.save(account);
 
@@ -207,6 +211,93 @@ public class AccountServiceImpl implements AccountService {
         roleRepository.save(roleTeacher);
 
         // return account to get username, password of account teacher
+        accountDTO.setUsername(defaultUsername);
+        accountDTO.setPassword(defaultPassword);
+        return accountDTO;
+    }
+
+    @Override
+    public List<AccountDTO> getAllPupilAccount() {
+        List<Account> pupilList = accountRepository.findAllPupil();
+        return pupilList.stream()
+                .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<AccountDTO> getListPupilPaginated(Pageable pageable) {
+        List<AccountDTO> pupilDTOList = getAllPupilAccount();
+        return paginate(pageable, pupilDTOList);
+    }
+
+    @Override
+    public Page<AccountDTO> filterPupilPaginated(Pageable pageable, String gradeName, String className) {
+        List<Account> pupilList;
+        // if gradeName not equal default gradeName and className equal default classname in view
+        if (!gradeName.equals(GRADE_NAME_DEFAULT) && className.equals(CLASS_NAME_DEFAULT)) {
+            pupilList = accountRepository.findAllPupilByGradeName(gradeName.replace(GRADE_NAME_DEFAULT, CLASS_NAME_DEFAULT));
+            List<AccountDTO> pupilDTOList = pupilList.stream()
+                    .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
+                    .collect(Collectors.toList());
+            return paginate(pageable, pupilDTOList);
+        }
+        // if gradeName equal default gradeName and className not equal default classname in view
+        if (gradeName.equals(GRADE_NAME_DEFAULT) && !className.equals(CLASS_NAME_DEFAULT)) {
+            pupilList = accountRepository.findAllPupilByClassRoomName(className);
+            List<AccountDTO> pupilDTOList = pupilList.stream()
+                .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
+                .collect(Collectors.toList());
+            return paginate(pageable, pupilDTOList);
+        }
+        return paginate(pageable, getAllPupilAccount());
+    }
+
+    @Override
+    public Page<AccountDTO> searchPupilPaginated(Pageable pageable, String search) {
+        List<Account> accountList = accountRepository.searchPupil(search.toLowerCase());
+        List<AccountDTO> accountDTOList = accountList.stream()
+                .map(account -> modelMapper.map(account, AccountDTO.class))
+                .collect(Collectors.toList());
+        return paginate(pageable, accountDTOList);
+    }
+
+    @Override
+    public AccountCreationDTO savePupil(AccountCreationDTO accountDTO, String className) {
+        // set default username and password
+        Long currentId = accountRepository.findMaxId();
+        String defaultUsername = PUPIL_PREFIX + LocalDateTime.now().getYear() + (currentId+1);
+        String defaultPassword = PUPIL_PREFIX  + LocalDateTime.now().getYear() + (currentId+1) + "@PU";
+        Account account = modelMapper.map(accountDTO, Account.class);
+        account.setUsername(defaultUsername);
+        account.setPassword(encoder.encode(defaultPassword));
+
+        if (LocalDate.now().minusYears(100).isAfter(accountDTO.getBirthday())) {
+            throw new DateTimeException(BIRTHDAY_NOT_VALID);
+        }
+
+        if (LocalDate.now().isBefore(accountDTO.getBirthday())) {
+            throw new DateTimeException(BIRTHDAY_NOT_VALID);
+        }
+        account.setBirthday(accountDTO.getBirthday().atStartOfDay());
+        account.setCreatedAt(LocalDateTime.now());
+        account.setUpdatedAt(LocalDateTime.now());
+
+        // set role for account
+        Role rolePupil = roleRepository.findRoleByName(RoleType.PUPIL_ROLE);
+        account.setRoles(Set.of(rolePupil));
+        rolePupil.getAccounts().add(account);
+        roleRepository.save(rolePupil);
+
+        // set classroom for account
+        Classroom classroom = classroomRepository.findClassroomByName(className);
+        classroom.getPupils().add(account);
+        classroomRepository.save(classroom);
+
+        // save account
+        account.setClassRoom(classroom);
+        accountRepository.save(account);
+
+        // return username and password
         accountDTO.setUsername(defaultUsername);
         accountDTO.setPassword(defaultPassword);
         return accountDTO;

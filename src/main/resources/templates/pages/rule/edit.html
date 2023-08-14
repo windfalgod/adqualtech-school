@@ -6,17 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Cập nhật nội quy</title>
-<link rel="stylesheet" href="/css/validation-error.css">
-<script src="/tinymce/js/tinymce/tinymce.min.js"></script>
-<script type="text/javascript">
-        tinymce.init({
-        selector: '#my-textarea'
-        });
-</script>
 </head>
 <body>
     <div class="rules-edit-wrapper p-4" th:fragment="content">
-        <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
         <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
 
         <nav aria-label="breadcrumb">

@@ -15,7 +15,7 @@ public interface NotifyService {
     List<NotifyDTO> getNotifiesByClassName(String className);
     List<NotifyDTO> getNotifiesByGradeName(String gradeName);
     List<NotifyDTO> getNotifiesBySchoolWide();
-    List<NotifyDTO> getNotifiesByStudentAccount(Long id);
+    List<NotifyDTO> getNotifiesByPupilAccount(Long id);
     Page<NotifyDTO> getListNotifyPaginated(Pageable pageable, Authentication auth);
     Page<NotifyDTO> filterNotifiesPaginated(Pageable pageable, Authentication auth, String createdAt,
                                          String scopeName, String creatorName);

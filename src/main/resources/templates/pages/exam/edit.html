@@ -6,11 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Cập nhật đề thi thử</title>
-<link rel="stylesheet" href="/css/validation-error.css">
 </head>
 <body>
     <div class="exams-edit-wrapper p-4" th:fragment="content">
-        <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
         <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
 
         <nav aria-label="breadcrumb">

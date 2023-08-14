@@ -20,6 +20,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "select e from Event e inner join Scope s on e.scope.id = s.id where s.title like 'Toàn trường'")
     List<Event> findEventsBySchoolWideOrderByCreatedAtDesc();
 
-    @Query(value = "select distinct (e.creator) from Event e group by e.creator order by e.creator.firstName, e.creator.lastName asc ")
+    @Query(value = "select distinct (e.creator) from Event e group by e.creator" +
+            " order by e.creator.firstName, e.creator.lastName asc ")
     List<Account> findAllEventCreator();
 }

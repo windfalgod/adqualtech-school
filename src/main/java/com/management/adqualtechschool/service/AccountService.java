@@ -18,4 +18,9 @@ public interface AccountService {
     Page<AccountDTO> searchTeachersPaginated(Pageable pageable, String search);
     void upgradeToManagerRole(Long id);
     AccountCreationDTO saveTeacher(AccountCreationDTO accountDTO);
+    List<AccountDTO> getAllPupilAccount();
+    Page<AccountDTO> getListPupilPaginated(Pageable pageable);
+    Page<AccountDTO> filterPupilPaginated(Pageable pageable, String gradeName, String className);
+    Page<AccountDTO> searchPupilPaginated(Pageable pageable, String search);
+    AccountCreationDTO savePupil(AccountCreationDTO accountDTO, String className);
 }
