@@ -7,8 +7,14 @@
     import java.util.Set;
     import javax.validation.constraints.NotEmpty;
     import javax.validation.constraints.NotNull;
+    import javax.validation.constraints.Pattern;
+    import javax.validation.constraints.Size;
     import lombok.Data;
     import org.springframework.format.annotation.DateTimeFormat;
+
+    import static com.management.adqualtechschool.common.Message.MAX_FIRST_NAME;
+    import static com.management.adqualtechschool.common.Message.MAX_LAST_NAME;
+    import static com.management.adqualtechschool.common.Message.PATTERN_NAME;
 
     @Data
     public class AccountCreationDTO {
@@ -17,7 +23,12 @@
         private String password;
 
         @NotEmpty(message = Message.FIRST_NAME_NOT_NULL)
+        @Pattern(regexp = "^[a-z0-9]{0,30}$", message = PATTERN_NAME)
+        @Size(max = 15, message = MAX_FIRST_NAME)
+
         private String firstName;
+        @Pattern(regexp = "^[a-z0-9]{0,50}$", message = PATTERN_NAME)
+        @Size(max = 15, message = MAX_LAST_NAME)
         private String lastName;
         private Boolean gender;
 

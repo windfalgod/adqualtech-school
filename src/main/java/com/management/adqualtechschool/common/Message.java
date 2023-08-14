@@ -77,4 +77,7 @@ public interface Message {
     String CREATE_PUPIL_FAILED = "Thêm học sinh không thành công!";
     String DELETE_PUPIL_SUCCESS = "Xóa học sinh thành công!";
     String DELETE_PUPIL_FAILED = "Xóa học sinh không thành công!";
+    String PATTERN_NAME = "Trường này chỉ cho phép chữ thường và ký tự số!";
+    String MAX_LAST_NAME = "Tên tối đa 30 ký tự!";
+    String MAX_FIRST_NAME = "Họ và tên đệm tối đa 50 ký tự!";
 }
