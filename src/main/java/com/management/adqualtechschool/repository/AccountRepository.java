@@ -11,9 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByUsername(String username);
 
-    @Query(value = "select a from Account a where a.username like 'te%' or a.username like 'ma%'")
-    List<Account> findAllTeacherManager();
-
     @Query(value = "select a from Account a where a.position like 'Giáo viên' order by a.firstName, a.lastName asc")
     List<Account> findAllTeacherByPosition(String position);
 
@@ -29,4 +26,12 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " or lower(a.email) like trim(concat('%', :search, '%')))" +
             " order by a.firstName, a.lastName ASC ")
     List<Account> searchTeachers(@Param("search")String search);
+
+    @Query(value = "select a from Account a where a.username like 'pu%'")
+    List<Account> findAllPupil();
+
+    List<Account> findAllPupilByClassRoomName(String className);
+
+    @Query(value = "select a from Account a where a.classRoom.name like :gradeName")
+    List<Account> findAllPupilByGradeName(@Param("gradeName") String gradeName);
 }

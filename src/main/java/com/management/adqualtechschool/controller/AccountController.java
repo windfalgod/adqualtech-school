@@ -29,12 +29,17 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.FILTER;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.LIST;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PAGE_NUMBERS;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PUPIL_INFO;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SEARCH;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TEACHER;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TEACHER_INFO;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TYPE;
+import static com.management.adqualtechschool.common.Message.CREATE_PUPIL_FAILED;
+import static com.management.adqualtechschool.common.Message.CREATE_PUPIL_SUCCESS;
 import static com.management.adqualtechschool.common.Message.CREATE_TEACHER_FAILED;
 import static com.management.adqualtechschool.common.Message.CREATE_TEACHER_SUCCESS;
+import static com.management.adqualtechschool.common.Message.DELETE_PUPIL_FAILED;
+import static com.management.adqualtechschool.common.Message.DELETE_PUPIL_SUCCESS;
 import static com.management.adqualtechschool.common.Message.DELETE_TEACHER_FAILED;
 import static com.management.adqualtechschool.common.Message.DELETE_TEACHER_SUCCESS;
 import static com.management.adqualtechschool.common.Message.FAILED;
@@ -109,9 +114,9 @@ public class AccountController {
     }
 
     @GetMapping("/teachers/filter")
-    public String filterEvents(Model model,
-                               @RequestParam("page") Optional<Integer> page,
-                               @RequestParam(value = "subjectName", required = false) String subjectName) {
+    public String filterTeachers(Model model,
+                                 @RequestParam("page") Optional<Integer> page,
+                                 @RequestParam(value = "subjectName", required = false) String subjectName) {
         int currentPage = page.orElse(1);
 
         Page<AccountDTO> accountDTOPage = accountService.filterTeacherPaginatedBySubjectName
@@ -126,9 +131,9 @@ public class AccountController {
     }
 
     @GetMapping("/teachers/search")
-    public String searchEvents(Model model,
-                               @RequestParam("page") Optional<Integer> page,
-                               @RequestParam("search") String search) {
+    public String searchTeachers(Model model,
+                                 @RequestParam("page") Optional<Integer> page,
+                                 @RequestParam("search") String search) {
         int currentPage = page.orElse(1);
         Page<AccountDTO> accountDTOPage = accountService
                 .searchTeachersPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), search);
@@ -192,6 +197,85 @@ public class AccountController {
             return "redirect:/teachers/create";
         }
         return "redirect:/teachers/create";
+    }
+
+    @GetMapping("/pupils")
+    public String showListPupil(Model model, @RequestParam("page") Optional<Integer> page) {
+        int currentPage = page.orElse(1);
+        Page<AccountDTO> pupilDTOPage = accountService
+                .getListPupilPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE));
+
+        definedCurrentPageAndAddAttrToModel(model, pupilDTOPage);
+        model.addAttribute(TYPE,LIST);
+        return "pages/pupil/list";
+    }
+
+    @GetMapping("/pupils/filter")
+    public String filterPupils(Model model,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam(value = "gradeName") String gradeName,
+                               @RequestParam(value = "className") String className) {
+        int currentPage = page.orElse(1);
+
+        Page<AccountDTO> pupilDTOPage = accountService.filterPupilPaginated(
+                (PageRequest.of(currentPage - 1, PAGE_SIZE)),gradeName ,className);
+
+        definedCurrentPageAndAddAttrToModel(model, pupilDTOPage);
+        model.addAttribute(TYPE,FILTER);
+        return "pages/pupil/list";
+    }
+
+    @GetMapping("/pupils/search")
+    public String searchPupils(Model model,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("search") String search) {
+        int currentPage = page.orElse(1);
+        Page<AccountDTO> pupilDTOPage = accountService
+                .searchPupilPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), search);
+
+        definedCurrentPageAndAddAttrToModel(model, pupilDTOPage);
+        model.addAttribute(TYPE, SEARCH);
+        model.addAttribute(SEARCH, search);
+        return "pages/pupil/list";
+    }
+
+    @PostMapping("/pupils/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String deletePupil(@RequestParam("id") Long id, RedirectAttributes attr) {
+        try {
+            accountService.deleteById(id);
+            attr.addFlashAttribute(SUCCESS, DELETE_PUPIL_SUCCESS);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            attr.addFlashAttribute(FAILED, DELETE_PUPIL_FAILED);
+        }
+        return "redirect:/pupils";
+    }
+
+    @GetMapping("/pupils/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String createPupil(Model model) {
+        model.addAttribute(TEACHER, new AccountCreationDTO());
+        return "pages/pupil/create";
+    }
+
+    @PostMapping("/pupils/create-processing")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    public String doCreatePupil(@Valid @ModelAttribute("pupil") AccountCreationDTO pupil,
+                                  BindingResult result, RedirectAttributes attr) {
+        if (result.hasErrors()) {
+            return "pages/pupil/create";
+        }
+        try {
+            AccountCreationDTO pupilAccount = accountService.saveTeacher(pupil);
+            attr.addFlashAttribute(PUPIL_INFO, pupilAccount);
+            attr.addFlashAttribute(SUCCESS, CREATE_PUPIL_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            attr.addFlashAttribute(FAILED, CREATE_PUPIL_FAILED);
+            return "redirect:/pupils/create";
+        }
+        return "redirect:/pupils/create";
     }
 
     private void definedCurrentPageAndAddAttrToModel(Model model, Page<AccountDTO> teacherDTOPage) {

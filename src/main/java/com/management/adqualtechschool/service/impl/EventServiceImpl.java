@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -37,9 +36,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATED_AT;
-import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
@@ -162,7 +161,7 @@ public class EventServiceImpl implements EventService {
         }
         String nameClass = account.getClassRoom().getName();
         List<EventDTO> classEvents = getEventsByClassName(nameClass);
-        String gradeName = nameClass.replace(CLASS_NAME, GRADE_NAME).substring(0, nameClass.length() - 1);
+        String gradeName = nameClass.replace(CLASS_NAME_DEFAULT, GRADE_NAME_DEFAULT).substring(0, nameClass.length() - 1);
         List<EventDTO> gradeEvents = getEventsByGradeName(gradeName);
         List<EventDTO> schoolEvents = getEventsBySchoolWide();
         classEvents.addAll(gradeEvents);

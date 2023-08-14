@@ -26,8 +26,9 @@ public interface DisplayTypeAndFilterAndPaginationType {
     String SUBJECT_LIST = "subjectList";
     String SUBJECT = "Môn";
     String SUBJECT_NAME = "subjectName";
-    String CLASS_NAME = "Lớp";
-    String GRADE_NAME = "Khối";
+    String CLASS_NAME_DEFAULT = "Lớp";
+    String GRADE_NAME_DEFAULT = "Khối";
     String TEACHER = "teacher";
     String TEACHER_INFO = "teacherInfo";
+    String PUPIL_INFO = "pupilInfo";
 }

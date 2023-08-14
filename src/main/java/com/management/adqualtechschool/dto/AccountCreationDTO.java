@@ -16,7 +16,7 @@
         private String username;
         private String password;
 
-        @NotEmpty(message = Message.TEACHER_NAME_NOT_NULL)
+        @NotEmpty(message = Message.FIRST_NAME_NOT_NULL)
         private String firstName;
         private String lastName;
         private Boolean gender;

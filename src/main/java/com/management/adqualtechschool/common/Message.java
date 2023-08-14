@@ -67,9 +67,14 @@ public interface Message {
     String SUBJECT_NAME = "subjectName";
     String NOT_CONTAIN_ROLE = "Set role not contains this role!";
     String TEACHER_PREFIX = "te";
-    String TEACHER_NAME_NOT_NULL = "Tên giáo viên không được để trống!";
+    String FIRST_NAME_NOT_NULL = "Tên không được để trống!";
     String BIRTHDAY_NOT_NULL = "Ngày sinh không được để trống";
     String BIRTHDAY_NOT_VALID = "birthday not valid";
     String GENERAL_TEACHER_SUBJECT = "Môn dạy";
     String SEARCH_EMPTY = "";
+    String PUPIL_PREFIX = "pu";
+    String CREATE_PUPIL_SUCCESS = "Thêm học sinh thành công!";
+    String CREATE_PUPIL_FAILED = "Thêm học sinh không thành công!";
+    String DELETE_PUPIL_SUCCESS = "Xóa học sinh thành công!";
+    String DELETE_PUPIL_FAILED = "Xóa học sinh không thành công!";
 }

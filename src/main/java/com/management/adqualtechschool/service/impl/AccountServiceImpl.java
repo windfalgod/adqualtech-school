@@ -31,6 +31,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME_DEFAULT;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.Message.BIRTHDAY_NOT_VALID;
 import static com.management.adqualtechschool.common.Message.GENERAL_TEACHER_SUBJECT;
 import static com.management.adqualtechschool.common.Message.NOT_CONTAIN_ROLE;
@@ -210,6 +212,47 @@ public class AccountServiceImpl implements AccountService {
         accountDTO.setUsername(defaultUsername);
         accountDTO.setPassword(defaultPassword);
         return accountDTO;
+    }
+
+    @Override
+    public List<AccountDTO> getAllPupilAccount() {
+        List<Account> pupilList = accountRepository.findAllPupil();
+        return pupilList.stream()
+                .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<AccountDTO> getListPupilPaginated(Pageable pageable) {
+        List<AccountDTO> pupilDTOList = getAllPupilAccount();
+        return paginate(pageable, pupilDTOList);
+    }
+
+    @Override
+    public Page<AccountDTO> filterPupilPaginated(Pageable pageable, String gradeName, String className) {
+        List<Account> pupilList;
+        // if gradeName not equal default gradeName and className equal default classname in view
+        if (!gradeName.equals(GRADE_NAME_DEFAULT) && className.equals(CLASS_NAME_DEFAULT)) {
+            pupilList = accountRepository.findAllPupilByGradeName(gradeName);
+            List<AccountDTO> pupilDTOList = pupilList.stream()
+                    .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
+                    .collect(Collectors.toList());
+            return paginate(pageable, pupilDTOList);
+        }
+        // if gradeName equal default gradeName and className not equal default classname in view
+        if (gradeName.equals(GRADE_NAME_DEFAULT) && !className.equals(CLASS_NAME_DEFAULT)) {
+            pupilList = accountRepository.findAllPupilByClassRoomName(className);
+            List<AccountDTO> pupilDTOList = pupilList.stream()
+                .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
+                .collect(Collectors.toList());
+            return paginate(pageable, pupilDTOList);
+        }
+        return paginate(pageable, getAllPupilAccount());
+    }
+
+    @Override
+    public Page<AccountDTO> searchPupilPaginated(Pageable pageable, String search) {
+        return null;
     }
 
     private Page<AccountDTO> paginate(Pageable pageable, List<AccountDTO> accountDTOList) {
