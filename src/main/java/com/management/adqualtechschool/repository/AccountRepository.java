@@ -11,14 +11,15 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByUsername(String username);
 
-    @Query(value = "select a from Account a where a.position like 'Giáo viên' order by a.firstName, a.lastName asc")
+    @Query(value = "select a from Account a where a.position like 'Giáo viên'" +
+            " order by a.firstName, a.lastName asc")
     List<Account> findAllTeacherByPosition(String position);
 
     @Query(value = "select MAX(a.id) from Account a")
     Long findMaxId();
 
     @Query(value = "select a from Account a where a.position like 'Giáo viên' and" +
-            "(lower(concat(a.lastName, ' ', a.firstName)) like trim(concat('%', :search, '%'))" +
+            "(lower(concat(a.lastName, ' ', a.firstName)) like lower(trim(concat('%', :search, '%')))" +
             " or lower(a.level) like trim(concat('%', :search, '%'))" +
             " or lower(a.rank) like trim(concat('%', :search, '%'))" +
             " or lower(a.position) like trim(concat('%', :search, '%'))" +
@@ -32,6 +33,12 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     List<Account> findAllPupilByClassRoomName(String className);
 
-    @Query(value = "select a from Account a where a.classRoom.name like :gradeName")
+    @Query(value = "select a from Account a where a.classRoom.name like concat(:gradeName, '%')")
     List<Account> findAllPupilByGradeName(@Param("gradeName") String gradeName);
+
+    @Query(value = "select a from Account a where lower(concat(a.lastName, ' ', a.firstName))" +
+            " like trim(concat('%', :search, '%'))" +
+            " and a.username like 'pu%' " +
+            " order by a.firstName, a.lastName ASC ")
+    List<Account> searchPupil(@Param("search") String search);
 }

@@ -1,9 +1,14 @@
 package com.management.adqualtechschool.controller;
 
 import com.management.adqualtechschool.dto.AccountDTO;
+import com.management.adqualtechschool.dto.ClassRoomDTO;
+import com.management.adqualtechschool.dto.ScopeDTO;
 import com.management.adqualtechschool.dto.SubjectDTO;
 import com.management.adqualtechschool.service.AccountService;
+import com.management.adqualtechschool.service.ClassroomService;
+import com.management.adqualtechschool.service.ScopeService;
 import com.management.adqualtechschool.service.SubjectService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,8 +30,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_LIST;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CURRENT_PAGE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.FILTER;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_LIST;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.LIST;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PAGE_NUMBERS;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PUPIL_ACCOUNT;
@@ -58,6 +68,12 @@ public class AccountController {
 
     @Autowired
     private SubjectService subjectService;
+
+    @Autowired
+    private ScopeService scopeService;
+
+    @Autowired
+    private ClassroomService classroomService;
 
     private final static String ACCOUNT = "account";
     private final static String MANAGER_USERNAME = "ma";
@@ -205,8 +221,8 @@ public class AccountController {
         int currentPage = page.orElse(1);
         Page<AccountDTO> pupilDTOPage = accountService
                 .getListPupilPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE));
-
         definedCurrentPageAndAddAttrToModel(model, pupilDTOPage);
+        addGradesAndClassRoomsToModel(model);
         model.addAttribute(TYPE,LIST);
         return "pages/pupil/list";
     }
@@ -220,9 +236,11 @@ public class AccountController {
 
         Page<AccountDTO> pupilDTOPage = accountService.filterPupilPaginated(
                 (PageRequest.of(currentPage - 1, PAGE_SIZE)),gradeName ,className);
-
         definedCurrentPageAndAddAttrToModel(model, pupilDTOPage);
+        addGradesAndClassRoomsToModel(model);
         model.addAttribute(TYPE,FILTER);
+        model.addAttribute(GRADE_NAME, gradeName);
+        model.addAttribute(CLASS_NAME, className);
         return "pages/pupil/list";
     }
 
@@ -231,10 +249,11 @@ public class AccountController {
                                @RequestParam("page") Optional<Integer> page,
                                @RequestParam("search") String search) {
         int currentPage = page.orElse(1);
-        Page<AccountDTO> pupilDTOPage = accountService
-                .searchPupilPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), search);
 
+        Page<AccountDTO> pupilDTOPage = accountService
+                .searchPupilPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), search.toLowerCase());
         definedCurrentPageAndAddAttrToModel(model, pupilDTOPage);
+        addGradesAndClassRoomsToModel(model);
         model.addAttribute(TYPE, SEARCH);
         model.addAttribute(SEARCH, search);
         return "pages/pupil/list";
@@ -257,18 +276,24 @@ public class AccountController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public String createPupil(Model model) {
         model.addAttribute(PUPIL_ACCOUNT, new AccountCreationDTO());
+        List<ClassRoomDTO> classRoomDTOList = classroomService.getAllClassroom();
+        model.addAttribute(CLASS_LIST, classRoomDTOList);
         return "pages/pupil/create";
     }
 
     @PostMapping("/pupils/create-processing")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public String doCreatePupil(@Valid @ModelAttribute("pupil") AccountCreationDTO pupil,
-                                  BindingResult result, RedirectAttributes attr) {
+                                  BindingResult result, Model model,
+                                @RequestParam("className") String className,
+                                RedirectAttributes attr) {
         if (result.hasErrors()) {
+            List<ClassRoomDTO> classRoomDTOList = classroomService.getAllClassroom();
+            model.addAttribute(CLASS_LIST, classRoomDTOList);
             return "pages/pupil/create";
         }
         try {
-            AccountCreationDTO pupilAccount = accountService.saveTeacher(pupil);
+            AccountCreationDTO pupilAccount = accountService.savePupil(pupil, className);
             attr.addFlashAttribute(PUPIL_INFO, pupilAccount);
             attr.addFlashAttribute(SUCCESS, CREATE_PUPIL_SUCCESS);
         } catch (Exception e) {
@@ -288,5 +313,12 @@ public class AccountController {
                     .collect(Collectors.toList());
             model.addAttribute(PAGE_NUMBERS, pageNumbers);
         }
+    }
+
+    private void addGradesAndClassRoomsToModel(Model model) {
+        List<ScopeDTO> scopeDTOList = scopeService.getAllGradeScope();
+        model.addAttribute(GRADE_LIST, scopeDTOList);
+        List<ClassRoomDTO> classRoomDTOList = classroomService.getAllClassroom();
+        model.addAttribute(CLASS_LIST, classRoomDTOList);
     }
 }

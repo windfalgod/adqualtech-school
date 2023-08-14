@@ -32,4 +32,8 @@ public interface DisplayTypeAndFilterAndPaginationType {
     String TEACHER_INFO = "teacherInfo";
     String PUPIL_INFO = "pupilInfo";
     String PUPIL_ACCOUNT = "pupil";
+    String GRADE_LIST = "gradeList";
+    String CLASS_LIST = "classList";
+    String GRADE_NAME = "gradeName";
+    String CLASS_NAME = "className";
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +22,7 @@ public class ClassroomServiceImpl implements ClassroomService {
 
     @Override
     public List<ClassRoomDTO> getAllClassroom() {
-        List<Classroom> classroomList = classroomRepository.findAll();
+        List<Classroom> classroomList = classroomRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
         return classroomList.stream()
                 .map(classroom -> modelMapper.map(classroom, ClassRoomDTO.class))
                 .collect(Collectors.toList());

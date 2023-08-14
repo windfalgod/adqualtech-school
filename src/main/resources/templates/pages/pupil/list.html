@@ -48,18 +48,18 @@
         <!--Filter Khối học sinh thuộc-->
         <select class="form-select ms-3" aria-label="Default" name="gradeName">
           <option selected>Khối</option>
-          <option th:each="subject : ${subjectList}"
-                  th:value="${subject.name}"
-                  th:text="${subject.name}"
-                  th:selected="${subjectName == subject.name}">
+          <option th:each="grade : ${gradeList}"
+                  th:value="${grade.title}"
+                  th:text="${grade.title}"
+                  th:selected="${gradeName == grade.title}">
           </option>
         </select>
         <select class="form-select ms-3" aria-label="Default" name="className">
           <option selected>Lớp</option>
-          <option th:each="subject : ${subjectList}"
-                  th:value="${subject.name}"
-                  th:text="${subject.name}"
-                  th:selected="${subjectName == subject.name}">
+          <option th:each="class : ${classList}"
+                  th:value="${class.name}"
+                  th:text="${class.name}"
+                  th:selected="${class.name == className}">
           </option>
         </select>
         <div class="col-md-1 ms-3 filter-button">
@@ -83,9 +83,9 @@
         <th class="text-center">#</th>
         <th>Họ tên</th>
         <th>Lớp</th>
-        <th>Số điện thoại phụ huynh</th>
-        <th>Email phụ huynh</th>
-        <th>Địa chỉ</th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Số điện thoại phụ huynh</th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Email phụ huynh</th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Địa chỉ</th>
         <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')"></th>
       </tr>
     </thead>
@@ -94,8 +94,8 @@
         <td th:text="${pupil.id}" class="id-td"></td>
         <td th:text="${pupil.lastName} + ' ' + ${pupil.firstName}"></td>
         <td th:text="${pupil.classRoom.name}"></td>
-        <td th:text="${pupil.phone}"></td>
-        <td th:text="${pupil.email}"></td>
+        <td th:text="${pupil.phone}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
+        <td th:text="${pupil.email}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
         <td th:text="${pupil.address}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
         <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">
           <form th:action="@{/pupils/delete}" method="post">
@@ -182,7 +182,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number > 0}"
            class="page-link"
-           th:href="@{/pupils/filter/(page=1, subjectName=${subjectName})}"><<
+           th:href="@{/pupils/filter/(page=1)}"><<
         </a>
       </li>
       <li class="page-item">
@@ -213,7 +213,7 @@
         </a>
         <a th:if="${pageNumber > currentPage.number - 2
         && pageNumber < currentPage.number + 4}"
-           th:href="@{/pupils/filter/(page=${pageNumber},  subjectName=${subjectName})}"
+           th:href="@{/pupils/filter/(page=${pageNumber})}"
            th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
            th:text="${pageNumber}">
         </a>
@@ -223,7 +223,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            th:class="'page-link'"
-           th:href="@{/pupils/filter/(page=${currentPage.number+2},  subjectName=${subjectName})}">>
+           th:href="@{/pupils/filter/(page=${currentPage.number+2})}">>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>
@@ -232,7 +232,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            class="page-link"
-           th:href="@{/pupils/filter/(page=${currentPage.totalPages},  subjectName=${subjectName})}">>>
+           th:href="@{/pupils/filter/(page=${currentPage.totalPages})}">>>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>>

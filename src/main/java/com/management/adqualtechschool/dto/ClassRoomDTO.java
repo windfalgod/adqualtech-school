@@ -11,5 +11,5 @@ public class ClassRoomDTO {
     private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<Account> student;
+    private List<Account> pupils;
 }

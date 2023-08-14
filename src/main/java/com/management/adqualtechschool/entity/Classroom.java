@@ -35,5 +35,5 @@ public class Classroom {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "classRoom")
-    private List<Account> student;
+    private List<Account> pupils;
 }

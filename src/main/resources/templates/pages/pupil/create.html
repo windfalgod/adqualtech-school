@@ -6,11 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Thêm học sinh</title>
-    <link rel="stylesheet" href="/css/validation-error.css">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <script src="/js/bootstrap/bootstrap.min.js"></script>
-    <script src="/js/jquery/lib/jquery.js"></script>
-    <script src="/js/modal.js"></script>
 </head>
 <body>
 <div class="pupils-create-wrapper p-4" th:fragment="content">
@@ -116,12 +111,10 @@
                           th:errors="*{gender}"></span>
 
                     <!-- select class-->
-                    <select class="form-select h-50 mt-5 col-6" aria-label="Default" name="gradeRoom" th:field="*{classRoom.name}">
-                        <option selected value="true">Lớp</option>
-                        <option th:each="class : ${classList}"></option>
+                    <select class="form-select h-50 mt-5 col-6 ms-3" aria-label="Default" name="className">
+                        <option selected value="Lớp">Lớp</option>
+                        <option th:each="class : ${classList}" th:text="${class.name}"></option>
                     </select>
-                    <span th:errorclass="error" th:if="${#fields.hasErrors('gender')}"
-                          th:errors="*{gender}"></span>
                 </div>
             </div>
 
