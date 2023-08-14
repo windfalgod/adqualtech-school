@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
-import static com.management.adqualtechschool.common.RoleType.ADMIN;
+import static com.management.adqualtechschool.common.RoleType.ADMIN_ROLE;
 
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     @Override
@@ -19,7 +19,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for(GrantedAuthority grantedAuthority : authorities){
             String roleName = grantedAuthority.getAuthority();
-            if(roleName.equals(ADMIN)){
+            if(roleName.equals(ADMIN_ROLE)){
                 new SimpleUrlAuthenticationSuccessHandler("/admin")
                         .onAuthenticationSuccess(request, response, authentication);
                 return;

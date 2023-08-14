@@ -42,7 +42,7 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
-import static com.management.adqualtechschool.common.RoleType.PUPIL;
+import static com.management.adqualtechschool.common.RoleType.PUPIL_ROLE;
 import static com.management.adqualtechschool.common.SaveFileDir.EVENT_IMAGE_DIR;
 import static com.management.adqualtechschool.common.SaveFileDir.STATIC_DIR;
 
@@ -238,7 +238,7 @@ public class EventServiceImpl implements EventService {
 
         List<EventDTO> eventDTOList;
 
-        if (role.equals(PUPIL)) {
+        if (role.equals(PUPIL_ROLE)) {
             eventDTOList = getEventsByPupilAccount(accountId);
         } else {
             eventDTOList = getAllEvent();

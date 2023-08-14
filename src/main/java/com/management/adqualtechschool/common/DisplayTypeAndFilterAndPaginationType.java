@@ -31,4 +31,5 @@ public interface DisplayTypeAndFilterAndPaginationType {
     String TEACHER = "teacher";
     String TEACHER_INFO = "teacherInfo";
     String PUPIL_INFO = "pupilInfo";
+    String PUPIL_ACCOUNT = "pupil";
 }

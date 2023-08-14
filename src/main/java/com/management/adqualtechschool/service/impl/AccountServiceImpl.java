@@ -158,8 +158,8 @@ public class AccountServiceImpl implements AccountService {
         }
 
         Set<Role> roleSet = account.getRoles();
-        Role roleTeacher = roleRepository.findRoleByName(RoleType.TEACHER);
-        Role roleManager = roleRepository.findRoleByName(RoleType.MANAGER);
+        Role roleTeacher = roleRepository.findRoleByName(RoleType.TEACHER_ROLE);
+        Role roleManager = roleRepository.findRoleByName(RoleType.MANAGER_ROLE);
 
         if (!roleSet.contains(roleTeacher)) {
             throw new NoSuchElementException(NOT_CONTAIN_ROLE);
@@ -201,7 +201,7 @@ public class AccountServiceImpl implements AccountService {
         account.setPosition(TEACHER_POSITION);
 
         // set role for account
-        Role roleTeacher = roleRepository.findRoleByName(RoleType.TEACHER);
+        Role roleTeacher = roleRepository.findRoleByName(RoleType.TEACHER_ROLE);
         account.setRoles(Set.of(roleTeacher));
         accountRepository.save(account);
 

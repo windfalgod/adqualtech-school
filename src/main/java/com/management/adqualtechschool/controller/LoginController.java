@@ -14,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import static com.management.adqualtechschool.common.RoleType.ADMIN;
-import static com.management.adqualtechschool.common.RoleType.PUPIL;
+import static com.management.adqualtechschool.common.RoleType.ADMIN_ROLE;
+import static com.management.adqualtechschool.common.RoleType.PUPIL_ROLE;
 
 @Controller
 public class LoginController {
@@ -35,7 +35,7 @@ public class LoginController {
             return "login";
         }
         if (auth.getAuthorities().iterator().next()
-                .getAuthority().equals(ADMIN)) {
+                .getAuthority().equals(ADMIN_ROLE)) {
             return "redirect:./admin";
         }
         return "redirect:./";
@@ -47,7 +47,7 @@ public class LoginController {
         List<EventDTO> eventDTOList;
         List<NotifyDTO> notifyDTOList;
         if (auth.getAuthorities().iterator().next()
-                .getAuthority().equals(PUPIL)) {
+                .getAuthority().equals(PUPIL_ROLE)) {
             eventDTOList = eventService.getEventsByPupilAccount(accountDetails.getId());
             notifyDTOList = notifyService.getNotifiesByPupilAccount(accountDetails.getId());
         } else {

@@ -114,6 +114,14 @@
                     </select>
                     <span th:errorclass="error" th:if="${#fields.hasErrors('gender')}"
                           th:errors="*{gender}"></span>
+
+                    <!-- select class-->
+                    <select class="form-select h-50 mt-5 col-6" aria-label="Default" name="gradeRoom" th:field="*{classRoom.name}">
+                        <option selected value="true">Lớp</option>
+                        <option th:each="class : ${classList}"></option>
+                    </select>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('gender')}"
+                          th:errors="*{gender}"></span>
                 </div>
             </div>
 

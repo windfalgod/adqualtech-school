@@ -29,6 +29,7 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.FILTER;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.LIST;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PAGE_NUMBERS;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PUPIL_ACCOUNT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PUPIL_INFO;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SEARCH;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TEACHER;
@@ -255,7 +256,7 @@ public class AccountController {
     @GetMapping("/pupils/create")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
     public String createPupil(Model model) {
-        model.addAttribute(TEACHER, new AccountCreationDTO());
+        model.addAttribute(PUPIL_ACCOUNT, new AccountCreationDTO());
         return "pages/pupil/create";
     }
 
