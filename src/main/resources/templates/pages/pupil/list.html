@@ -46,7 +46,7 @@
       <form th:action="@{/pupils/filter}" class="row w-100" method="get">
 
         <!--Filter Khối học sinh thuộc-->
-        <select class="form-select ms-3" aria-label="Default" name="gradeName">
+        <select class="form-select ms-3 gradeSelect" aria-label="Default" name="gradeName">
           <option selected>Khối</option>
           <option th:each="grade : ${gradeList}"
                   th:value="${grade.title}"
@@ -54,7 +54,8 @@
                   th:selected="${gradeName == grade.title}">
           </option>
         </select>
-        <select class="form-select ms-3" aria-label="Default" name="className">
+        <!--Filter lớp học sinh thuộc-->
+        <select class="form-select ms-3 classSelect" aria-label="Default" name="className">
           <option selected>Lớp</option>
           <option th:each="class : ${classList}"
                   th:value="${class.name}"
