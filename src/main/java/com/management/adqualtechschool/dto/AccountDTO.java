@@ -3,6 +3,7 @@ package com.management.adqualtechschool.dto;
 import com.management.adqualtechschool.entity.Classroom;
 import com.management.adqualtechschool.entity.Role;
 import com.management.adqualtechschool.entity.Subject;
+import com.management.adqualtechschool.entity.TeachSubject;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +25,6 @@ public class AccountDTO {
     private String position;
     private String rank;
     private Set<Role> roles;
-    private List<Subject> subjects;
+    private List<TeachSubject> teachSubjectList;
     private Long classInChargedId;
 }

@@ -92,7 +92,8 @@
         <td th:text="${teacher.position}"></td>
         <td th:text="${teacher.level}"></td>
         <td>
-          <p th:each="subject : ${teacher.subjects}" th:text="${subject.name}"></p>
+          <p class="mt-3" th:each="teacherSubject : ${teacher.teachSubjectList}"
+             th:text="${teacherSubject.subject.name}"></p>
         </td>
         <td th:text="${teacher.email}"></td>
         <td th:text="${teacher.phone}"></td>
