@@ -31,9 +31,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query(value = "select a from Account a where a.username like 'pu%'")
     List<Account> findAllPupil();
 
-    List<Account> findAllPupilByClassRoomName(String className);
+    List<Account> findAllPupilByClassroomName(String className);
 
-    @Query(value = "select a from Account a where a.classRoom.name like concat(:gradeName, '%')")
+    @Query(value = "select a from Account a where a.classroom.name like concat(:gradeName, '%')")
     List<Account> findAllPupilByGradeName(@Param("gradeName") String gradeName);
 
     @Query(value = "select a from Account a where lower(concat(a.lastName, ' ', a.firstName))" +

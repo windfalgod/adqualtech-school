@@ -243,7 +243,7 @@ public class AccountServiceImpl implements AccountService {
         }
         // if gradeName equal default gradeName and className not equal default classname in view
         if (gradeName.equals(GRADE_NAME_DEFAULT) && !className.equals(CLASS_NAME_DEFAULT)) {
-            pupilList = accountRepository.findAllPupilByClassRoomName(className);
+            pupilList = accountRepository.findAllPupilByClassroomName(className);
             List<AccountDTO> pupilDTOList = pupilList.stream()
                 .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
                 .collect(Collectors.toList());
@@ -294,7 +294,7 @@ public class AccountServiceImpl implements AccountService {
         classroomRepository.save(classroom);
 
         // save account
-        account.setClassRoom(classroom);
+        account.setClassroom(classroom);
         accountRepository.save(account);
 
         // return username and password
