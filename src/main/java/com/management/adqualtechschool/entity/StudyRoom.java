@@ -1,6 +1,5 @@
 package com.management.adqualtechschool.entity;
 
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -14,15 +13,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "upcoming_event")
-public class Event extends PostEntity {
+@Table(name = "study_room")
+public class StudyRoom extends BaseEntity{
 
-    @Column(name = "image")
-    private String image;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "start_at", nullable = false)
-    private LocalDateTime startAt;
-
-    @Column(name = "end_at", nullable = false)
-    private LocalDateTime endAt;
+    @Column(name = "description")
+    private String description;
 }
