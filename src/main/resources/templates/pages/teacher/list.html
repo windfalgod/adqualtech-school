@@ -94,7 +94,6 @@
         <td>
           <p class="mt-3" th:each="teacherSubject : ${teacher.teachSubjectList}">
             <span th:text="${teacherSubject.subject.name}"></span>
-            <span th:text="${teacherSubject.scope.title.replace('Khối ', '')}"></span>
           </p>
         </td>
         <td th:text="${teacher.email}"></td>

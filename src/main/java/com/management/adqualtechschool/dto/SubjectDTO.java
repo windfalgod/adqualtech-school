@@ -6,7 +6,6 @@ import com.management.adqualtechschool.entity.PrepareExam;
 import com.management.adqualtechschool.entity.TeachSubject;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import lombok.Data;
 
 @Data

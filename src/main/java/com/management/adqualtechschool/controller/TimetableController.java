@@ -2,11 +2,12 @@ package com.management.adqualtechschool.controller;
 
 import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.StudyRoomDTO;
-import com.management.adqualtechschool.dto.TimetableDTO;
 import com.management.adqualtechschool.dto.TimetableRequireDTO;
+import com.management.adqualtechschool.dto.RequireDTO;
 import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.StudyRoomService;
 import com.management.adqualtechschool.service.TimetableRequireService;
+import com.management.adqualtechschool.service.TimetableService;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class TimetableController {
     @Autowired
     private TimetableRequireService timetableRequireService;
 
+    @Autowired
+    private TimetableService timetableService;
+
     @GetMapping("")
     public String showTimetablePage() {
         return "pages/timetable/view";
@@ -47,20 +51,20 @@ public class TimetableController {
     @GetMapping("/arrange")
     public String arrangeTimetable(Model model) {
         addDataAndRequireArrangeToModel(model);
-        model.addAttribute(TIMETABLE, new TimetableDTO());
+        model.addAttribute(TIMETABLE, new TimetableRequireDTO());
         return "pages/timetable/arrange";
     }
 
     @PostMapping("/arranging")
     public String doArrangeTimetable(Model model,
-                                     @Valid @ModelAttribute("timetable") TimetableDTO timetable,
+                                     @Valid @ModelAttribute("timetable") TimetableRequireDTO timetable,
                                      BindingResult result, RedirectAttributes attr)  {
         if (result.hasErrors()) {
             addDataAndRequireArrangeToModel(model);
             attr.addFlashAttribute(FAILED, TIMETABLE_ARRANGE_FAILED);
             return "pages/timetable/arrange";
         }
-
+        timetableService.getParameterForTimetable();
         return "redirect:arrange";
     }
 
@@ -69,7 +73,7 @@ public class TimetableController {
         model.addAttribute(TEACHER_LIST, teacherList);
         List<StudyRoomDTO> studyRoomList = studyRoomService.getAllStudyRoom();
         model.addAttribute(STUDY_ROOM_LIST, studyRoomList);
-        List<TimetableRequireDTO> requireDTOList = timetableRequireService.getAllRequire();
+        List<RequireDTO> requireDTOList = timetableRequireService.getAllRequire();
         model.addAttribute(TIMETABLE_REQUIRE_LIST, requireDTOList);
     }
 }

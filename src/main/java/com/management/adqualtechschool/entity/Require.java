@@ -14,9 +14,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "timetable_require")
-public class TimetableRequire extends BaseEntity{
+public class Require extends BaseEntity{
 
     // the requirement for arrangement
     @Column(name = "name")
     private String name;
+
+    //the weight of constraint
+    @Column(name = "weight")
+    private String weight;
 }

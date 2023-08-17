@@ -1,7 +1,7 @@
 package com.management.adqualtechschool.service.impl;
 
-import com.management.adqualtechschool.dto.TimetableRequireDTO;
-import com.management.adqualtechschool.entity.TimetableRequire;
+import com.management.adqualtechschool.dto.RequireDTO;
+import com.management.adqualtechschool.entity.Require;
 import com.management.adqualtechschool.repository.TimetableRequireRepository;
 import com.management.adqualtechschool.service.TimetableRequireService;
 import java.util.List;
@@ -20,10 +20,10 @@ public class TimetableRequireServiceImpl implements TimetableRequireService {
     private ModelMapper modelMapper;
 
     @Override
-    public List<TimetableRequireDTO> getAllRequire() {
-        List<TimetableRequire> requireList = repository.findAll();
+    public List<RequireDTO> getAllRequire() {
+        List<Require> requireList = repository.findAll();
         return requireList.stream()
-                .map(require -> modelMapper.map(require, TimetableRequireDTO.class))
+                .map(require -> modelMapper.map(require, RequireDTO.class))
                 .collect(Collectors.toList());
     }
 }
