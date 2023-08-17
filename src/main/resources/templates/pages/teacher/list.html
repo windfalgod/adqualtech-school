@@ -92,16 +92,18 @@
         <td th:text="${teacher.position}"></td>
         <td th:text="${teacher.level}"></td>
         <td>
-          <p class="mt-3" th:each="teacherSubject : ${teacher.teachSubjectList}"
-             th:text="${teacherSubject.subject.name}"></p>
+          <p class="mt-3" th:each="teacherSubject : ${teacher.teachSubjectList}">
+            <span th:text="${teacherSubject.subject.name}"></span>
+            <span th:text="${teacherSubject.scope.title.replace('Khối ', '')}"></span>
+          </p>
         </td>
         <td th:text="${teacher.email}"></td>
         <td th:text="${teacher.phone}"></td>
         <td class="button-control-upgrade" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">
-          <form th:action="@{/teachers/upgrading-role}" method="post" class="upgrade-form">
+          <form th:action="@{/teachers/upgrading-role}" method="post" class="upgrade-form" th:each="role : ${teacher.roles}">
             <input type="hidden" name="id" th:value="${teacher.id}" />
-            <button type="submit" th:class="'btn btn-primary ' + ${teacher.roles.iterator().next().name == 'ROLE_MANAGER'
-             || teacher.roles.iterator().next().name == 'ROLE_ADMIN' ?  'disabled' : '' }">Nâng quyền</button>
+            <button type="submit" th:class="'btn btn-primary ' + ${role.name == 'ROLE_MANAGER'
+             || role.name == 'ROLE_ADMIN' ?  'disabled' : '' }">Nâng quyền</button>
           </form>
         </td>
         <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">

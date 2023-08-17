@@ -94,7 +94,7 @@
       <tr th:each="pupil : ${currentPage}" class="row-value">
         <td th:text="${pupil.id}" class="id-td"></td>
         <td th:text="${pupil.lastName} + ' ' + ${pupil.firstName}"></td>
-        <td th:text="${pupil.classRoom.name}"></td>
+        <td th:text="${pupil.classroom.name}"></td>
         <td th:text="${pupil.phone}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
         <td th:text="${pupil.email}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
         <td th:text="${pupil.address}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
