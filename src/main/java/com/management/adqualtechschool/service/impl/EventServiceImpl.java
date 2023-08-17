@@ -159,7 +159,7 @@ public class EventServiceImpl implements EventService {
         if (account == null) {
             throw new NoSuchElementException(Message.NOT_FOUND_ACCOUNT_ID);
         }
-        String nameClass = account.getClassRoom().getName();
+        String nameClass = account.getClassroom().getName();
         List<EventDTO> classEvents = getEventsByClassName(nameClass);
         String gradeName = nameClass.replace(CLASS_NAME_DEFAULT, GRADE_NAME_DEFAULT).substring(0, nameClass.length() - 1);
         List<EventDTO> gradeEvents = getEventsByGradeName(gradeName);

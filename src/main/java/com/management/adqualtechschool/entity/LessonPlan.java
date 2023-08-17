@@ -15,18 +15,18 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "study_room")
-public class StudyRoom extends BaseEntity{
+@Table(name = "lesson_plan")
+public class LessonPlan extends BaseEntity {
 
-    // Tên phòng học
-    @Column(name = "name", nullable = false)
-    private String name;
+    // lesson in day
+    @Column(name = "lesson_of_day", nullable = false)
+    private Integer lessonOfDay;
 
-    // Mô tả về phòng học
-    @Column(name = "description")
-    private String description;
+    // the day of week
+    @Column(name = "day_of_week", nullable = false)
+    private Integer dayOfWeek;
 
-    // Danh sách môn học và thời gian dạy
-    @OneToMany(mappedBy = "studyRoom")
+    // Get Subject and Class
+    @OneToMany(mappedBy = "lessonPlan")
     private List<SubjectLessonPlan> subjectLessonPlanList;
 }

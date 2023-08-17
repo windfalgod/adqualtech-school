@@ -48,7 +48,7 @@ public class Account extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "class_id", referencedColumnName = "id")
-    private Classroom classRoom;
+    private Classroom classroom;
 
     @Column(name = "address")
     private String address;
@@ -59,12 +59,15 @@ public class Account extends BaseEntity {
     @Column(name = "email", length = 50)
     private String email;
 
+    // Trình độ
     @Column(name = "level", length = 30)
     private String level;
 
+    // Cấp bậc
     @Column(name = "rank", length = 50)
     private String rank;
 
+    // Chức vụ
     @Column(name = "position", length = 50)
     private String position;
 
@@ -79,23 +82,19 @@ public class Account extends BaseEntity {
     )
     private Set<Role> roles;
 
+    // List event
     @OneToMany(mappedBy = "creator")
     private List<Event> events;
 
+    // List notify
     @OneToMany(mappedBy = "creator")
     private List<Notify> notifies;
 
+    // List rule
     @OneToMany(mappedBy = "creator")
-    private List<Notify> rules;
+    private List<Rule> rules;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<Account> accounts;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "teach_subject",
-            joinColumns = @JoinColumn(name = "account_id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id")
-    )
-    private Set<Subject> subjects;
+    // Set teach subject
+    @OneToMany(mappedBy = "teacher")
+    private List<TeachSubject> teachSubjectList;
 }

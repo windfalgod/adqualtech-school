@@ -135,7 +135,7 @@ public class RuleServiceImpl implements RuleService {
         if (account == null) {
             throw new NoSuchElementException(Message.NOT_FOUND_ACCOUNT_ID);
         }
-        String nameClass = account.getClassRoom().getName();
+        String nameClass = account.getClassroom().getName();
         List<RuleDTO> classRules = getRulesByClassName(nameClass);
         List<RuleDTO> gradeRules = getRulesByGradeName(nameClass.substring(0, nameClass.length() - 1));
         List<RuleDTO> schoolRules = getRulesBySchoolWide();

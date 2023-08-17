@@ -17,7 +17,7 @@ public class AccountDTO {
     private Boolean gender;
     private LocalDateTime birthday;
     private String image;
-    private Classroom classRoom;
+    private Classroom classroom;
     private String address;
     private String phone;
     private String email;

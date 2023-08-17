@@ -23,12 +23,27 @@ public class Subject extends BaseEntity{
     @Column(name = "name", nullable = false)
     private String name;
 
+    // Number unit of a subject
     @Column(name = "unit", nullable = false)
     private Long unit;
 
+    // status of obligation or elective
+    @Column(name = "status")
+    private String status;
+
+    // Combination of course
+    @Column(name = "combination")
+    private String combination;
+
+    // List subject exam
     @OneToMany(mappedBy = "subject")
     private List<PrepareExam> prepareExams;
 
-    @ManyToMany(mappedBy = "subjects")
-    private Set<Account> accounts;
+    // Set teacher teach this subject
+    @OneToMany(mappedBy = "subject")
+    private List<TeachSubject> teachSubjectList;
+
+    // List elective subject
+    @OneToMany(mappedBy = "subject")
+    private List<ElectiveSubject> electiveSubjectList ;
 }

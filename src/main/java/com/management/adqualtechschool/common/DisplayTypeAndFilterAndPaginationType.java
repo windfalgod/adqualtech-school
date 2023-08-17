@@ -36,4 +36,8 @@ public interface DisplayTypeAndFilterAndPaginationType {
     String CLASS_LIST = "classList";
     String GRADE_NAME = "gradeName";
     String CLASS_NAME = "className";
+    String TEACHER_LIST = "teacherList";
+    String STUDY_ROOM_LIST = "studyRoomList";
+    String TIMETABLE_REQUIRE_LIST = "timetableRequireList";
+    String TIMETABLE = "timetable";
 }

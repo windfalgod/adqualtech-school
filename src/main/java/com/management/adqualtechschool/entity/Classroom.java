@@ -21,6 +21,15 @@ public class Classroom extends BaseEntity{
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "classRoom")
+    // List pupils in class
+    @OneToMany(mappedBy = "classroom")
     private List<Account> pupils;
+
+    // List subject lesson in class
+    @OneToMany(mappedBy = "classroom")
+    private List<SubjectLessonPlan> subjectLessonPlanList;
+
+    // List elective subject
+    @OneToMany(mappedBy = "classroom")
+    private List<ElectiveSubject> electiveSubjectList;
 }

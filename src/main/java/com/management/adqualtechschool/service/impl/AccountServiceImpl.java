@@ -8,6 +8,7 @@ import com.management.adqualtechschool.dto.SubjectDTO;
 import com.management.adqualtechschool.entity.Account;
 import com.management.adqualtechschool.entity.Classroom;
 import com.management.adqualtechschool.entity.Role;
+import com.management.adqualtechschool.entity.TeachSubject;
 import com.management.adqualtechschool.repository.AccountRepository;
 import com.management.adqualtechschool.repository.ClassroomRepository;
 import com.management.adqualtechschool.repository.RoleRepository;
@@ -16,6 +17,7 @@ import com.management.adqualtechschool.service.SubjectService;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -136,12 +138,15 @@ public class AccountServiceImpl implements AccountService {
             return getListTeacherPaginated(pageable);
         }
         SubjectDTO subjectDTO = subjectService.getSubjectByName(subjectName);
-        List<Account> teacherList = subjectDTO.getAccounts();
-        List<AccountDTO> teacherListDTO = teacherList
+
+        List<Account> teacherList = subjectDTO.getTeachSubjectList()
+                .stream().map(TeachSubject::getTeacher)
+                .collect(Collectors.toList());
+        Set<AccountDTO> teacherListDTO = teacherList
                 .stream()
                 .map(teacher -> modelMapper.map(teacher, AccountDTO.class))
-                .collect(Collectors.toList());
-        return paginate(pageable, teacherListDTO);
+                .collect(Collectors.toSet());
+        return paginate(pageable, new ArrayList<>(teacherListDTO));
     }
 
     @Override

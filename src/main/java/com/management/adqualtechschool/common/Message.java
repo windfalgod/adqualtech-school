@@ -77,7 +77,14 @@ public interface Message {
     String CREATE_PUPIL_FAILED = "Thêm học sinh không thành công!";
     String DELETE_PUPIL_SUCCESS = "Xóa học sinh thành công!";
     String DELETE_PUPIL_FAILED = "Xóa học sinh không thành công!";
-    String PATTERN_NAME = "Trường này chỉ cho phép chữ thường và ký tự số!";
+    String PATTERN_NAME = "Trường này chỉ cho phép chữ thường!";
     String MAX_LAST_NAME = "Tên tối đa 30 ký tự!";
     String MAX_FIRST_NAME = "Họ và tên đệm tối đa 50 ký tự!";
+    String START_DATE_NOT_NULL = "Thời gian bắt đầu không được để trống!";
+    String END_DATE_NOT_NULL = "Thời gian kết thúc không được để trống!";
+    String TEACHER_SELECT_NOT_EMPTY = "Vui lòng chọn giáo viên!";
+    String STUDY_ROOM_SELECT_NOT_EMPTY = "Vui lòng chọn phòng học!";
+    String REQUIRED_NOT_EMPTY = "Vui lòng chọn yêu cầu!";
+    String TIMETABLE_ARRANGE_SUCCESS = "Sắp xếp thời khóa biểu thành công!";
+    String TIMETABLE_ARRANGE_FAILED = "Sắp xếp thời khóa biểu không thành công!";
 }
