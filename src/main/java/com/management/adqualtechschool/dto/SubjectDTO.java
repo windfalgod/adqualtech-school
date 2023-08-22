@@ -12,7 +12,8 @@ import lombok.Data;
 public class SubjectDTO {
     private Long id;
     private String name;
-    private Long unit;
+    private Integer unit;
+    private String combination;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<PrepareExam> prepareExams;

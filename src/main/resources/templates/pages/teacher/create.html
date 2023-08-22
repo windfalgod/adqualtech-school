@@ -104,7 +104,6 @@
 
                     <!-- select gender-->
                     <select class="form-select h-50 mt-5 col-6" aria-label="Default" name="gender" th:field="*{gender}">
-                        <option selected value="true">Giới tính</option>
                         <option value="true" th:selected="*{gender == 'Nam'}">Nam</option>
                         <option value="false" th:selected="*{gender == 'Nữ'}">Nữ</option>
                     </select>

@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,9 @@ public class Classroom extends BaseEntity{
     @OneToMany(mappedBy = "classroom")
     private List<Account> pupils;
 
+    @Column(name = "academic_track")
+    private String academicTrack;
+
     // List subject lesson in class
     @OneToMany(mappedBy = "classroom")
     private List<SubjectLessonPlan> subjectLessonPlanList;
@@ -32,4 +36,8 @@ public class Classroom extends BaseEntity{
     // List elective subject
     @OneToMany(mappedBy = "classroom")
     private List<ElectiveSubject> electiveSubjectList;
+
+    // teacher responsibility one class
+    @OneToOne(mappedBy = "classInCharged")
+    private Account formTeacher;
 }

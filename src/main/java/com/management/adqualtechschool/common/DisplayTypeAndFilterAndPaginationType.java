@@ -40,4 +40,14 @@ public interface DisplayTypeAndFilterAndPaginationType {
     String STUDY_ROOM_LIST = "studyRoomList";
     String TIMETABLE_REQUIRE_LIST = "timetableRequireList";
     String TIMETABLE = "timetable";
+    String MATH = "Toán";
+    String LITERATURE = "Ngữ văn";
+    String PHYSICAL_EDUCATION = "Giáo dục thể chất";
+    String TECHNOLOGY = "Công nghệ";
+    String ART = "Mĩ thuật";
+    String MUSIC = "Âm nhạc";
+    String OBLIGATE_COMBINATION = "Không";
+    String PROFILE = "profile";
+    String PROVINCE_LIST = "provinceList";
+
 }

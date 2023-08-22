@@ -8,12 +8,19 @@ import com.management.adqualtechschool.dto.SubjectDTO;
 import com.management.adqualtechschool.entity.Account;
 import com.management.adqualtechschool.entity.Classroom;
 import com.management.adqualtechschool.entity.Role;
+import com.management.adqualtechschool.entity.Subject;
 import com.management.adqualtechschool.entity.TeachSubject;
 import com.management.adqualtechschool.repository.AccountRepository;
 import com.management.adqualtechschool.repository.ClassroomRepository;
 import com.management.adqualtechschool.repository.RoleRepository;
+import com.management.adqualtechschool.repository.ScopeRepository;
+import com.management.adqualtechschool.repository.SubjectRepository;
+import com.management.adqualtechschool.repository.TeachSubjectRepository;
 import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.SubjectService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,6 +38,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,6 +54,8 @@ import static com.management.adqualtechschool.common.Message.PUPIL_PREFIX;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
 import static com.management.adqualtechschool.common.Message.TEACHER_PREFIX;
 import static com.management.adqualtechschool.common.RoleType.TEACHER_POSITION;
+import static com.management.adqualtechschool.common.SaveFileDir.ACCOUNT_IMAGE_DIR;
+import static com.management.adqualtechschool.common.SaveFileDir.STATIC_DIR;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -67,8 +77,19 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private ClassroomRepository classroomRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
+    private static final String DEFAULT_ADDRESS = " -  -  - ";
+    private final SubjectRepository subjectRepository;
+    private final ScopeRepository scopeRepository;
+    private final TeachSubjectRepository teachSubjectRepository;
+
+    public AccountServiceImpl(AccountRepository accountRepository,
+                              SubjectRepository subjectRepository,
+                              ScopeRepository scopeRepository,
+                              TeachSubjectRepository teachSubjectRepository) {
         this.accountRepository = accountRepository;
+        this.subjectRepository = subjectRepository;
+        this.scopeRepository = scopeRepository;
+        this.teachSubjectRepository = teachSubjectRepository;
     }
 
     @Override
@@ -100,7 +121,9 @@ public class AccountServiceImpl implements AccountService {
         if (account == null) {
             throw new EntityNotFoundException(NOT_FOUND_ACCOUNT_USERNAME + username);
         }
-        return modelMapper.map(account, AccountDTO.class);
+        AccountDTO accountDTO = modelMapper.map(account, AccountDTO.class);
+        accountDTO.setBirthday(LocalDate.from(account.getBirthday()));
+        return accountDTO;
     }
 
     @Override
@@ -306,6 +329,95 @@ public class AccountServiceImpl implements AccountService {
         accountDTO.setUsername(defaultUsername);
         accountDTO.setPassword(defaultPassword);
         return accountDTO;
+    }
+
+    @Override
+    public void updateAccount(AccountDTO account, Authentication auth, String address,
+                              List<Long> subjectList, Long classId, Long classInChargedId) {
+        Account accountSave = accountRepository.findById(account.getId()).orElse(null);
+        if (accountSave == null) {
+            throw new NoSuchElementException(NOT_FOUND_ACCOUNT_ID);
+        }
+
+        if (account.getBirthday().isAfter(LocalDate.now())) {
+            throw new DateTimeException(BIRTHDAY_NOT_VALID);
+        }
+
+        accountSave.setGender(account.getGender());
+        accountSave.setBirthday(account.getBirthday().atStartOfDay());
+        accountSave.setPosition(account.getPosition());
+        accountSave.setLevel(account.getLevel());
+        accountSave.setRank(account.getRank());
+        accountSave.setPhone(account.getPhone());
+        accountSave.setEmail(account.getEmail());
+        accountSave.setUpdatedAt(LocalDateTime.now());
+
+        // resolve classroom
+        if (classId != null) {
+            Classroom classroom = classroomRepository.findById(classId).orElse(null);
+            if (classroom != null) {
+                accountSave.setClassroom(classroom);
+            }
+        }
+
+        // resolve class in charged
+        if (classInChargedId != null) {
+            Classroom classInCharged = classroomRepository.findById(classInChargedId).orElse(null);
+            if (classInCharged != null) {
+                accountSave.setClassInCharged(classInCharged);
+            }
+        } else {
+            accountSave.setClassInCharged(null);
+        }
+        // resolve address
+        if (address.equals(DEFAULT_ADDRESS)) {
+            accountSave.setAddress(null);
+        }
+        accountSave.setAddress(address);
+
+        List<TeachSubject> teachSubjectBefore = teachSubjectRepository.findAllByTeacherUsername(auth.getName());
+        teachSubjectRepository.deleteAll(teachSubjectBefore);
+
+        // save list subject
+        if (subjectList != null) {
+            List<TeachSubject> teachSubjectList = new ArrayList<>();
+
+            for (Long subjectId : subjectList) {
+                Subject subject = subjectRepository.findById(subjectId).orElse(null);
+                // valid teachSubject exist or not
+                if (subject != null) {
+                    TeachSubject teachSubject = new TeachSubject();
+                    teachSubject.setSubject(subject);
+                    teachSubject.setTeacher(accountSave);
+                    teachSubject.setCreatedAt(LocalDateTime.now());
+                    teachSubject.setUpdatedAt(LocalDateTime.now());
+                    teachSubjectRepository.save(teachSubject);
+                    teachSubjectList.add(teachSubject);
+                }
+            }
+            accountSave.setTeachSubjectList(teachSubjectList);
+        } else {
+            accountSave.setTeachSubjectList(null);
+        }
+
+        // update image
+        String imageName;
+        if (account.getMultipartFile() != null) {
+            imageName = String.valueOf(account.getMultipartFile().getOriginalFilename());
+            if (!imageName.equals("")) {
+                try {
+                    byte[] imageBytes = account.getMultipartFile().getBytes();
+                    if (!(ACCOUNT_IMAGE_DIR + imageName).equals(account.getImage())) {
+                        Path imagePath = Path.of(STATIC_DIR + ACCOUNT_IMAGE_DIR + imageName);
+                        Files.write(imagePath, imageBytes);
+                    }
+                    accountSave.setImage(ACCOUNT_IMAGE_DIR + imageName);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        accountRepository.save(accountSave);
     }
 
     private Page<AccountDTO> paginate(Pageable pageable, List<AccountDTO> accountDTOList) {

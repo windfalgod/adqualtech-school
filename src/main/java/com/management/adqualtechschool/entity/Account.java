@@ -11,6 +11,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -71,8 +72,9 @@ public class Account extends BaseEntity {
     @Column(name = "position", length = 50)
     private String position;
 
-    @Column(name = "class_in_charged_id", length = 20)
-    private Long classInChargedId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_in_charged_id", referencedColumnName = "id")
+    private Classroom classInCharged;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

@@ -64,7 +64,7 @@ public class TimetableController {
             attr.addFlashAttribute(FAILED, TIMETABLE_ARRANGE_FAILED);
             return "pages/timetable/arrange";
         }
-        timetableService.getParameterForTimetable();
+        timetableService.scheduleTimetable();
         return "redirect:arrange";
     }
 

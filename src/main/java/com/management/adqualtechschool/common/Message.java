@@ -85,6 +85,14 @@ public interface Message {
     String TEACHER_SELECT_NOT_EMPTY = "Vui lòng chọn giáo viên!";
     String STUDY_ROOM_SELECT_NOT_EMPTY = "Vui lòng chọn phòng học!";
     String REQUIRED_NOT_EMPTY = "Vui lòng chọn yêu cầu!";
-    String TIMETABLE_ARRANGE_SUCCESS = "Sắp xếp thời khóa biểu thành công!";
     String TIMETABLE_ARRANGE_FAILED = "Sắp xếp thời khóa biểu không thành công!";
+    String UPDATE_PROFILE_FAILED = "Cập nhật thông tin người dùng không thành công";
+    String UPDATE_PROFILE_SUCCESS = "Cập nhật thông tin người dùng thành công";
+    String LEVEL_MAX = "Trường trình độ không quá 30 ký tự";
+    String POSITION_MAX = "Trường chức vụ không quá 50 ký tự";
+    String RANK_MAX = "Trường cấp bậc không quá 50 ký tự";
+    String EMAIL_PATTERN = "Email không đúng";
+    String PHONE_PATTERN = "Số điện thoại không đúng";
+    String ADDRESS_MAX = "Địa chỉ tối đa 255 ký tự";
+    String IMAGE_MAX = "Ảnh tối đa 255 ký tự";
 }

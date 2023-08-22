@@ -5,6 +5,7 @@ import com.management.adqualtechschool.dto.AccountDTO;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 public interface AccountService {
     AccountCreationDTO getAccountCreationByUsername(String username);
@@ -23,4 +24,6 @@ public interface AccountService {
     Page<AccountDTO> filterPupilPaginated(Pageable pageable, String gradeName, String className);
     Page<AccountDTO> searchPupilPaginated(Pageable pageable, String search);
     AccountCreationDTO savePupil(AccountCreationDTO accountDTO, String className);
+    void updateAccount(AccountDTO account, Authentication auth,
+                       String address, List<Long> subjectList, Long classId, Long classInChargedId);
 }

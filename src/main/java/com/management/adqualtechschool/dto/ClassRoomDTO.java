@@ -14,6 +14,7 @@ public class ClassRoomDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<Account> pupils;
+    private String academicTrack;
     private List<SubjectLessonPlan> subjectLessonPlanList;
     private List<ElectiveSubject> electiveSubjectList;
 }

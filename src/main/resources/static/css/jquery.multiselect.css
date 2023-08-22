@@ -30,6 +30,11 @@
     height: 38px;
 }
 
+.subject-select-container {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
 .ms-options-wrap > button > span {
     display: inline-block;
 }
