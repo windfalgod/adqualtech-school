@@ -8,7 +8,6 @@ import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.ClassroomService;
 import com.management.adqualtechschool.service.ScopeService;
 import com.management.adqualtechschool.service.SubjectService;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,9 +35,10 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.FILTER;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_LIST;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME;
-import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.LIST;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PAGE_NUMBERS;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PROFILE;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PROVINCE_LIST;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PUPIL_ACCOUNT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PUPIL_INFO;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SEARCH;
@@ -57,6 +57,8 @@ import static com.management.adqualtechschool.common.Message.FAILED;
 import static com.management.adqualtechschool.common.Message.SUBJECT_LIST;
 import static com.management.adqualtechschool.common.Message.SUBJECT_NAME;
 import static com.management.adqualtechschool.common.Message.SUCCESS;
+import static com.management.adqualtechschool.common.Message.UPDATE_PROFILE_FAILED;
+import static com.management.adqualtechschool.common.Message.UPDATE_PROFILE_SUCCESS;
 import static com.management.adqualtechschool.common.Message.UPGRADE_TEACHER_ROLE_FAILED;
 import static com.management.adqualtechschool.common.Message.UPGRADE_TEACHER_ROLE_SUCCESS;
 
@@ -79,6 +81,7 @@ public class AccountController {
     private final static String MANAGER_USERNAME = "ma";
     private final static String ADMIN_USERNAME = "admin";
     private static final int PAGE_SIZE = 30;
+    private static final String SPLIT_CHARACTER = " - ";
 
     @GetMapping("/change-password")
     public String showChangePwdPage(Model model, Authentication auth) {
@@ -302,6 +305,50 @@ public class AccountController {
             return "redirect:/pupils/create";
         }
         return "redirect:/pupils/create";
+    }
+
+    @GetMapping("/profile")
+    public String showProfilePage(Model model, Authentication auth) {
+        addCurrentUserToModel(model, auth);
+        List<ClassRoomDTO> classRoomDTOList = classroomService.getAllClassroom();
+        model.addAttribute(CLASS_LIST, classRoomDTOList);
+        List<SubjectDTO> subjectDTOList = subjectService.getAllSubject();
+        model.addAttribute(SUBJECT_LIST, subjectDTOList);
+        return "pages/profile";
+    }
+
+    @PostMapping("/profile/edit")
+    public String showEditProfilePage(@Valid @ModelAttribute("profile") AccountDTO account,
+                                      BindingResult result, Model model, Authentication auth,
+                                      @RequestParam(value = "address", required = false) String address,
+                                      @RequestParam(value = "citySelect", required = false) String citySelect,
+                                      @RequestParam(value = "districtSelect", required = false) String districtSelect,
+                                      @RequestParam(value = "wardSelect", required = false) String wardSelect,
+                                      @RequestParam(value = "subjectList", required = false) List<Long> subjectList,
+                                      @RequestParam(value = "classroomSelect", required = false) Long classroomId,
+                                      @RequestParam(value = "classInChargedSelect", required = false) Long classInChargedId,
+                                      RedirectAttributes attr) {
+        if (result.hasErrors()) {
+            model.addAttribute(PROFILE, account);
+            List<ClassRoomDTO> classRoomDTOList = classroomService.getAllClassroom();
+            model.addAttribute(CLASS_LIST, classRoomDTOList);
+            return "pages/profile";
+        }
+        try {
+            address = address + SPLIT_CHARACTER + wardSelect  + SPLIT_CHARACTER + districtSelect + SPLIT_CHARACTER + citySelect;
+            accountService.updateAccount(account, auth, address, subjectList, classroomId, classInChargedId);
+            attr.addFlashAttribute(SUCCESS, UPDATE_PROFILE_SUCCESS);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            attr.addFlashAttribute(FAILED, UPDATE_PROFILE_FAILED);
+            return "redirect:/profile/edit";
+        }
+        return "redirect:/profile";
+    }
+
+    private void addCurrentUserToModel(Model model, Authentication auth) {
+        AccountDTO accountDTO = accountService.getAccountByUsername(auth.getName());
+        model.addAttribute(PROFILE, accountDTO);
     }
 
     private void definedCurrentPageAndAddAttrToModel(Model model, Page<AccountDTO> teacherDTOPage) {

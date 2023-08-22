@@ -1,0 +1,25 @@
+.profile-content {
+    background: rgb(230,230,230) !important;
+}
+
+.profile-image {
+    height: 200px;
+    width: 200px;
+    margin-left: 200px;
+}
+
+.profile-attribute-container {
+    height: 34px;
+}
+
+#hiddenSubjectContainer {
+    display: none !important;
+}
+
+input {
+    background: rgb(230,230,230) !important;
+}
+
+.error {
+    margin-left: 16.666%;
+}

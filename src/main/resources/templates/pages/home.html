@@ -50,7 +50,7 @@
                 <a th:href="@{'/notifies/' + ${notify.id}}"
                    class="col p-2 notify-home-items"
                    th:each="notify : ${notifyList}">
-                    <div class="notify-home-card h-100">
+                    <div class="notify-home-card h-100 text-dark px-4">
                         <h5 class="notify-home-title text-center text-dark fw-bold"
                             th:text="${notify.title}"></h5>
                         <p class="notify-home-content px-1 text-dark"

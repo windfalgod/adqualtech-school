@@ -130,7 +130,7 @@ public class NotifyServiceImpl implements NotifyService {
         if (account == null) {
             throw new NoSuchElementException(NOT_FOUND_ACCOUNT_ID);
         }
-        String nameClass = account.getClassRoom().getName();
+        String nameClass = account.getClassroom().getName();
         List<NotifyDTO> classNotifies = getNotifiesByClassName(nameClass);
         List<NotifyDTO> gradeNotifies = getNotifiesByGradeName(nameClass.substring(0, nameClass.length() - 1));
         List<NotifyDTO> schoolNotifies = getNotifiesBySchoolWide();

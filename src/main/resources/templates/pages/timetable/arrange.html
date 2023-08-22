@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sắp xếp thời khóa biểu</title>
+    <link rel="stylesheet" href="/css/jquery.multiselect.css">
+    <script src="/js/jquery.multiselect.js"></script>
+    <script src="/js/timetable.js"></script>
+</head>
+<body>
+<div class="timetable-arrange-wrapper p-4" th:fragment="content">
+    <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
+    <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/timetable">Thời khóa biểu</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page">Sắp xếp thời khóa biểu
+            </li>
+        </ol>
+    </nav>
+
+    <h4 class="mt-5 mb-4">Sắp xếp thời khóa biểu</h4>
+
+    <div class="timetable-criteria-container d-flex flex-column">
+        <form th:action="@{/timetable/arranging}" class="d-flex flex-column" method="post" th:object="${timetable}">
+            <div class="d-flex w-100 mb-4">
+                <!--Yêu cầu ngày bắt đầu thời khóa biểu -->
+                <div class="col-md-2 ms-1 me-2">
+                    <div class="form-group">
+                        <label for="startDate">Ngày diễn ra</label>
+                        <input type="date" class="form-control"
+                               id="startDate" placeholder="Start Date" name="startDate" th:field="*{startDate}">
+                    </div>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('startDate')}"
+                          th:errors="*{startDate}"></span>
+                </div>
+
+                <!--Yêu cầu ngày kết thúc thời khóa biểu -->
+                <div class="col-md-2 ms-1 me-2">
+                    <div class="form-group">
+                        <label for="endDate">Ngày kết thúc</label>
+                        <input type="date" class="form-control"
+                               id="endDate" placeholder="End Date" name="endDate" th:field="*{endDate}">
+                    </div>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('endDate')}"
+                          th:errors="*{endDate}"></span>
+                </div>
+
+                <div class="row justify-content-center ms-1 me-2 mt-4 select-criteria-container">
+                    <select name="requiredList" multiple="multiple" class="select-criteria active form-control"
+                            id="requiredList" th:field="*{requiredList}">
+                        <option th:each="require : ${timetableRequireList}"
+                                th:value="${require.id}"
+                                th:text="${require.name}">
+                        </option>
+                    </select>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('requiredList')}"
+                          th:errors="*{requiredList}"></span>
+                </div>
+            </div>
+            <div class="select-data-container d-flex">
+                <div class="row justify-content-center ms-1 me-2 select-data">
+                    <select name="teacherList" multiple="multiple" class="select-teacher active form-control"
+                            id="teacherList" th:field="*{teacherList}">
+                        <option th:each="teacher : ${teacherList}"
+                                th:value="${teacher.id}"
+                                th:text="${teacher.lastName + ' ' + teacher.firstName}">
+                        </option>
+                    </select>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('teacherList')}"
+                          th:errors="*{teacherList}"></span>
+                </div>
+                <div class="row justify-content-center ms-1 me-2 select-data">
+                    <select name="studyRoomList" multiple="multiple" class="select-study-room active form-control"
+                            id="studyRoomList" th:field="*{studyRoomList}">
+                        <option th:each="studyRoom : ${studyRoomList}"
+                                th:value="${studyRoom.id}"
+                                th:text="${studyRoom.name}">
+                        </option>
+                    </select>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('studyRoomList')}"
+                          th:errors="*{studyRoomList}"></span>
+                </div>
+            </div>
+            <div class="button-timetable-container d-flex flex-row align-items-center mt-5">
+                <div class="link-timetable d-flex ms-auto">
+                    <button class="btn btn-primary text-white">Thời khóa biếu học sinh</button>
+                    <button class="btn btn-primary text-white ms-3">Thời khóa biểu giáo viên</button>
+                </div>
+                <button class="btn btn-primary ms-auto" type="submit">Sắp xếp</button>
+            </div>
+        </form>
+        <div class="timetable-content-wrapper">
+            <div class="timetable-content">
+                <label for="timetable">Lớp</label>
+                <table class="table table-bordered text-center mt-3" id="timetable">
+                    <thead>
+                    <tr class="bg-light-gray">
+                        <th class="text-uppercase">Tiết</th>
+                        <th class="text-uppercase">Thứ 2</th>
+                        <th class="text-uppercase">Thứ 3</th>
+                        <th class="text-uppercase">Thứ 4</th>
+                        <th class="text-uppercase">Thứ 5</th>
+                        <th class="text-uppercase">Thứ 6</th>
+                        <th class="text-uppercase">Thứ 7</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Thiết lập cá nhân</title>
+    <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/css/jquery.multiselect.css">
+    <script src="/js/profile.js"></script>
+    <script type="module" src="/js/province.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/jquery.multiselect.js"></script>
+    <script src="/js/alert.js"></script>
+</head>
+<body>
+<div class="profile-content-wrapper p-4" th:fragment="content">
+    <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
+    <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page">Thiết lập cá nhân
+            </li>
+        </ol>
+    </nav>
+    <h4 class="mt-5 ms-4">Thiết lập cá nhân</h4>
+    <form th:action="@{/profile/edit}" class="d-flex flex-column p-3 form-profile"
+          enctype="multipart/form-data" th:object="${profile}" method="post">
+
+<!--        button control-->
+        <div class="button-container d-flex">
+           <div class="buttonEditGroup mb-3 col-3 ms-auto d-flex flex-row justify-content-end">
+               <button class="btn btn-primary col-4" id="confirmEdit" hidden>Xác nhận</button>
+               <a th:href="@{/profile}" class="btn btn-warning col-4 ms-3" id="confirmCancel" hidden>Hủy</a>
+               <button class="btn btn-warning col-4" id="editProfileBtn">Sửa</button>
+           </div>
+        </div>
+
+<!--        fieldset information-->
+        <fieldset disabled class="d-flex flex-column" id="profileFieldSet">
+            <input th:field="*{id}" type="hidden" name="id"/>
+<!--            name user-->
+            <div class="profile-content d-flex flex-column p-2 mb-2 rounded">
+                <div class="profile-name fs-4 d-flex">
+                    <div class="d-flex flex-column">
+                        <label for="profileLastName"></label>
+                        <input id="profileLastName" type="text" th:value="*{lastName}"
+                               th:field="*{lastName}" name="lastName" readonly
+                               class="border-0">
+                    </div>
+                   <div class="d-flex flex-column">
+                       <label for="profileFirstName"></label>
+                       <input id="profileFirstName" type="text" th:value="*{firstName}"
+                              th:field="*{firstName}" name="firstName" readonly
+                              class="border-0">
+                   </div>
+                </div>
+<!--                information can edit-->
+                <div class="profile-information-wrapper d-flex mt-3 p-3">
+                    <div class="profile-information d-flex flex-column col-8">
+
+<!--                        gender-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-2">
+                            <label for="profileGender" class="col-2 h-100 mt-2" id="profileGenderLabel">Giới tính:</label>
+                            <input type="text" id="profileGender" class="border-0 col-6 h-100"
+                            th:value="${profile.gender != null && profile.gender ? 'Nam' : 'Nữ'}">
+                            <label for="genderSelect" class="col-2 h-100 mt-2" id="genderSelectLabel" hidden>Giới tính:</label>
+                            <select name="gender" id="genderSelect" hidden class="col-2 rounded h-100" th:field="*{gender}">
+                                <option selected value="" disabled>Giới tính</option>
+                                <option value="true" th:selected="*{gender != null && gender}">Nam</option>
+                                <option value="false" th:selected="*{gender != null && !gender}">Nữ</option>
+                            </select>
+                        </div>
+
+<!--                        birthday-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-2">
+                            <label for="profileBirthday" class="col-2 h-100 mt-2">Ngày sinh:</label>
+                            <input type="date" id="profileBirthday"
+                                   th:attr="value=${#temporals.format(profile.birthday, 'yyyy-MM-dd')}"
+                                   class="border-0 col-6 h-100" name="birthday">
+                        </div>
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('birthday')}"
+                              th:errors="*{birthday}"></span>
+
+<!--                        position-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-2"
+                             sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
+                            <label for="profilePosition" class="col-2 h-100 mt-2">Chức vụ:</label>
+                            <input type="text" id="profilePosition" name="position" th:value="*{position}"
+                                   class="border-0 col-6 h-100" th:field="*{position}" readonly>
+                        </div>
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('position')}"
+                              th:errors="*{position}"></span>
+
+<!--                        level-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-2"
+                             sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
+                            <label for="profileLevel" class="col-2 h-100 mt-2">Trình độ:</label>
+                            <input type="text" id="profileLevel" name="level" th:value="*{level}"
+                                   class="border-0 col-6 h-100" th:field="*{level}">
+                        </div>
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('level')}"
+                              th:errors="*{level}"></span>
+
+<!--                        rank-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-2"
+                             sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
+                            <label for="profileRank" class="col-2 h-100 mt-2">Cấp bậc:</label>
+                            <input type="text" id="profileRank" th:value="*{rank}"
+                                   class="border-0 col-6 h-100" th:field="*{rank}" name="rank">
+                        </div>
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('rank')}"
+                              th:errors="*{rank}"></span>
+
+                        <!--                        teach subject-->
+                        <div class="profile-subject-container d-flex align-items-center mt-2"
+                             sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')" id="subjectContainer">
+                            <label for="profileSubject" class="col-2  mt-2" id="profileSubjectLabel">Môn dạy</label>
+                            <div type="text" id="profileSubject" class="border-0 col-6 h-100 d-flex flex-column">
+                                <p th:each="teachSubject : ${profile.teachSubjectList}" th:text="${teachSubject.subject.name}"></p>
+                            </div>
+                        </div>
+                        <div class="profile-attribute-container d-flex align-items-center mt-2"
+                             sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"
+                             id="hiddenSubjectContainer">
+                            <label for="subjectList" class="col-2 h-100 mt-2" id="subjectListLabel">Môn dạy</label>
+                            <div class="col-3 h-100 rounded subject-select-container">
+                                <select name="subjectList" id="subjectList"  multiple="multiple"
+                                        class="subject-select active">
+                                    <option th:each="subject : ${subjectList}"
+                                            th:value="${subject.id}"
+                                            th:text="${subject.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('classroom.name')}"
+                              th:errors="*{classroom.name}"></span>
+
+                        <!--                        phone number-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-2">
+                            <label for="profilePhone" class="col-2 h-100 mt-2">Số điện thoại:</label>
+                            <input type="text" id="profilePhone" th:value="*{phone}"
+                                   class="border-0 col-6 h-100" th:field="*{phone}" name="phone">
+                        </div>
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('phone')}"
+                              th:errors="*{phone}"></span>
+
+<!--                        email-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-2">
+                            <label for="profileEmail" class="col-2 h-100 mt-2">Email:</label>
+                            <input type="text" id="profileEmail" th:value="*{email}"
+                                   class="border-0 col-6 h-100" th:field="*{email}" name="email">
+                        </div>
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('email')}"
+                              th:errors="*{email}"></span>
+
+<!--                        address-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-2">
+                            <label for="profileAddress" class="col-2 h-100 mt-2" id="profileAddressLabel">Địa chỉ:</label>
+                            <input type="text" id="profileAddress" th:value="*{address}"
+                                   class="border-0 col-10 h-100">
+
+                            <label for="address" class="col-2 h-100 mt-2" id="addressLabel" hidden>Địa chỉ:</label>
+                            <input type="text" id="address" placeholder="Nhập số nhà, đường" name="address"
+                                   class="border-0 col-3 h-100" hidden>
+
+                            <label for="citySelect" id="citySelectLabel"></label>
+                            <select name="citySelect" id="citySelect" hidden class="col-3 ms-2 rounded h-100">
+                                <option value="">Tỉnh thành</option>
+                            </select>
+
+                            <label for="districtSelect" id="districtSelectLabel"></label>
+                            <select name="districtSelect" id="districtSelect" hidden class="col-3 ms-2 rounded h-100">
+                                <option value="">Quận huyện</option>
+                            </select>
+
+                            <label for="wardSelect" id="wardSelectLabel"></label>
+                            <select name="wardSelect" id="wardSelect" hidden class="col-3 ms-2 rounded h-100">
+                                <option value="" >Phường xã</option>
+                            </select>
+                        </div>
+
+<!--                        classroom-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-2"
+                             sec:authorize="hasAnyRole('ROLE_PUPIL')">
+                            <label for="profileClassroom" class="col-2 h-100 mt-2" id="profileClassroomLabel">Lớp:</label>
+                            <input type="text" id="profileClassroom" th:value="*{classroom.name}"
+                                   class="border-0 col-6 h-100">
+                            <label for="classroomSelect" class="col-2 h-100 mt-2" id="classroomSelectLabel" hidden>Lớp:</label>
+                            <select name="classroomSelect" id="classroomSelect" hidden class="rounded col-3 h-100">
+                                <option value="">Lớp học</option>
+                                <option th:each="class : ${classList}" th:value="${class.id}" th:text="${class.name}"></option>
+                            </select>
+                        </div>
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('classroom.name')}"
+                              th:errors="*{classroom.name}"></span>
+
+<!--                        class in charged-->
+                        <div class="profile-attribute-container d-flex align-items-center mt-3"
+                             sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
+                            <label for="profileClassInCharged" class="col-2 h-100 mt-2"
+                                   id="profileClassInChargedLabel">Lớp chủ nhiệm:</label>
+                            <input type="text" id="profileClassInCharged"
+                                   th:value="${profile.classInCharged?.name}"
+                                   class="border-0 col-6 h-100">
+                            <label for="classInChargedSelect" class="col-2 h-100 mt-2"
+                                   id="classInChargedSelectLabel" hidden>Lớp chủ nhiệm:</label>
+                            <select name="classInChargedSelect"  id="classInChargedSelect"
+                                    hidden class="rounded col-3 h-100">
+                                <option value="">Lớp chủ nhiệm</option>
+                                <option th:each="class : ${classList}" th:value="${class.id}" th:text="${class.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+<!--                    image container-->
+                    <div class="profile-image col-4 d-flex flex-column align-items-end">
+<!--                        avatar image-->
+                        <img  th:if="${profile.image != null}"
+                              th:src="${profile.image}" width="150px" height="150px" alt="image"
+                             class="profile-image-content rounded-circle me-5" id="avatarImage">
+
+<!--                        anonymous image-->
+                        <img th:if="${profile.image == null || profile.image == ''}"
+                             src="https://ibiettuot.com/wp-content/uploads/2021/10/avatar-mac-dinh.png"
+                             width="150px" height="150px" alt="image"
+                             class="profile-image-content rounded-circle me-5" id="anonymousImage">
+<!--                        preview image-->
+                        <img src="#" id="imagePreview" alt="Image Preview" width="150px" height="150px"
+                             class="rounded-circle me-5 profile-image-content" style="display: none;">
+
+                        <label for="formImage" class="btn-primary col-9 me-5 mt-2 text-center"
+                               id="uploadImgBtn" hidden>Đổi ảnh</label>
+                        <input type="file" id="formImage" accept="image/png, image/jpeg, image/jpg"
+                               name="imageUpload" th:field="*{multipartFile}" hidden>
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('multipartFile')}"
+                              th:errors="*{multipartFile}"></span>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+</body>
+</html>

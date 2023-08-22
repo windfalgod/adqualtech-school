@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Thời khóa biểu</title>
+</head>
+<body>
+<div class="timetable-content-wrapper p-4" th:fragment="content">
+    <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
+    <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page">Thời khóa biểu
+            </li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-row">
+        <p>Ngày bắt đầu</p>
+        <p>Ngày kết thúc</p>
+    </div>
+
+    <div class="addition-button-wrapper d-flex flex-row justify-content-end">
+        <a th:href="@{/timetable/arrange/}" class="btn btn-primary addition-timetable-button"
+           sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">Sắp xếp thời khóa biểu</a>
+    </div>
+
+    <table class="table table-bordered text-center mt-3">
+        <thead>
+            <tr class="bg-light-gray">
+                <th class="text-uppercase">Tiết</th>
+                <th class="text-uppercase">Thứ 2</th>
+                <th class="text-uppercase">Thứ 3</th>
+                <th class="text-uppercase">Thứ 4</th>
+                <th class="text-uppercase">Thứ 5</th>
+                <th class="text-uppercase">Thứ 6</th>
+                <th class="text-uppercase">Thứ 7</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

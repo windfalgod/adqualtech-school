@@ -23,11 +23,11 @@
         private String password;
 
         @NotEmpty(message = Message.FIRST_NAME_NOT_NULL)
-        @Pattern(regexp = "^[a-z0-9]{0,30}$", message = PATTERN_NAME)
+        @Pattern(regexp = "^[^\\d!@#$%^&*()_+{}\\[\\]:;<>,.?/~`\\\\|=]+$", message = PATTERN_NAME)
         @Size(max = 15, message = MAX_FIRST_NAME)
 
         private String firstName;
-        @Pattern(regexp = "^[a-z0-9]{0,50}$", message = PATTERN_NAME)
+        @Pattern(regexp = "^[^\\d!@#$%^&*()_+{}\\[\\]:;<>,.?/~`\\\\|=]+$", message = PATTERN_NAME)
         @Size(max = 15, message = MAX_LAST_NAME)
         private String lastName;
         private Boolean gender;

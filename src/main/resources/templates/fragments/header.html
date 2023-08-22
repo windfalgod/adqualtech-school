@@ -49,8 +49,15 @@
                 </li>
             </ul>
             <ul class="navbar-nav user-header-wrapper d-flex flex-row h-100 align-items-center position-fixed">
-                <li class="nav-item user-image-header-wrapper mx-2 text-white">
+                <li class="nav-item user-image-header-wrapper mx-2 text-white"
+                    th:if="${#authentication.getPrincipal().getImage() != null}">
                     <img th:src="${#authentication.getPrincipal().getImage()}"
+                         alt="user image" class="rounded-circle" width="50" height="50">
+                </li>
+                <li class="nav-item user-image-header-wrapper mx-2 text-white"
+                    th:if="${#authentication.getPrincipal().getImage() == null
+                    || #authentication.getPrincipal().getImage() == ''}">
+                    <img src="https://ibiettuot.com/wp-content/uploads/2021/10/avatar-mac-dinh.png"
                          alt="user image" class="rounded-circle" width="50" height="50">
                 </li>
                 <li class="nav-item dropdown mx-2">
