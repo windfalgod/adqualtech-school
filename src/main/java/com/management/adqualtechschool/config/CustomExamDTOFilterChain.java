@@ -27,25 +27,25 @@ public class CustomExamDTOFilterChain {
             return new CustomExamDTOFilterChain(examDTOList);
         }
         examDTOList = examDTOList.stream()
-                .filter(eventDTO -> {
+                .filter(examDTO -> {
                     switch (updatedAt) {
-                        case TODAY: return eventDTO.getUpdatedAt()
+                        case TODAY: return examDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now()
                                         .minusHours(LocalDateTime.now().getHour())
                                         .minusMinutes(LocalDateTime.now().getMinute())
                                         .minusSeconds(LocalDateTime.now().getSecond())
                                 );
-                        case YESTERDAY: return eventDTO.getUpdatedAt()
+                        case YESTERDAY: return examDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now().minusDays(1)
                                         .minusHours(LocalDateTime.now().getHour())
                                         .minusMinutes(LocalDateTime.now().getMinute())
                                         .minusSeconds(LocalDateTime.now().getSecond())
                                 );
-                        case WEEK_AGO: return eventDTO.getUpdatedAt()
+                        case WEEK_AGO: return examDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now().minusWeeks(1));
-                        case MONTH_AGO: return eventDTO.getUpdatedAt()
+                        case MONTH_AGO: return examDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now().minusMonths(1));
-                        case YEAR_AGO:return eventDTO.getUpdatedAt()
+                        case YEAR_AGO:return examDTO.getUpdatedAt()
                                 .isAfter(LocalDateTime.now().minusYears(1));
                         default: return true;
                     }
@@ -79,7 +79,7 @@ public class CustomExamDTOFilterChain {
         }
 
         examDTOList = examDTOList.stream()
-                .filter(eventDTO -> eventDTO.getScope().getTitle().equals(scopeName))
+                .filter(examDTO -> examDTO.getScope().getTitle().equals(scopeName))
                 .collect(Collectors.toList());
         return new CustomExamDTOFilterChain(examDTOList);
     }
@@ -92,9 +92,9 @@ public class CustomExamDTOFilterChain {
             return new CustomExamDTOFilterChain(examDTOList);
         }
         examDTOList = examDTOList.stream()
-                .filter(eventDTO -> (eventDTO.getCreator().getLastName()
+                .filter(examDTO -> (examDTO.getCreator().getLastName()
                         + " "
-                        + eventDTO.getCreator().getFirstName())
+                        + examDTO.getCreator().getFirstName())
                         .equals(creatorName))
                 .collect(Collectors.toList());
         return new CustomExamDTOFilterChain(examDTOList);

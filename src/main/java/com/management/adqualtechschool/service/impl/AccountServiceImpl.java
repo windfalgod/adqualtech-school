@@ -38,7 +38,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -79,16 +82,13 @@ public class AccountServiceImpl implements AccountService {
 
     private static final String DEFAULT_ADDRESS = " -  -  - ";
     private final SubjectRepository subjectRepository;
-    private final ScopeRepository scopeRepository;
     private final TeachSubjectRepository teachSubjectRepository;
 
     public AccountServiceImpl(AccountRepository accountRepository,
                               SubjectRepository subjectRepository,
-                              ScopeRepository scopeRepository,
                               TeachSubjectRepository teachSubjectRepository) {
         this.accountRepository = accountRepository;
         this.subjectRepository = subjectRepository;
-        this.scopeRepository = scopeRepository;
         this.teachSubjectRepository = teachSubjectRepository;
     }
 
@@ -439,6 +439,24 @@ public class AccountServiceImpl implements AccountService {
             }
         }
         accountRepository.save(accountSave);
+        updateAuthentication(modelMapper.map(accountSave, AccountCreationDTO.class));
+    }
+
+    // update information of this authentication
+    private void updateAuthentication(AccountCreationDTO accountCreationDTO) {
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // get current userDetails and update Authentication
+        if (currentAuthentication != null) {
+            UserDetails userDetails = (UserDetails) currentAuthentication.getPrincipal();
+            // set accountCreationDTO
+            ((AccountDetailsImpl) userDetails).setAccountCreationDTO(accountCreationDTO);
+
+            Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+        }
     }
 
     private Page<AccountDTO> paginate(Pageable pageable, List<AccountDTO> accountDTOList) {
