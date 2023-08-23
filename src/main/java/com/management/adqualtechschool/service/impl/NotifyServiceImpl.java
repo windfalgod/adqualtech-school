@@ -30,7 +30,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATED_AT;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.NOT_FOUND_ACCOUNT_ID;
@@ -132,7 +134,8 @@ public class NotifyServiceImpl implements NotifyService {
         }
         String nameClass = account.getClassroom().getName();
         List<NotifyDTO> classNotifies = getNotifiesByClassName(nameClass);
-        List<NotifyDTO> gradeNotifies = getNotifiesByGradeName(nameClass.substring(0, nameClass.length() - 1));
+        String gradeName = nameClass.replace(CLASS_NAME_DEFAULT, GRADE_NAME_DEFAULT).substring(0, nameClass.length());
+        List<NotifyDTO> gradeNotifies = getNotifiesByGradeName(gradeName);
         List<NotifyDTO> schoolNotifies = getNotifiesBySchoolWide();
         classNotifies.addAll(gradeNotifies);
         classNotifies.addAll(schoolNotifies);

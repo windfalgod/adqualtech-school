@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATOR;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.MONTH_AGO;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TODAY;
@@ -83,7 +85,11 @@ public class CustomRuleDTOFilterChain {
         }
 
         ruleDTOList = ruleDTOList.stream()
-                .filter(ruleDTO -> ruleDTO.getScope().getTitle().equals(scopeName))
+                .filter(ruleDTO -> {
+                    return ruleDTO.getScope().getTitle().equals(scopeName)
+                            || ruleDTO.getScope().getTitle()
+                            .startsWith(scopeName.replace(GRADE_NAME_DEFAULT, CLASS_NAME_DEFAULT));
+                })
                 .collect(Collectors.toList());
         return new CustomRuleDTOFilterChain(ruleDTOList);
     }

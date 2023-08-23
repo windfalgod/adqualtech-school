@@ -38,7 +38,6 @@ import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPagi
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.LIST;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PAGE_NUMBERS;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PROFILE;
-import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PROVINCE_LIST;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PUPIL_ACCOUNT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.PUPIL_INFO;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SEARCH;
@@ -80,7 +79,7 @@ public class AccountController {
     private final static String ACCOUNT = "account";
     private final static String MANAGER_USERNAME = "ma";
     private final static String ADMIN_USERNAME = "admin";
-    private static final int PAGE_SIZE = 30;
+    private static final int PAGE_SIZE = 5;
     private static final String SPLIT_CHARACTER = " - ";
 
     @GetMapping("/change-password")

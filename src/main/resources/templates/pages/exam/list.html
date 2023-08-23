@@ -165,7 +165,8 @@
       </li>
 
       <!--page item number page -->
-      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+      <li class="page-item" th:if="${currentPage.totalPages > 0
+       && pageNumber >= currentPage.number - 2 && pageNumber <= currentPage.number + 4}"
           th:each="pageNumber : ${pageNumbers}">
         <a th:if="${pageNumber <= currentPage.number - 2}"
            th:class="'page-link disabled'"
@@ -212,8 +213,7 @@
       <li class="page-item">
         <a th:if="${currentPage.number > 0}"
            class="page-link"
-           th:href="@{/exam-library/filter/(page=1, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}"><<
+           th:href="@{/exam-library/filter/(page=1, scopeName=${scopeName}, creatorName=${creatorName})}"><<
         </a>
       </li>
       <li class="page-item">
@@ -232,7 +232,8 @@
       </li>
 
       <!--page item number page -->
-      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+      <li class="page-item" th:if="${currentPage.totalPages > 0
+       && pageNumber >= currentPage.number - 2 && pageNumber <= currentPage.number + 4}"
           th:each="pageNumber : ${pageNumbers}">
         <a th:if="${pageNumber <= currentPage.number - 2}"
            th:class="'page-link disabled'"
@@ -244,8 +245,8 @@
         </a>
         <a th:if="${pageNumber > currentPage.number - 2
         && pageNumber < currentPage.number + 4}"
-           th:href="@{/exam-library/filter/(page=${pageNumber}, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}"
+           th:href="@{/exam-library/filter/(page=${pageNumber},
+             updatedAt=${updatedAt}, scopeName=${scopeName}, subjectName=${subjectName}, creatorName=${creatorName})}"
            th:class="${pageNumber==currentPage.number + 1 ? 'active page-link' : 'page-link'}"
            th:text="${pageNumber}">
         </a>
@@ -255,8 +256,8 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            th:class="'page-link'"
-           th:href="@{/exam-library/filter/(page=${currentPage.number+2}, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}">>
+           th:href="@{/exam-library/filter/(page=${currentPage.number+2},
+            updatedAt=${updatedAt}, scopeName=${scopeName}, subjectName=${subjectName}, creatorName=${creatorName})}">>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>
@@ -265,8 +266,8 @@
       <li class="page-item">
         <a th:if="${currentPage.number + 1 < currentPage.totalPages}"
            class="page-link"
-           th:href="@{/exam-library/filter/(page=${currentPage.totalPages}, startAt=${startAt}, endAt=${endAt},
-            createdAt=${createdAt}, scopeName=${scopeName}, creatorName=${creatorName})}">>>
+           th:href="@{/exam-library/filter/(page=${currentPage.totalPages},
+             updatedAt=${updatedAt}, scopeName=${scopeName}, subjectName=${subjectName}, creatorName=${creatorName})}">>>
         </a>
         <a th:if="${currentPage.number + 1 >= currentPage.totalPages}"
            th:class="'page-link disabled'">>>
@@ -301,7 +302,8 @@
       </li>
 
       <!--page item number page -->
-      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+      <li class="page-item" th:if="${currentPage.totalPages > 0
+       && pageNumber >= currentPage.number - 2 && pageNumber <= currentPage.number + 4}"
           th:each="pageNumber : ${pageNumbers}">
         <a th:if="${pageNumber <= currentPage.number - 2}"
            th:class="'page-link disabled'"

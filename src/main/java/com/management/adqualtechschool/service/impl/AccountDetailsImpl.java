@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class AccountDetailsImpl implements UserDetails {
 
-    private final AccountCreationDTO accountCreationDTO;
+    private AccountCreationDTO accountCreationDTO;
 
     public AccountDetailsImpl(AccountCreationDTO accountCreationDTO) {
         this.accountCreationDTO = accountCreationDTO;
@@ -69,5 +69,9 @@ public class AccountDetailsImpl implements UserDetails {
 
     public String getImage() {
         return accountCreationDTO.getImage();
+    }
+
+    public void setAccountCreationDTO(AccountCreationDTO accountCreationDTO) {
+        this.accountCreationDTO = accountCreationDTO;
     }
 }

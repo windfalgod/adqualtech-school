@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RuleRepository extends JpaRepository<Rule, Long> {
-    @Query(value = "select e from Rule e inner join Scope s on e.scope.id = s.id where s.title like :className")
+    @Query(value = "select e from Rule e inner join Scope s on e.scope.id = s.id where s.title like lower(:className) ")
     List<Rule> findRulesByClassNameOrderByCreatedAtDesc(@Param("className")String className);
 
-    @Query(value = "select e from Rule e inner join Scope s on e.scope.id = s.id where s.title like :gradeName")
+    @Query(value = "select e from Rule e inner join Scope s on e.scope.id = s.id where s.title like lower(:gradeName)")
     List<Rule> findRulesByGradeNameOrderByCreatedAtDesc(@Param("gradeName")String gradeName);
 
     @Query(value = "select e from Rule e inner join Scope s on e.scope.id = s.id where s.title like 'Toàn trường'")

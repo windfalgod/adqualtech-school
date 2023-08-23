@@ -151,7 +151,8 @@
       </li>
 
       <!--page item number page -->
-      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+      <li class="page-item" th:if="${currentPage.totalPages > 0
+       && pageNumber >= currentPage.number - 2 && pageNumber <= currentPage.number + 4}"
           th:each="pageNumber : ${pageNumbers}">
         <a th:if="${pageNumber <= currentPage.number - 2}"
            th:class="'page-link disabled'"
@@ -218,7 +219,8 @@
       </li>
 
       <!--page item number page -->
-      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+      <li class="page-item" th:if="${currentPage.totalPages > 0
+       && pageNumber >= currentPage.number - 2 && pageNumber <= currentPage.number + 4}"
           th:each="pageNumber : ${pageNumbers}">
         <a th:if="${pageNumber <= currentPage.number - 2}"
            th:class="'page-link disabled'"
@@ -287,7 +289,8 @@
       </li>
 
       <!--page item number page -->
-      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+      <li class="page-item" th:if="${currentPage.totalPages > 0
+       && pageNumber >= currentPage.number - 2 && pageNumber <= currentPage.number + 4}"
           th:each="pageNumber : ${pageNumbers}">
         <a th:if="${pageNumber <= currentPage.number - 2}"
            th:class="'page-link disabled'"
