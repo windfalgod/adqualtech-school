@@ -79,7 +79,7 @@ public class AccountController {
     private final static String ACCOUNT = "account";
     private final static String MANAGER_USERNAME = "ma";
     private final static String ADMIN_USERNAME = "admin";
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 30;
     private static final String SPLIT_CHARACTER = " - ";
 
     @GetMapping("/change-password")
