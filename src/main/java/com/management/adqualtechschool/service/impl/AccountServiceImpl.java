@@ -105,7 +105,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDTO getAccountById(Long id) {
         Optional<Account> account = accountRepository.findById(id);
         if (account.isPresent()) {
-        return modelMapper.map(account, AccountDTO.class);
+            return modelMapper.map(account, AccountDTO.class);
         }
         throw new EntityNotFoundException(NOT_FOUND_ACCOUNT_ID);
     }
@@ -261,23 +261,44 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Page<AccountDTO> filterPupilPaginated(Pageable pageable, String gradeName, String className) {
         List<Account> pupilList;
+        List<AccountDTO> pupilDTOList;
+
+        // if gradeName and className is default
+        if (gradeName.equals(GRADE_NAME_DEFAULT) && className.equals(CLASS_NAME_DEFAULT)) {
+            return paginate(pageable, getAllPupilAccount());
+        }
+
         // if gradeName not equal default gradeName and className equal default classname in view
-        if (!gradeName.equals(GRADE_NAME_DEFAULT) && className.equals(CLASS_NAME_DEFAULT)) {
-            pupilList = accountRepository.findAllPupilByGradeName(gradeName.replace(GRADE_NAME_DEFAULT, CLASS_NAME_DEFAULT));
-            List<AccountDTO> pupilDTOList = pupilList.stream()
+        if (!gradeName.equals(GRADE_NAME_DEFAULT)) {
+            if (className.equals(CLASS_NAME_DEFAULT)) {
+                pupilList = accountRepository.findAllPupilByGradeName(gradeName.replace(GRADE_NAME_DEFAULT, CLASS_NAME_DEFAULT));
+                pupilDTOList = pupilList.stream()
+                        .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
+                        .collect(Collectors.toList());
+                return paginate(pageable, pupilDTOList);
+            }
+            // if gradeName equal default gradeName
+        } else {
+            pupilList = accountRepository.findAllPupilByClassroomName(className);
+            pupilDTOList = pupilList.stream()
                     .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
                     .collect(Collectors.toList());
             return paginate(pageable, pupilDTOList);
         }
-        // if gradeName equal default gradeName and className not equal default classname in view
-        if (gradeName.equals(GRADE_NAME_DEFAULT) && !className.equals(CLASS_NAME_DEFAULT)) {
+
+        // gradeName get from className
+        String sameGradeName = className.replace(CLASS_NAME_DEFAULT, GRADE_NAME_DEFAULT)
+                .substring(0, className.length());
+
+        if (sameGradeName.equals(gradeName)) {
             pupilList = accountRepository.findAllPupilByClassroomName(className);
-            List<AccountDTO> pupilDTOList = pupilList.stream()
-                .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
-                .collect(Collectors.toList());
+            pupilDTOList = pupilList.stream()
+                    .map(pupil -> modelMapper.map(pupil, AccountDTO.class))
+                    .collect(Collectors.toList());
             return paginate(pageable, pupilDTOList);
+        } else {
+            return paginate(pageable, new ArrayList<>());
         }
-        return paginate(pageable, getAllPupilAccount());
     }
 
     @Override
