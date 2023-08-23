@@ -32,7 +32,8 @@
         <i class="fa fa-search position-absolute search-icon"></i>
         <label for="form-search"></label>
         <input type="text" class="form-control form-input rounded w-100"
-                 id="form-search" name="search" placeholder="Nhập tên tiêu đề sự kiện hoặc người tạo sự kiện">
+                 id="form-search" name="search" th:value="${search}"
+               placeholder="Nhập tên tiêu đề sự kiện hoặc người tạo sự kiện">
         <button type="submit" class="btn btn-primary search-button">Tìm kiếm</button>
       </form>
     </div>

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NotifyRepository extends JpaRepository<Notify, Long> {
-    @Query(value = "select n from Notify n join Scope s on n.scope.id = s.id where s.title like :className")
+    @Query(value = "select n from Notify n join Scope s on n.scope.id = s.id where s.title like lower(:className)")
     List<Notify> findNotifiesByClassNameOrderByCreatedAtDesc(@Param("className")String className);
 
-    @Query(value = "select n from Notify n join Scope s on n.scope.id = s.id where s.title like :gradeName")
+    @Query(value = "select n from Notify n join Scope s on n.scope.id = s.id where s.title like lower(:gradeName)")
     List<Notify> findNotifiesByGradeNameOrderByCreatedAtDesc(@Param("gradeName")String gradeName);
 
     @Query(value = "select n from Notify n join Scope s on n.scope.id = s.id where s.title like 'Toàn trường'")

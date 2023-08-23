@@ -32,7 +32,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATED_AT;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
@@ -137,7 +139,8 @@ public class RuleServiceImpl implements RuleService {
         }
         String nameClass = account.getClassroom().getName();
         List<RuleDTO> classRules = getRulesByClassName(nameClass);
-        List<RuleDTO> gradeRules = getRulesByGradeName(nameClass.substring(0, nameClass.length() - 1));
+        String gradeName = nameClass.replace(CLASS_NAME_DEFAULT, GRADE_NAME_DEFAULT).substring(0, nameClass.length());
+        List<RuleDTO> gradeRules = getRulesByGradeName(gradeName);
         List<RuleDTO> schoolRules = getRulesBySchoolWide();
         classRules.addAll(gradeRules);
         classRules.addAll(schoolRules);

@@ -161,7 +161,7 @@ public class EventServiceImpl implements EventService {
         }
         String nameClass = account.getClassroom().getName();
         List<EventDTO> classEvents = getEventsByClassName(nameClass);
-        String gradeName = nameClass.replace(CLASS_NAME_DEFAULT, GRADE_NAME_DEFAULT).substring(0, nameClass.length() - 1);
+        String gradeName = nameClass.replace(CLASS_NAME_DEFAULT, GRADE_NAME_DEFAULT).substring(0, nameClass.length());
         List<EventDTO> gradeEvents = getEventsByGradeName(gradeName);
         List<EventDTO> schoolEvents = getEventsBySchoolWide();
         classEvents.addAll(gradeEvents);
