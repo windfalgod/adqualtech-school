@@ -24,11 +24,11 @@
 
         @NotEmpty(message = Message.FIRST_NAME_NOT_NULL)
         @Pattern(regexp = "^[^\\d!@#$%^&*()_+{}\\[\\]:;<>,.?/~`\\\\|=]+$", message = PATTERN_NAME)
-        @Size(max = 15, message = MAX_FIRST_NAME)
+        @Size(max = 20, message = MAX_FIRST_NAME)
 
         private String firstName;
         @Pattern(regexp = "^[^\\d!@#$%^&*()_+{}\\[\\]:;<>,.?/~`\\\\|=]+$", message = PATTERN_NAME)
-        @Size(max = 15, message = MAX_LAST_NAME)
+        @Size(max = 30, message = MAX_LAST_NAME)
         private String lastName;
         private Boolean gender;
 
