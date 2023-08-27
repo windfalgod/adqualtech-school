@@ -25,7 +25,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 return;
             }
         }
-        new SimpleUrlAuthenticationSuccessHandler("/")
+        new SimpleUrlAuthenticationSuccessHandler("/home")
                 .onAuthenticationSuccess(request, response, authentication);
     }
 }
