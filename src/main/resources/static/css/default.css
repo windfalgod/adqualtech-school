@@ -44,6 +44,10 @@
     width: 280px;
 }
 
+.row-value .address-td {
+    width: 300px;
+}
+
 .row-value .id-td {
     text-align: center;
 }

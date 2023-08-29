@@ -28,12 +28,15 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             " order by a.firstName, a.lastName ASC ")
     List<Account> searchTeachers(@Param("search")String search);
 
-    @Query(value = "select a from Account a where a.username like 'pu%'")
+    @Query(value = "select a from Account a where a.username like 'pu%' order by a.firstName, a.lastName asc")
     List<Account> findAllPupil();
 
+    @Query(value = "select a from Account a where a.classroom.name like :className" +
+            " order by a.firstName, a.lastName ASC")
     List<Account> findAllPupilByClassroomName(String className);
 
-    @Query(value = "select a from Account a where a.classroom.name like concat(:gradeName, '%')")
+    @Query(value = "select a from Account a where a.classroom.name like concat(:gradeName, '%')" +
+            " order by a.firstName, a.lastName ASC")
     List<Account> findAllPupilByGradeName(@Param("gradeName") String gradeName);
 
     @Query(value = "select a from Account a where lower(concat(a.lastName, ' ', a.firstName))" +

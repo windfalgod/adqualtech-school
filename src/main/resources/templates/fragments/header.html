@@ -48,6 +48,15 @@
                 </li>
             </ul>
             <ul class="navbar-nav user-header-wrapper d-flex flex-row h-100 align-items-center position-fixed">
+                <li class="nav-item dropdown mx-2">
+                    <a href="#" class="text-white" role="button"
+                       id="notify-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-bell"></i>
+                    </a>
+                    <ul class="dropdown-menu mt-2" aria-labelledby="dropdownMenuLink">
+                        <li>hello</li>
+                    </ul>
+                </li>
                 <li class="nav-item user-image-header-wrapper mx-2 text-white"
                     th:if="${#authentication.getPrincipal().getImage() != null}">
                     <img th:src="${#authentication.getPrincipal().getImage()}"
@@ -68,6 +77,15 @@
                         <li><a class="dropdown-item" href="/profile">Xem trang cá nhân</a></li>
                         <li><a class="dropdown-item" href="/change-password">Đổi mật khẩu</a></li>
                         <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown mx-2">
+                    <a href="#" class="text-white" role="button"
+                       id="setting-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-gear"></i>
+                    </a>
+                    <ul class="dropdown-menu mt-2" aria-labelledby="dropdownMenuLink">
+                        <li>hello</li>
                     </ul>
                 </li>
             </ul>

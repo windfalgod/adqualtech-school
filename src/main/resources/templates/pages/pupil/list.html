@@ -97,7 +97,8 @@
         <td th:text="${pupil.classroom.name}"></td>
         <td th:text="${pupil.phone}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
         <td th:text="${pupil.email}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
-        <td th:text="${pupil.address}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
+        <td class="address-td" th:text="${pupil.address}"
+            sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></td>
         <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')">
           <form th:action="@{/pupils/delete}" method="post">
           <input type="hidden" name="id" th:value="${pupil.id}" />
