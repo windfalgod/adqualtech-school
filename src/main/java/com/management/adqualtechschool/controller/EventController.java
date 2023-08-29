@@ -3,7 +3,6 @@ package com.management.adqualtechschool.controller;
 import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.EventDTO;
 import com.management.adqualtechschool.dto.ScopeDTO;
-import com.management.adqualtechschool.service.AccountService;
 import com.management.adqualtechschool.service.EventService;
 import com.management.adqualtechschool.service.ScopeService;
 import java.time.LocalDate;
@@ -62,35 +61,19 @@ public class EventController {
     @Autowired
     private ScopeService scopeService;
 
-    @Autowired
-    private AccountService accountService;
-
     private final static String EVENT = "event";
     private final static int PAGE_SIZE = 12;
 
     @GetMapping("")
     public String showEventsPage(Model model, Authentication auth,
                                  @RequestParam("page") Optional<Integer> page) {
-            int currentPage = page.orElse(1);
+        int currentPage = page.orElse(1);
+        Page<EventDTO> eventDTOPage = eventService
+                .getListEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth);
 
-            Page<EventDTO> eventDTOPage = eventService
-                    .getListEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth);
-
-            model.addAttribute(CURRENT_PAGE, eventDTOPage);
-            int totalPages = eventDTOPage.getTotalPages();
-
-            if (totalPages > 0) {
-                List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                        .boxed()
-                        .collect(Collectors.toList());
-                model.addAttribute(PAGE_NUMBERS, pageNumbers);
-            }
-
-            List<ScopeDTO> scopeList = scopeService.getAllScope();
-            List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
-            model.addAttribute(TYPE,LIST);
-            model.addAttribute(SCOPE_LIST, scopeList);
-            model.addAttribute(ACCOUNT_LIST, accountDTOList);
+        definedCurrentPageAndAddAttrToModel(model, eventDTOPage);
+        addAttrScopeListAndCreatorListToModel(model);
+        model.addAttribute(TYPE,LIST);
         return "pages/event/list";
     }
 
@@ -98,9 +81,9 @@ public class EventController {
     public String filterEvents(Model model, Authentication auth,
                                @RequestParam("page") Optional<Integer> page,
                                @RequestParam(value = "startAt", required = false)
-                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startAt,
+                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startAt,
                                @RequestParam(value = "endAt", required = false)
-                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endAt,
+                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endAt,
                                @RequestParam(value = "createdAt", required = false) String createdAt,
                                @RequestParam(value = "scopeName", required = false) String scopeName,
                                @RequestParam(value = "creatorName", required = false) String creatorName) {
@@ -109,21 +92,10 @@ public class EventController {
         Page<EventDTO> eventDTOPage = eventService
                 .filterEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE),
                         auth, startAt, endAt, createdAt, scopeName, creatorName);
-        model.addAttribute(CURRENT_PAGE, eventDTOPage);
 
-        int totalPages = eventDTOPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-
-        List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        definedCurrentPageAndAddAttrToModel(model, eventDTOPage);
+        addAttrScopeListAndCreatorListToModel(model);
         model.addAttribute(TYPE,FILTER);
-        model.addAttribute(SCOPE_LIST, scopeList);
-        model.addAttribute(ACCOUNT_LIST, accountDTOList);
         model.addAttribute(START_AT, startAt);
         model.addAttribute(END_AT, endAt);
         model.addAttribute(CREATED_AT, createdAt);
@@ -139,21 +111,11 @@ public class EventController {
         int currentPage = page.orElse(1);
         Page<EventDTO> eventDTOPage = eventService
                 .searchEventsPaginated(PageRequest.of(currentPage - 1, PAGE_SIZE), auth, search);
-        model.addAttribute(CURRENT_PAGE, eventDTOPage);
 
-        int totalPages = eventDTOPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute(PAGE_NUMBERS, pageNumbers);
-        }
-        List<ScopeDTO> scopeList = scopeService.getAllScope();
-        List<AccountDTO> accountDTOList = accountService.getAllTeacherAdminAccount();
+        definedCurrentPageAndAddAttrToModel(model, eventDTOPage);
+        addAttrScopeListAndCreatorListToModel(model);
         model.addAttribute(TYPE, SEARCH);
         model.addAttribute(SEARCH, search);
-        model.addAttribute(SCOPE_LIST, scopeList);
-        model.addAttribute(ACCOUNT_LIST, accountDTOList);
         return "pages/event/list";
     }
 
@@ -165,7 +127,7 @@ public class EventController {
     }
 
     @GetMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String createEvent(Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -174,7 +136,7 @@ public class EventController {
     }
 
     @PostMapping("/create-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postCreateEvent(@Valid @ModelAttribute("event") EventDTO event,
                                   BindingResult result, Authentication auth,
                                   Model model, RedirectAttributes attr) {
@@ -196,7 +158,7 @@ public class EventController {
     }
 
     @GetMapping("/edit")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String editEvent(@RequestParam("id") Long id, Model model) {
         List<ScopeDTO> scopeList = scopeService.getAllScope();
         model.addAttribute(SCOPE_LIST, scopeList);
@@ -207,7 +169,7 @@ public class EventController {
 
 
     @PostMapping("/edit-processing")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String postEditEvent(@Valid @ModelAttribute("event") EventDTO event,
                                 BindingResult result, Authentication auth,
                                 Model model, RedirectAttributes attr) {
@@ -231,7 +193,7 @@ public class EventController {
 
 
     @PostMapping("/delete")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_TEACHER')")
     public String deleteEvent(@RequestParam("id") Long id, RedirectAttributes attr) {
         try {
             eventService.deleteById(id);
@@ -241,5 +203,23 @@ public class EventController {
             attr.addFlashAttribute(FAILED, DELETE_EVENT_FAILED);
         }
         return "redirect:/events";
+    }
+
+    private void definedCurrentPageAndAddAttrToModel(Model model, Page<EventDTO> eventDTOPage) {
+        model.addAttribute(CURRENT_PAGE, eventDTOPage);
+        int totalPages = eventDTOPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute(PAGE_NUMBERS, pageNumbers);
+        }
+    }
+
+    private void addAttrScopeListAndCreatorListToModel(Model model) {
+        List<ScopeDTO> scopeList = scopeService.getAllScope();
+        List<AccountDTO> accountDTOList = eventService.getAllCreator();
+        model.addAttribute(SCOPE_LIST, scopeList);
+        model.addAttribute(ACCOUNT_LIST, accountDTOList);
     }
 }

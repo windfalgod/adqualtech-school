@@ -1,11 +1,8 @@
 package com.management.adqualtechschool.entity;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -19,24 +16,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "scope")
-public class Scope {
+public class Scope extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
+    // Tên phạm vi
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
+    // Danh sách sự kiện có phạm vi này
     @OneToMany(mappedBy = "scope")
     private List<Event> events;
 
+    // Danh sách thông báo có phạm vi này
     @OneToMany(mappedBy = "scope")
     private List<Notify> notifies;
+
+    @OneToMany(mappedBy = "scope")
+    private List<Rule> rules;
+
+    @OneToMany(mappedBy = "scope")
+    private List<TeachSubject> teachSubjectList;
 }

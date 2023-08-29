@@ -1,5 +1,6 @@
 package com.management.adqualtechschool.service;
 
+import com.management.adqualtechschool.dto.AccountDTO;
 import com.management.adqualtechschool.dto.EventDTO;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,11 +17,12 @@ public interface EventService {
     List<EventDTO> getEventsByClassName(String className);
     List<EventDTO> getEventsByGradeName(String gradeName);
     List<EventDTO> getEventsBySchoolWide();
-    List<EventDTO> getEventsByStudentAccount(Long id);
+    List<EventDTO> getEventsByPupilAccount(Long id);
     Page<EventDTO> getListEventsPaginated(Pageable pageable, Authentication auth);
     Page<EventDTO> filterEventsPaginated(Pageable pageable, Authentication auth,
                                          LocalDate startAt, LocalDate endAt, String createdAt,
                                          String scopeName, String creatorName);
     Page<EventDTO> searchEventsPaginated(Pageable pageable, Authentication auth,
                                          String search);
+    List<AccountDTO> getAllCreator();
 }

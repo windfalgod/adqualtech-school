@@ -7,8 +7,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Danh sách sự kiện</title>
-  <script src="/js/jquery/lib/jquery.js"></script>
-  <script src="/js/alert.js"></script>
 </head>
 <body>
 <!--Breadcrumb-->
@@ -18,7 +16,7 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="/">Trang chủ</a>
+        <a href="/home">Trang chủ</a>
       </li>
       <li class="breadcrumb-item active"
           aria-current="page">Danh sách sự kiện
@@ -34,7 +32,8 @@
         <i class="fa fa-search position-absolute search-icon"></i>
         <label for="form-search"></label>
         <input type="text" class="form-control form-input rounded w-100"
-               id="form-search" name="search" placeholder="Search anything...">
+                 id="form-search" name="search" th:value="${search}"
+               placeholder="Nhập tên tiêu đề sự kiện hoặc người tạo sự kiện">
         <button type="submit" class="btn btn-primary search-button">Tìm kiếm</button>
       </form>
     </div>
@@ -102,7 +101,7 @@
 <!--Addition button-->
   <div class="addition-button-wrapper d-flex flex-row justify-content-end">
     <a th:href="@{/events/create/}" class="btn btn-primary addition-event-button"
-       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Thêm sự kiện</a>
+       sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">Thêm sự kiện</a>
   </div>
 
 <!--Table-->
@@ -118,8 +117,8 @@
         <th>Thời gian tạo</th>
         <th>Người tạo</th>
         <th></th>
-        <th></th>
-        <th></th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></th>
+        <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')"></th>
       </tr>
     </thead>
     <tbody>
@@ -134,16 +133,14 @@
         <td class="button-control">
           <a th:href="@{'/events/' + ${event.id}}" class="btn btn-success">Xem</a>
         </td>
-        <td class="button-control">
-          <a th:href="@{/events/edit(id=${event.id})}" class="btn btn-warning"
-               sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Sửa</a>
+        <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
+          <a th:href="@{/events/edit(id=${event.id})}" class="btn btn-warning">Sửa</a>
         </td>
-        <td class="button-control">
+        <td class="button-control" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
           <form th:action="@{/events/delete}" method="post">
           <input type="hidden" name="id" th:value="${event.id}" />
           <button type="submit" class="btn btn-danger"
-                  onclick="return confirm('Bạn có chắc muốn xóa sự kiện này?')"
-                  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">Xóa</button>
+                  onclick="return confirm('Bạn có chắc muốn xóa sự kiện này?')">Xóa</button>
           </form>
         </td>
       </tr>
@@ -177,7 +174,8 @@
       </li>
 
       <!--page item number page -->
-      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+      <li class="page-item" th:if="${currentPage.totalPages > 0
+       && pageNumber >= currentPage.number - 2 && pageNumber <= currentPage.number + 4}"
           th:each="pageNumber : ${pageNumbers}">
         <a th:if="${pageNumber <= currentPage.number - 2}"
            th:class="'page-link disabled'"
@@ -244,7 +242,8 @@
       </li>
 
       <!--page item number page -->
-      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+      <li class="page-item" th:if="${currentPage.totalPages > 0
+       && pageNumber >= currentPage.number - 2 && pageNumber <= currentPage.number + 4}"
           th:each="pageNumber : ${pageNumbers}">
         <a th:if="${pageNumber <= currentPage.number - 2}"
            th:class="'page-link disabled'"
@@ -313,7 +312,8 @@
       </li>
 
       <!--page item number page -->
-      <li class="page-item" th:if="${currentPage.totalPages > 0}"
+      <li class="page-item" th:if="${currentPage.totalPages > 0
+       && pageNumber >= currentPage.number - 2 && pageNumber <= currentPage.number + 4}"
           th:each="pageNumber : ${pageNumbers}">
         <a th:if="${pageNumber <= currentPage.number - 2}"
            th:class="'page-link disabled'"

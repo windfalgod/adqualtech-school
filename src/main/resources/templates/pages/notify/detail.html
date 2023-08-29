@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết thông báo</title>
+</head>
+<body>
+<div class="notifies-create-wrapper p-4" th:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/notifies">Danh sách thông báo</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page" th:text="${notify.id}">
+            </li>
+        </ol>
+    </nav>
+
+    <h3 class="notify-detail-title mt-5 mb-5">Chi tiết thông báo</h3>
+    <div class="button-update-notify-wrapper d-flex flex-row justify-content-end mt-4 mb-4 rounded"
+         sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
+        <a th:href="@{/notifies/edit(id=${notify.id})}" class="btn btn-primary me-2">Cập nhật</a>
+        <form th:action="@{/notifies/delete}" method="post" class="delete-form me-2">
+            <input type="hidden" name="id" th:value="${notify.id}" />
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('Bạn có chắc muốn xóa thông báo này?')">Xóa</button>
+        </form>
+    </div>
+
+    <div class="detail-container d-flex flex-column">
+        <h4 th:text="${notify.title}" class="text-center fw-bold mb-4 mt-5"></h4>
+        <div class="notify-detail-content mx-4 mb-2">
+            <div class="notify-content" th:utext="${notify.content}"></div>
+            <div class="created-date-detail d-flex mt-4">
+                <p><strong>Thời gian tạo:</strong></p>
+                <p class="notify-created-at ms-2"
+                   th:text="${#temporals.format(notify.createdAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+            <div class="updated-date-detail d-flex">
+                <p><strong>Thời gian cập nhật:</strong></p>
+                <p class="notify-updated-at ms-2"
+                   th:text="${#temporals.format(notify.updatedAt, 'HH:mm dd/MM/yyyy')}"></p>
+            </div>
+            <div class="creator-detail d-flex">
+                <p><strong>Người tạo:</strong></p>
+                <p class="notify-creator ms-2"
+                   th:text="${notify.creator.lastName + ' ' + notify.creator.firstName}"></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

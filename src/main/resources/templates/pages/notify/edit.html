@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cập nhật thông báo</title>
+</head>
+<body>
+<div class="notifies-edit-wrapper p-4" th:fragment="content">
+    <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/notifies">Danh sách thông báo</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page">Cập nhật thông báo
+            </li>
+        </ol>
+    </nav>
+
+    <h3 class="notify-update-title mt-4 mb-4">Cập nhật thông báo</h3>
+
+    <div class="update-notify-container ps-md-5 pe-md-5">
+        <form th:action="@{/notifies/edit-processing}" th:object="${notify}"
+              method="post" class="d-flex flex-column">
+            <input th:field="*{id}" type="hidden" name="id"/>
+            <div class="col-6">
+                <label for="title-input" class="mb-1">Tên tiêu đề thông báo(*)</label>
+                <input type="text" class="form-control form-input rounded w-100"
+                       id="title-input" name="notify-title" placeholder="Nhập tên tiêu đề"
+                       th:field="*{title}">
+                <span th:errorclass="error" th:if="${#fields.hasErrors('title')}"
+                      th:errors="*{title}"></span>
+            </div>
+            <select class="form-select" aria-label="Default" name="scope" th:field="*{scope.title}">
+                <option selected value="Phạm vi">Phạm vi</option>
+                <option th:each="scopeItem : ${scopeList}"
+                        th:value="${scopeItem.title}"
+                        th:text="${scopeItem.title}"
+                        th:selected="${scopeItem.title eq notify.scope.title}">
+                </option>
+            </select>
+            <span th:errorclass="error" th:if="${#fields.hasErrors('scope')}"
+                  th:errors="*{scope}"></span>
+            <div>
+                <label for="my-textarea" class="mb-1 mt-3">Nhập nội dung cho thông báo(*)</label>
+                <textarea id="my-textarea" th:field="*{content}" name="content"></textarea>
+                <span th:errorclass="error" th:if="${#fields.hasErrors('content')}"
+                      th:errors="*{content}"></span>
+            </div>
+            <div class="button-update-notify-wrapper d-flex flex-row justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <a th:href="@{/notifies}" class="btn btn-warning ms-3"
+                   onclick="return confirm('Bạn có chắc muốn hủy?')">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

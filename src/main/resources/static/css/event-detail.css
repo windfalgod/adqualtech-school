@@ -1,5 +1,9 @@
 .event-image {
     padding: 50px;
-    width: 100%;
+    width: 70%;
     height: auto;
+}
+
+.event-detail-content {
+    width: 95%;
 }

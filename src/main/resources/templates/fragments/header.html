@@ -7,7 +7,7 @@
 </head>
 <body>
 <nav th:fragment="header"
-     class="header-wrapper position-fixed float-right bg-dark text-white">
+     class="header-wrapper position-fixed float-right text-white">
     <div class="header-content h-100">
         <div class="collapse navbar-collapse h-100 d-flex ms-5"
              id="navbarSupportedContent">
@@ -26,7 +26,7 @@
                    ? 'active text-warning' : 'text-white'}">Xin phép</a>
                 </li>
                 <li class="nav-item mx-3 text-white"
-                    sec:authorize="hasRole('ROLE_STUDENT')">
+                    sec:authorize="hasRole('ROLE_PUPIL')">
                     <a href="/score-letter"
                        th:class="'link-score-letter ' +
                    ${#httpServletRequest.requestURI == '/score-letter'
@@ -34,7 +34,7 @@
                        >Bảng điểm</a>
                 </li>
                 <li class="nav-item mx-3 text-white"
-                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_TEACHER')">
+                    sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER')">
                     <a href="/score-addition"
                        th:class="'link-score-addition ' +
                    ${#httpServletRequest.requestURI == '/score-addition'
@@ -48,19 +48,44 @@
                 </li>
             </ul>
             <ul class="navbar-nav user-header-wrapper d-flex flex-row h-100 align-items-center position-fixed">
-                <li class="nav-item user-image-header-wrapper mx-2 text-white">
+                <li class="nav-item dropdown mx-2">
+                    <a href="#" class="text-white" role="button"
+                       id="notify-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-bell"></i>
+                    </a>
+                    <ul class="dropdown-menu mt-2" aria-labelledby="dropdownMenuLink">
+                        <li>hello</li>
+                    </ul>
+                </li>
+                <li class="nav-item user-image-header-wrapper mx-2 text-white"
+                    th:if="${#authentication.getPrincipal().getImage() != null}">
                     <img th:src="${#authentication.getPrincipal().getImage()}"
                          alt="user image" class="rounded-circle" width="50" height="50">
                 </li>
+                <li class="nav-item user-image-header-wrapper mx-2 text-white"
+                    th:if="${#authentication.getPrincipal().getImage() == null
+                    || #authentication.getPrincipal().getImage() == ''}">
+                    <img src="https://ibiettuot.com/wp-content/uploads/2021/10/avatar-mac-dinh.png"
+                         alt="user image" class="rounded-circle" width="50" height="50">
+                </li>
                 <li class="nav-item dropdown mx-2">
-                    <a href="#" class="user-header-text text-white dropdown-toggle"
-                       role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
+                    <a href="#" class="user-header-text text-white dropdown-toggle" role="button"
+                       id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
                        th:text="${#authentication.getPrincipal().getName()}">
                     </a>
                     <ul class="dropdown-menu mt-2" aria-labelledby="dropdownMenuLink">
                         <li><a class="dropdown-item" href="/profile">Xem trang cá nhân</a></li>
                         <li><a class="dropdown-item" href="/change-password">Đổi mật khẩu</a></li>
                         <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown mx-2">
+                    <a href="#" class="text-white" role="button"
+                       id="setting-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-gear"></i>
+                    </a>
+                    <ul class="dropdown-menu mt-2" aria-labelledby="dropdownMenuLink">
+                        <li>hello</li>
                     </ul>
                 </li>
             </ul>

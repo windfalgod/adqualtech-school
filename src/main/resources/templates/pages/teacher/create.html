@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm giáo viên</title>
+    <script src="/js/jquery/lib/jquery.js"></script>
+</head>
+<body>
+<div class="teachers-create-wrapper p-4" th:fragment="content">
+    <div th:if="${success}" role="alert" th:text="${success}" class="alert alert-success alert-message"/>
+    <div th:if="${failed}" role="alert" th:text="${failed}" class="alert alert-danger alert-message"/>
+
+<!-- breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/teachers">Danh sách giáo viên</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page">Thêm giáo viên
+            </li>
+        </ol>
+    </nav>
+
+<!--Modal show information of teacher account-->
+    <div th:if="${success}" class="modal fade" id="teacherModal" tabindex="-1" role="dialog"
+         aria-labelledby="teacherModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thông tin tài khoản</h5>
+                </div>
+                <div class="modal-body" th:if="success" th:object="${teacherInfo}">
+                    <p>Thông tin tài khoản:</p>
+                    <div class="d-flex mb-2">
+                        <label for="usernameAccountInfo" class="labelForShowAccount">Tên tài khoản: </label>
+                        <input th:value="*{username}" id="usernameAccountInfo" class="inputShowAccount" disabled>
+                        <button type="button" id="copyBtnUsername" class="clipboard-button">
+                            <i class="fa-solid fa-clipboard"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex">
+                        <label for="passwordAccountInfo" class="labelForShowAccount">Mật khẩu: </label>
+                        <input th:value="*{password}" id="passwordAccountInfo" class="inputShowAccount" disabled>
+                        <button type="button" id="copyBtnPassword" class="clipboard-button">
+                            <i class="fa-solid fa-clipboard"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--Form create teacher account-->
+    <h3 class="teacher-creation-title mt-4 mb-4">Thêm giáo viên</h3>
+    <div class="create-teacher-container ps-md-5 pe-md-5 d-flex align-items-center justify-content-center">
+        <form th:action="@{/teachers/create-processing}" th:object="${teacher}" enctype="multipart/form-data"
+              method="post" class="d-flex flex-column w-75 h-100" id="create-teacher-form">
+
+            <!-- input last name and first name-->
+            <div class="create-container d-flex flex-column rounded">
+                <div class="teacher-name-container d-flex flex-row col-11">
+                    <div class="col-5 me-2">
+                        <label for="last-name-input" class="mb-1">Họ giáo viên(*)</label>
+                        <input type="text" class="form-control form-input rounded w-100"
+                               id="last-name-input" name="teacher-title" placeholder="Nhập họ của giáo viên"
+                               th:field="*{lastName}">
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('lastName')}"
+                              th:errors="*{lastName}"></span>
+                    </div>
+                    <div class="col-5">
+                        <label for="first-name-input" class="mb-1">Tên giáo viên(*)</label>
+                        <input type="text" class="form-control form-input rounded w-100"
+                               id="first-name-input" name="teacher-title" placeholder="Nhập tên của giáo viên"
+                               th:field="*{firstName}">
+                        <span th:errorclass="error" th:if="${#fields.hasErrors('firstName')}"
+                              th:errors="*{firstName}"></span>
+                    </div>
+                </div>
+
+                <!--select birthday-->
+                <div class="row select-container mb-3 col-11">
+                    <div class="select-group-birthday col-4 d-flex flex-row mt-3">
+                        <div class="birthday-content w-100">
+                            <div class="form-group">
+                                <label for="birthday" class="mb-2">Ngày sinh(*)</label>
+                                <input type="date" class="form-control datepicker"
+                                       id="birthday" name="birthday"
+                                       th:field="*{birthday}">
+                                <span th:errorclass="error" th:if="${#fields.hasErrors('birthday')}"
+                                      th:errors="*{birthday}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- select gender-->
+                    <select class="form-select h-50 mt-5 col-6" aria-label="Default" name="gender" th:field="*{gender}">
+                        <option value="true" th:selected="*{gender == 'Nam'}">Nam</option>
+                        <option value="false" th:selected="*{gender == 'Nữ'}">Nữ</option>
+                    </select>
+                    <span th:errorclass="error" th:if="${#fields.hasErrors('gender')}"
+                          th:errors="*{gender}"></span>
+                </div>
+            </div>
+
+            <!--button-->
+            <div class="button-create-event-wrapper d-flex flex-row justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary">Thêm</button>
+                <a th:href="@{/teachers}" class="btn btn-warning ms-3"
+                   onclick="return confirm('Bạn có chắc muốn hủy?')">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

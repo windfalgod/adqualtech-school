@@ -3,4 +3,5 @@
     float: right;
     width: calc(100% - 250px);
     font-family: Arial, serif;
+    margin-bottom: 100px
 }

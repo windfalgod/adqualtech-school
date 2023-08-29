@@ -15,7 +15,6 @@ import com.management.adqualtechschool.service.ScopeService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -38,11 +36,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATED_AT;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCHOOL_WIDE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
-import static com.management.adqualtechschool.common.ImageDir.eventImagesDir;
-import static com.management.adqualtechschool.common.RoleType.STUDENT;
+import static com.management.adqualtechschool.common.Message.SEARCH_EMPTY;
+import static com.management.adqualtechschool.common.RoleType.PUPIL_ROLE;
+import static com.management.adqualtechschool.common.SaveFileDir.EVENT_IMAGE_DIR;
+import static com.management.adqualtechschool.common.SaveFileDir.STATIC_DIR;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -58,9 +60,6 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private ScopeService scopeService;
-
-    @Value("${spring.servlet.multipart.location}")
-    private String staticDir;
 
     @Override
     public EventDTO getEventById(Long id) {
@@ -111,11 +110,11 @@ public class EventServiceImpl implements EventService {
         }
         try {
             byte[] imageBytes = imageUpload.getBytes();
-            if (!(eventImagesDir + imageName).equals(event.getImage())) {
-                Path imagePath = Path.of(staticDir + eventImagesDir + imageName);
+            if (!(EVENT_IMAGE_DIR + imageName).equals(event.getImage())) {
+                Path imagePath = Path.of(STATIC_DIR + EVENT_IMAGE_DIR + imageName);
                 Files.write(imagePath, imageBytes);
             }
-            event.setImage(eventImagesDir + imageName);
+            event.setImage(EVENT_IMAGE_DIR + imageName);
             eventRepository.save(modelMapper.map(event, Event.class));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -155,14 +154,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDTO> getEventsByStudentAccount(Long id) {
+    public List<EventDTO> getEventsByPupilAccount(Long id) {
         AccountDTO account = accountService.getAccountById(id);
         if (account == null) {
             throw new NoSuchElementException(Message.NOT_FOUND_ACCOUNT_ID);
         }
-        String nameClass = account.getClassRoom().getName();
+        String nameClass = account.getClassroom().getName();
         List<EventDTO> classEvents = getEventsByClassName(nameClass);
-        List<EventDTO> gradeEvents = getEventsByGradeName(nameClass.substring(0, nameClass.length() - 1));
+        String gradeName = nameClass.replace(CLASS_NAME_DEFAULT, GRADE_NAME_DEFAULT).substring(0, nameClass.length());
+        List<EventDTO> gradeEvents = getEventsByGradeName(gradeName);
         List<EventDTO> schoolEvents = getEventsBySchoolWide();
         classEvents.addAll(gradeEvents);
         classEvents.addAll(schoolEvents);
@@ -197,7 +197,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public Page<EventDTO> searchEventsPaginated(Pageable pageable, Authentication auth, String search) {
         List<EventDTO> eventDTOList = getEventsFollowAuth(auth);
-        if (search.equals("")) {
+        if (search.equals(SEARCH_EMPTY)) {
             return paginate(pageable, eventDTOList);
         }
         String searchString = search.toLowerCase().trim();
@@ -209,6 +209,14 @@ public class EventServiceImpl implements EventService {
                         .toLowerCase().contains(searchString))
                 .collect(Collectors.toList());
         return paginate(pageable, eventDTOList);
+    }
+
+    @Override
+    public List<AccountDTO> getAllCreator() {
+        List<Account> creatorList = eventRepository.findAllEventCreator();
+        return creatorList.stream()
+                .map(creator -> modelMapper.map(creator, AccountDTO.class))
+                .collect(Collectors.toList());
     }
 
     private List<EventDTO> filterEvents(List<EventDTO> eventDTOList, LocalDateTime startAt,
@@ -230,8 +238,8 @@ public class EventServiceImpl implements EventService {
 
         List<EventDTO> eventDTOList;
 
-        if (role.equals(STUDENT)) {
-            eventDTOList = getEventsByStudentAccount(accountId);
+        if (role.equals(PUPIL_ROLE)) {
+            eventDTOList = getEventsByPupilAccount(accountId);
         } else {
             eventDTOList = getAllEvent();
         }

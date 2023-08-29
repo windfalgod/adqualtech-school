@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CLASS_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.CREATOR;
+import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.GRADE_NAME_DEFAULT;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.MONTH_AGO;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.SCOPE;
 import static com.management.adqualtechschool.common.DisplayTypeAndFilterAndPaginationType.TODAY;
@@ -28,7 +30,7 @@ public class CustomEventDTOFilterChain {
         eventDTOList = eventDTOList.stream()
                 .filter(eventDTO -> eventDTO.getStartAt().isAfter(startAt))
                 .collect(Collectors.toList());
-       return new CustomEventDTOFilterChain(eventDTOList);
+        return new CustomEventDTOFilterChain(eventDTOList);
     }
 
     public CustomEventDTOFilterChain filterByEndAt(LocalDateTime endAt) {
@@ -83,7 +85,11 @@ public class CustomEventDTOFilterChain {
         }
 
         eventDTOList = eventDTOList.stream()
-                .filter(eventDTO -> eventDTO.getScope().getTitle().equals(scopeName))
+                .filter(eventDTO -> {
+                    return eventDTO.getScope().getTitle().equals(scopeName)
+                            || eventDTO.getScope().getTitle()
+                            .startsWith(scopeName.replace(GRADE_NAME_DEFAULT, CLASS_NAME_DEFAULT));
+                })
                 .collect(Collectors.toList());
         return new CustomEventDTOFilterChain(eventDTOList);
     }

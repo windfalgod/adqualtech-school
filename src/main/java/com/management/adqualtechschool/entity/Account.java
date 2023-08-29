@@ -6,13 +6,12 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,11 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "account")
-public class Account {
-
-    @Id
-    @GeneratedValue
-    private Long id;
+public class Account extends BaseEntity {
 
     @Column(name = "username", length = 15, nullable = false)
     private String username;
@@ -54,7 +49,7 @@ public class Account {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "class_id", referencedColumnName = "id")
-    private Classroom classRoom;
+    private Classroom classroom;
 
     @Column(name = "address")
     private String address;
@@ -65,17 +60,21 @@ public class Account {
     @Column(name = "email", length = 50)
     private String email;
 
+    // Trình độ
     @Column(name = "level", length = 30)
     private String level;
 
-    @Column(name = "class_in_charged_id", length = 20)
-    private Long classInChargedId;
+    // Cấp bậc
+    @Column(name = "rank", length = 50)
+    private String rank;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    // Chức vụ
+    @Column(name = "position", length = 50)
+    private String position;
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_in_charged_id", referencedColumnName = "id")
+    private Classroom classInCharged;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -85,9 +84,19 @@ public class Account {
     )
     private Set<Role> roles;
 
+    // List event
     @OneToMany(mappedBy = "creator")
     private List<Event> events;
 
+    // List notify
     @OneToMany(mappedBy = "creator")
     private List<Notify> notifies;
+
+    // List rule
+    @OneToMany(mappedBy = "creator")
+    private List<Rule> rules;
+
+    // Set teach subject
+    @OneToMany(mappedBy = "teacher")
+    private List<TeachSubject> teachSubjectList;
 }

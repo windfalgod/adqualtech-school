@@ -38,4 +38,12 @@ public class ScopeServiceImpl implements ScopeService {
         }
         return modelMapper.map(scope, ScopeDTO.class);
     }
+
+    @Override
+    public List<ScopeDTO> getAllGradeScope() {
+        List<Scope> scopeList = scopeRepository.findAllGrade();
+        return scopeList.stream()
+                .map(scope -> modelMapper.map(scope, ScopeDTO.class))
+                .collect(Collectors.toList());
+    }
 }

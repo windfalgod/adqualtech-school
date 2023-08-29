@@ -15,7 +15,7 @@
         <div class="list-group-flush">
                 <a href="/"
                    th:class="'link-home list-group-item ms-2 rounded d-flex align-items-center ' +
-                   ${#httpServletRequest.requestURI == '/' ? 'active text-white' : 'text-dark'}">
+                   ${#httpServletRequest.requestURI == '/home' ? 'active text-white' : 'text-dark'}">
                     <i class="fa-solid fa-house me-2"></i>
                     Trang chủ
                 </a>
@@ -37,9 +37,9 @@
                     <i class="fa-solid fa-list-check me-2"></i>
                     Nội quy
                 </a>
-                <a href="/preparation-exams"
+                <a href="/exam-library"
                    th:class="'link-exams text-dark list-group-item ms-2 rounded d-flex align-items-center ' +
-                   ${#httpServletRequest.requestURI == '/preparation-exams' ? 'active text-white' : 'text-dark'}">
+                   ${#httpServletRequest.requestURI == '/exam-library' ? 'active text-white' : 'text-dark'}">
                     <i class="fa-solid fa-file-lines me-2"></i>
                     Thư viện đề thi
                 </a>
@@ -49,9 +49,9 @@
                     <i class="fa-solid fa-users me-2"></i>
                     Danh sách giáo viên
                 </a>
-                <a href="/student"
-                   th:class="'link-student text-dark list-group-item ms-2 rounded d-flex align-items-center ' +
-                   ${#httpServletRequest.requestURI == '/student' ? 'active text-white' : 'text-dark'}">
+                <a href="/pupils"
+                   th:class="'link-pupils text-dark list-group-item ms-2 rounded d-flex align-items-center ' +
+                   ${#httpServletRequest.requestURI == '/pupils' ? 'active text-white' : 'text-dark'}">
                     <i class="fa-solid fa-users me-2"></i>
                     Danh sách học sinh
                 </a>
