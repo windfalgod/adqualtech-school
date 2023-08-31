@@ -1,31 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Trang chủ</title>
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/public-page.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery/lib/jquery.js"></script>
+    <script src="/js/public-page.js"></script>
 </head>
 <body>
 <div class="public-page-container">
     <div class="public-page-header mx-md-5">
         <div class="public-header-wrapper d-flex h-100 align-items-center">
             <ul class="list-feature-public navbar-nav d-flex flex-row align-items-center">
-                <li class="nav-item mx-md-3 d-flex">
+                <li class="logo-header nav-item ms-md-3 me-md-5 d-flex">
                     <img src="/images/logo-sidebar.png" alt="logo" width="75">
                     <p class="logo-title mt-3">ADQUATECH SCHOOL</p>
                 </li>
-                <li class="introduce nav-item mx-md-3">
-                    <a href="#" class="text-dark" role="button"
-                       id="introduce-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <li class="introduce nav-item ms-md-5 me-md-4">
+                    <a href="#" class="text-dark fw-bold" role="button">
                         Giới thiệu
                     </a>
-                    <ul class="dropdown-menu mt-2" aria-labelledby="dropdownMenuLink">
-                        <li>Tuyển sinh 1-</li>
-                    </ul>
                 </li>
-                <li class="notify nav-item mx-md-3">
-                    <a href="#" class="text-dark" role="button"
+                <li class="notify nav-item mx-md-4">
+                    <a href="#" class="text-dark fw-bold dropdown-toggle" role="button"
                        id="notify-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         Tin tức
                     </a>
@@ -33,8 +35,8 @@
                         <li>Tin tức</li>
                     </ul>
                 </li>
-                <li class="admissions nav-item mx-md-3">
-                    <a href="#" class="text-dark" role="button"
+                <li class="admissions nav-item mx-md-4">
+                    <a href="#" class="text-dark fw-bold dropdown-toggle" role="button"
                        id="admissions-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         Tuyển sinh
                     </a>
@@ -51,15 +53,24 @@
         </div>
     </div>
     <div class="public-page-content">
-        <div class="loading-section">
-            <div class="loading-content">
-                <img src="https://w.ladicdn.com/s2250x900/5c7362c6c417ab07e5196b05/nen-20230414042837-pmijd.jpg" alt="">
+        <div class="loading-section d-flex align-items-center position-relative">
+            <div class="loading-content w-100 d-flex justify-content-center">
+                <img src="https://w.ladicdn.com/s2250x900/5c7362c6c417ab07e5196b05/nen-20230414042837-pmijd.jpg" alt="image"
+                class="loading-image h-100 w-100 slide-img">
+                <img src="https://www.elle.vn/wp-content/uploads/2017/07/25/hinh-anh-dep-1.jpg" alt="image"
+                     class="loading-image h-100 w-100 slide-img">
+                <img src="https://noithatbinhminh.com.vn/wp-content/uploads/2022/08/anh-dep-19.jpg" alt="image"
+                     class="loading-image h-100 w-100 slide-img">
             </div>
+            <button class="prev-button position-absolute ms-md-5 bg-transparent border-0">
+                <i class="fa-solid fa-angle-left fs-2"></i>
+            </button>
+            <button class="next-button position-absolute me-md-5 end-0 bg-transparent border-0">
+                <i class="fa-solid fa-angle-right fs-2"></i>
+            </button>
         </div>
     </div>
-    <div class="public-page-footer">
-
-    </div>
 </div>
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>
