@@ -1,7 +1,41 @@
+.public-page-container {
+    font-family: Arial, serif;
+}
+
 .public-page-header {
-    height: 75px;
+    height: 60px;
+}
+
+.dropdown-menu {
+    border-top: none;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 8px 16px 0;
 }
 
 .login-button {
     height: 40px;
+}
+
+.loading-content {
+    height: 500px;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+}
+
+@media only screen and (max-width:500px) {
+    /* For mobile phones: */
+    .logo-header {
+        width: 0;
+    }
+}
+
+.slide-img {
+    display: none;
+}
+
+.current-slide {
+    display: block;
 }
