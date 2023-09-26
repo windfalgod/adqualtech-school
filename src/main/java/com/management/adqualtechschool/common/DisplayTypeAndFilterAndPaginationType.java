@@ -49,5 +49,8 @@ public interface DisplayTypeAndFilterAndPaginationType {
     String OBLIGATE_COMBINATION = "Không";
     String PROFILE = "profile";
     String PROVINCE_LIST = "provinceList";
+    String ATTENDANCE_CALENDAR = "attendanceCalendar";
+    String MONTH = "month";
+    String YEAR = "year";
 
 }

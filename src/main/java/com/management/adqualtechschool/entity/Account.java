@@ -99,4 +99,7 @@ public class Account extends BaseEntity {
     // Set teach subject
     @OneToMany(mappedBy = "teacher")
     private List<TeachSubject> teachSubjectList;
+
+    @OneToMany(mappedBy = "account")
+    private List<Attendance> attendanceList;
 }

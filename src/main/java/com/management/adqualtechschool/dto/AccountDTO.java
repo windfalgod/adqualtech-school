@@ -1,6 +1,7 @@
 package com.management.adqualtechschool.dto;
 
 import com.management.adqualtechschool.common.Message;
+import com.management.adqualtechschool.entity.Attendance;
 import com.management.adqualtechschool.entity.Classroom;
 import com.management.adqualtechschool.entity.Role;
 import com.management.adqualtechschool.entity.TeachSubject;
@@ -61,4 +62,5 @@ public class AccountDTO {
     private MultipartFile multipartFile;
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
+    private List<Attendance> attendanceList;
 }
