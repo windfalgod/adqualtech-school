@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch đến trường</title>
+    <script src="/js/jquery/lib/jquery.js"></script>
+    <script src="/js/attendance-calendar.js"></script>
+</head>
+<body>
+<div class="attendance-wrapper p-4" th:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item active"
+                aria-current="page">Lịch đến trường
+        </ol>
+    </nav>
+    <h3 class="event-creation-title mt-4 mb-4">Lịch đến trường</h3>
+    <div class="attendance-container d-flex">
+        <div class="attendance-form-container w-100">
+
+            <form th:action="@{/school-attendance/changeTime}" class="attendance-form d-flex mb-md-4" method="get">
+                <label for="monthInput"></label>
+                <input type="number" id="monthInput" class="me-md-1" name="month" th:value="${month}" min="1" max="12">
+                <label for="yearInput"></label>
+                <input type="number" id="yearInput" th:value="${year}" name="year" th:min="${year}" th:max="${year}">
+            </form>
+
+            <div class="attendance-calendar">
+                <h4 th:if="${attendanceCalendar.isEmpty()}">Không có dữ liệu!</h4>
+                <table class="table-bordered w-100" th:if="${!attendanceCalendar.isEmpty()}">
+                    <thead>
+                    <tr class="attendance-calendar-header">
+                        <th>Thứ 2</th>
+                        <th>Thứ 3</th>
+                        <th>Thứ 4</th>
+                        <th>Thứ 5</th>
+                        <th>Thứ 6</th>
+                        <th>Thứ 7</th>
+                        <th>Chủ nhật</th>
+                    </tr>
+                    </thead>
+                    <tbody class="attendance-calendar-content">
+                    <tr>
+                        <td th:each="day, iterStat : ${attendanceCalendar}" th:if="${iterStat.index < 7}"
+                            th:class="${day.content != null && day.content != ''} ? 'mistake'">
+                            <div th:class="${#dates.day(#dates.createNow()) == day.date} ? 'currentDate'">
+                                <span th:text="${day.date}" class="dateOfMonth"></span>
+                                <span th:if="${day.content != null}" th:text="${day.content}"></span>
+                                <span th:if="${day.status != null}" th:text="${day.status}"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:each="day, iterStat : ${attendanceCalendar}" th:if="${iterStat.index >= 7 && iterStat.index < 14}"
+                            th:class="${day.content != null && day.content != ''} ? 'mistake'">
+                            <div th:class="${#dates.day(#dates.createNow()) == day.date} ? 'currentDate'">
+                                <span th:text="${day.date}" class="dateOfMonth"></span>
+                                <span th:if="${day.content != null}" th:text="${day.content}"></span>
+                                <span th:if="${day.status != null}" th:text="${day.status}"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:each="day, iterStat : ${attendanceCalendar}" th:if="${iterStat.index >= 14 && iterStat.index < 21}"
+                        th:class="${day.content != null && day.content != ''} ? 'mistake'">
+                            <div th:class="${#dates.day(#dates.createNow()) == day.date} ? 'currentDate'">
+                                <span th:text="${day.date}" class="dateOfMonth"></span>
+                                <span th:if="${day.content != null}" th:text="${day.content}"></span>
+                                <span th:if="${day.status != null}" th:text="${day.status}"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:each="day, iterStat : ${attendanceCalendar}" th:if="${iterStat.index >= 21 && iterStat.index < 28}"
+                            th:class="${day.content != null && day.content != ''} ? 'mistake'">
+                            <div th:class="${#dates.day(#dates.createNow()) == day.date} ? 'currentDate'">
+                                <span th:text="${day.date}" class="dateOfMonth"></span>
+                                <span th:if="${day.content != null}" th:text="${day.content}"></span>
+                                <span th:if="${day.status != null}" th:text="${day.status}"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td th:each="day, iterStat : ${attendanceCalendar}" th:if="${iterStat.index >= 28}"
+                            th:class="${day.content != null && day.content != ''} ? 'mistake'">
+                            <div th:class="${#dates.day(#dates.createNow()) == day.date} ? 'currentDate'">
+                                <span th:text="${day.date}" class="dateOfMonth"></span>
+                                <span th:if="${day.content != null}" th:text="${day.content}"></span>
+                                <span th:if="${day.status != null}" th:text="${day.status}"></span>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

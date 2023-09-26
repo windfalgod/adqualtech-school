@@ -1,0 +1,42 @@
+.attendance-calendar-header {
+    height: 60px;
+    text-align: center;
+    background-color: #9bc4ff;
+}
+
+table, th, td {
+    border: solid;
+}
+
+td > div {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.currentDate {
+    background-color: #cccccc;
+}
+
+.mistake {
+    background-color: #fefe69;
+}
+
+.attendance-calendar-header > th {
+    width: 14.2%;
+}
+
+.attendance-calendar-content > tr {
+    height: 90px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.dateOfMonth {
+    font-size: 24px;
+}
+
+#monthInput, #yearInput {
+    width: 10%;
+}
